@@ -38,7 +38,6 @@ const InitialScreen = ({ setShowStakeModeSettings,
     setForm,
     setErrors,
     selectedSwapRoute,
-    formProps: { initialOutputMint, fixedOutputMint },
     jupiter: { loading },
   } = useSwapContext();
   const { setScreen } = useScreenState();
@@ -107,13 +106,8 @@ const InitialScreen = ({ setShowStakeModeSettings,
 
   const availableMints: TokenInfo[] = useMemo(() => {
     let result = [...tokenMap.values()];
-    // On fixedOutputMint, prevent user from selecting the same token as output
-    if (fixedOutputMint) {
-      result = result.filter((item) => item.address !== initialOutputMint);
-    }
-
     return result;
-  }, [tokenMap, fixedOutputMint, initialOutputMint]);
+  }, [tokenMap]);
 
   const onSubmitToConfirmation = useCallback(() => {
     setScreen('Confirmation');

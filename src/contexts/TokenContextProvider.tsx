@@ -39,13 +39,9 @@ const fetchAllMints = async (env: ENV, preferredTokenListMode: PreferredTokenLis
   }, new Map());
 };
 
-export function TokenContextProvider({ strictTokenList, children }: IInit & { children: ReactNode }) {
+export function TokenContextProvider({ children }: IInit & { children: ReactNode }) {
   const { connection } = useConnection();
-  const defaultPreferredTokenListMode = useMemo(() => {
-    if (typeof strictTokenList === 'undefined') return 'strict';
-    return strictTokenList ? 'strict' : 'all';
-  }, [strictTokenList])
-  const [preferredTokenListMode, setPreferredTokenListMode] = useState<PreferredTokenListMode>(defaultPreferredTokenListMode);
+  const [preferredTokenListMode, setPreferredTokenListMode] = useState<PreferredTokenListMode>('all');
 
   const [{ tokenMap, isLoaded }, setState] = useState({
     isLoaded: false,

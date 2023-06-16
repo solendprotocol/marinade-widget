@@ -65,9 +65,6 @@ const RouteSelectionScreen: React.FC<{ onClose(): void }> = ({ onClose }) => {
     form: { fromMint, toMint },
     selectedSwapRoute,
     setSelectedSwapRoute,
-    formProps: {
-      swapMode,
-    },
     jupiter: { routes },
   } = useSwapContext();
 
@@ -119,7 +116,6 @@ const RouteSelectionScreen: React.FC<{ onClose(): void }> = ({ onClose }) => {
               toTokenInfo,
               selectedSwapRoute,
               onSubmit,
-              swapMode,
             }}
             className={classNames('overflow-y-scroll mr-1 min-h-[12rem] webkit-scrollbar pt-4')}
           >

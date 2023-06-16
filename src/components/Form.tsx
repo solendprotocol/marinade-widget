@@ -51,10 +51,8 @@ const Form: React.FC<{
     toTokenInfo,
     selectedSwapRoute,
     formProps: {
-      swapMode,
       fixedAmount,
       fixedInputMint,
-      fixedOutputMint,
     },
     jupiter: { routes, loading, refresh },
   } = useSwapContext();
@@ -90,41 +88,8 @@ const Form: React.FC<{
     return fromTokenInfo ? accounts[fromTokenInfo.address]?.balance || 0 : 0;
   }, [accounts, fromTokenInfo]);
 
-  const onClickMax = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-
-      if (!balance || swapMode === 'ExactOut') return;
-
-      if (fromTokenInfo?.address === WRAPPED_SOL_MINT.toBase58()) {
-        setForm((prev) => ({
-          ...prev,
-          fromValue: String(balance > MINIMUM_SOL_BALANCE ? (balance - MINIMUM_SOL_BALANCE).toFixed(6) : 0),
-        }));
-      } else {
-        setForm((prev) => ({
-          ...prev,
-          fromValue: String(balance),
-        }));
-      }
-    },
-    [balance, fromTokenInfo],
-  );
-
   const msolTokenInfo = tokenMap.get(MSOL_MINT.toBase58());
   const solTokenInfo = tokenMap.get(NATIVE_MINT.toBase58());
-
-  const { inputAmountDisabled } = useMemo(() => {
-    const result = { inputAmountDisabled: true, outputAmountDisabled: true };
-    if (!fixedAmount) {
-      if (swapMode === SwapMode.ExactOut) {
-        result.outputAmountDisabled = false;
-      } else {
-        result.inputAmountDisabled = false;
-      }
-    }
-    return result;
-  }, [fixedAmount, swapMode]);
 
   const marketRoutes = selectedSwapRoute ? selectedSwapRoute.marketInfos.map(({ label }) => label).join(', ') : '';
 
@@ -132,16 +97,6 @@ const Form: React.FC<{
     if (fixedInputMint) return;
     setSelectPairSelector('fromMint')
   }, [fixedInputMint])
-
-  const onClickSelectToMint = useCallback(() => {
-    if (fixedOutputMint) return;
-    setSelectPairSelector('toMint')
-  }, [fixedOutputMint])
-
-  const fixedOutputFomMintClass = useMemo(() => {
-    if (swapMode === 'ExactOut' && !form.toValue) return 'opacity-20 hover:opacity-100';
-    return '';
-  }, [fixedOutputMint, form.toValue])
 
 
   const thousandSeparator = useMemo(() => detectedSeparator === ',' ? '.' : ',', []);
@@ -173,7 +128,7 @@ const Form: React.FC<{
                 </button>
             </span>}
           </div>
-          <div className={classNames("border-b border-transparent bg-[#F7FAFC] rounded-xl transition-all", fixedOutputFomMintClass)}>
+          <div className={classNames("border-b border-transparent bg-[#F7FAFC] rounded-xl transition-all")}>
             <div className={classNames("px-x border-transparent rounded-xl ")}>
               <div>
                 <div className={classNames("p-4 flex flex-col dark:text-[#4A5568]")}>
@@ -210,7 +165,7 @@ const Form: React.FC<{
                         valueIsNumericString
                         onValueChange={({ value }) => setTargetAmount(Number(value))}
                         placeholder={'0.00'}
-                        className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 text-lg", { 'cursor-not-allowed': inputAmountDisabled })}
+                        className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 text-lg")}
                         decimalSeparator={detectedSeparator}
                         isAllowed={withValueLimit}
                       />
@@ -250,7 +205,6 @@ const Form: React.FC<{
                       type="button"
                       className="py-2 px-2 rounded-lg flex items-center text-[#4A5568]"
                       disabled={true}
-                      onClick={onClickSelectToMint}
                     >
                       <div className="h-5 w-5"><TokenIcon tokenInfo={msolTokenInfo} width={20} height={20} /></div>
                       <div className="mx-2 font-semibold" translate="no">
@@ -260,14 +214,13 @@ const Form: React.FC<{
 
                     {(msolTokenInfo && marinadeStats && target) ? (<div className="text-right">
                       <NumericFormat
-                        disabled={!swapMode || swapMode === 'ExactIn'}
+                        disabled={true}
                         value={((target?.amount ?? 0) / marinadeStats.msolSolPrice).toString()}
                         decimalScale={mSolAccount.decimals}
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
                         onValueChange={({ value }) => onChangeToValue(value)}
-                        placeholder={swapMode === 'ExactOut' ? 'Enter desired amount' : ''}
                         className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 placeholder:text-sm placeholder:font-normal text-lg")}
                         decimalSeparator={detectedSeparator}
                         isAllowed={withValueLimit}

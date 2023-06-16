@@ -7,10 +7,9 @@ const IntegratedTerminal = (props: {
   rpcUrl: string;
   formProps: FormProps;
   fakeWallet: Wallet | null;
-  strictTokenList: boolean;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
-  const { rpcUrl, formProps, fakeWallet, strictTokenList, defaultExplorer } = props;
+  const { rpcUrl, formProps, fakeWallet, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
   const launchTerminal = async () => {
     window.Jupiter.init({
@@ -19,7 +18,6 @@ const IntegratedTerminal = (props: {
       endpoint: rpcUrl,
       formProps,
       passThroughWallet: fakeWallet,
-      strictTokenList,
       defaultExplorer,
     });
   };

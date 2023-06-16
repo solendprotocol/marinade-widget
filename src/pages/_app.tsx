@@ -195,7 +195,6 @@ export default function App({ Component, pageProps }: AppProps) {
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
                         fakeWallet={wallet}
-                        strictTokenList={watchAllFields.strictTokenList}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
                     ) : null}
@@ -204,7 +203,6 @@ export default function App({ Component, pageProps }: AppProps) {
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
                         fakeWallet={wallet}
-                        strictTokenList={watchAllFields.strictTokenList}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
                     ) : null}
@@ -213,7 +211,6 @@ export default function App({ Component, pageProps }: AppProps) {
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
                         fakeWallet={wallet}
-                        strictTokenList={watchAllFields.strictTokenList}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
                     ) : null}

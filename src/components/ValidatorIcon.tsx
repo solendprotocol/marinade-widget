@@ -1,6 +1,7 @@
 import { TokenInfo } from '@solana/spl-token-registry';
 import React, { useState } from 'react';
 import { ValidatorType } from 'src/contexts/DataProvider';
+import Image from 'next/image';
 
 const ValidatorIcon: React.FC<{ tokenInfo?: ValidatorType | null; width?: number; height?: number }> = ({
   tokenInfo,
@@ -12,7 +13,7 @@ const ValidatorIcon: React.FC<{ tokenInfo?: ValidatorType | null; width?: number
   return (
     <div className="text-xs flex items-center justify-center rounded-full overflow-hidden" style={{ width, height}}>
       {tokenInfo && !error ? (
-        <img onError={() => setError(true)} src={tokenInfo?.logo} alt={tokenInfo?.name} width={width} height={height} />
+        <Image onError={() => setError(true)} src={tokenInfo?.logo ?? ''} alt={tokenInfo?.name} width={width} height={height} />
       ) : (
         <div className="items-center justify-center rounded-full overflow-hidden bg-black/20" style={{ width, height}} />
       )}

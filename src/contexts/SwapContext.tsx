@@ -99,13 +99,10 @@ export const initialSwapContext: ISwapContext = {
   lastSwapResult: null,
   displayMode: 'modal',
   formProps: {
-    swapMode: SwapMode.ExactIn,
     initialAmount: undefined,
     fixedAmount: undefined,
     initialInputMint: undefined,
     fixedInputMint: undefined,
-    initialOutputMint: undefined,
-    fixedOutputMint: undefined,
   },
   scriptDomain: '',
   swapping: {
@@ -166,12 +163,12 @@ export const SwapContextProvider: FC<{
 
   const [form, setForm] = useState<IForm>({
     fromMint: formProps?.initialInputMint ?? 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    toMint: formProps?.initialOutputMint ?? WRAPPED_SOL_MINT.toString(),
+    toMint: WRAPPED_SOL_MINT.toString(),
     fromValue: '',
     toValue: '',
   });
   const [errors, setErrors] = useState<Record<string, { title: string; message: string }>>({});
-  const jupiterSwapMode = useMemo(() => formProps?.swapMode ? SwapMode[formProps?.swapMode] : SwapMode.ExactIn, [formProps?.swapMode]);
+  const jupiterSwapMode = useMemo(() => SwapMode.ExactIn, []);
 
   const fromTokenInfo = useMemo(() => {
     const tokenInfo = form.fromMint ? tokenMap.get(form.fromMint) : null;

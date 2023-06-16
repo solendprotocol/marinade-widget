@@ -10,14 +10,12 @@ const ModalTerminal = (props: {
   rpcUrl: string;
   formProps: FormProps;
   fakeWallet: Wallet | null;
-  strictTokenList: boolean;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
   const {
     rpcUrl,
     formProps,
     fakeWallet,
-    strictTokenList,
     defaultExplorer
   } = props;
   
@@ -26,7 +24,6 @@ const ModalTerminal = (props: {
       endpoint: rpcUrl,
       formProps,
       passThroughWallet: fakeWallet,
-      strictTokenList,
       defaultExplorer
     });
   };

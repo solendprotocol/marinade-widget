@@ -51,7 +51,6 @@ const queryClient = new QueryClient();
 const JupiterApp = (props: IInit) => {
   const {
     displayMode,
-    platformFeeAndAccounts,
     formProps,
   } = props;
   const { connection } = useConnection();
