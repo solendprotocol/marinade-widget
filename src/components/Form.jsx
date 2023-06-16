@@ -114,7 +114,7 @@ const Form = ({ onSubmit, isDisabled, setSelectPairSelector, setIsWalletModalOpe
         <div className="flex-col">
         <div className="flex justify-between items-center">
         <span className='text-xs text-[#4A5568] font-semibold mb-1'>
-          You're staking
+          You&apos;re staking
           </span>
             {(target === null || target === void 0 ? void 0 : target.type) === 'native' && <span className='text-xs text-[#4A5568] text-thin'>
               <fa_1.FaWallet className='inline text-[#CBD5E0]'/> {(_a = solAccount === null || solAccount === void 0 ? void 0 : solAccount.balance) !== null && _a !== void 0 ? _a : 0} SOL{" "}

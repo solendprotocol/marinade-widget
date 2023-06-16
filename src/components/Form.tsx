@@ -160,7 +160,7 @@ const Form: React.FC<{
         <div className="flex-col">
         <div className="flex justify-between items-center">
         <span className='text-xs text-[#4A5568] font-semibold mb-1'>
-          You're staking
+          You&apos;re staking
           </span>
             {target?.type === 'native' && <span className='text-xs text-[#4A5568] text-thin'>
               <FaWallet className='inline text-[#CBD5E0]' /> {solAccount?.balance ?? 0} SOL{" "}
