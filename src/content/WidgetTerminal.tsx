@@ -52,7 +52,7 @@ const WidgetTerminal = (props: { rpcUrl: string, formProps: FormProps, fakeWalle
         <div>
           <div className="relative mt-8 md:mt-0">
             <div className="bg-white/10 rounded-xl flex items-center justify-center w-full md:w-[384px] h-[216px]">
-              <span className="text-xs text-white/50 text-center w-[70%]">
+              <span className="text-xs text-[#4A5568]/50 text-center w-[70%]">
                 Click on the arrows to see how the Jupiter Widget will appear on your web browser.
                 <br />
                 Click on the logo to view the Jupiter Swap Modal.

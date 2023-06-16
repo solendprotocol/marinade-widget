@@ -14,28 +14,24 @@ declare global {
 export type WidgetPosition = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
 export type WidgetSize = 'sm' | 'default';
 
-export declare type PlatformFeeAndAccounts = {
-  feeBps: number;
-  feeAccounts: Map<string, PublicKey>;
-};
-
 export interface FormProps {
-  swapMode?: SwapMode;
+  referralCode?: string; 
+  initialInputMint?: string;
+  initialValidator?: string;
+
   initialAmount?: string;
   fixedAmount?: boolean;
-  initialInputMint?: string;
   fixedInputMint?: boolean;
-  initialOutputMint?: string;
-  fixedOutputMint?: boolean;
 }
+
+export type THEME = 'light' | 'dark';
 
 export type DEFAULT_EXPLORER = 'Solana Explorer' | 'Solscan' | 'Solana Beach' | 'SolanaFM';
 export interface IInit {
   endpoint: string;
-  platformFeeAndAccounts?: PlatformFeeAndAccounts;
   formProps?: FormProps;
-  strictTokenList?: boolean;
   defaultExplorer?: DEFAULT_EXPLORER;
+  theme?: 'light',
   
   // Display & Styling
   displayMode?: 'modal' | 'integrated' | 'widget';

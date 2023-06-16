@@ -120,9 +120,9 @@ const RenderShell = (props: IInit) => {
     // Default Modal
     if (!displayMode || displayMode === 'modal') {
       return `flex flex-col h-screen w-screen max-h-[90vh] md:max-h-[600px] max-w-[360px] overflow-auto text-black relative bg-jupiter-bg rounded-lg webkit-scrollbar ${containerClassName || ''
-        }`;
+        } p-4 h-fit`;
     } else if (displayMode === 'integrated' || displayMode === 'widget') {
-      return 'flex flex-col h-full w-full overflow-auto text-black relative webkit-scrollbar';
+      return 'flex flex-col h-full w-full overflow-auto text-black relative webkit-scrollbar p-4';
     }
   }, [displayMode]);
 
@@ -201,8 +201,8 @@ const RenderWidgetShell = (props: IInit) => {
 
       <div
         id="integrated-terminal"
-        className={`absolute overflow-hidden ${classes.contentClassName
-          } flex flex-col w-[90vw] h-[600px] max-w-[384px] max-h-[75vh] rounded-2xl bg-jupiter-bg transition-opacity duration-300 shadow-2xl ${!isOpen ? 'h-0 opacity-0' : 'opacity-100'
+        className={`p-4 absolute overflow-hidden ${classes.contentClassName
+          } flex flex-col w-[90vw] max-w-[384px] max-h-[75vh] rounded-2xl bg-jupiter-bg transition-opacity duration-300 shadow-2xl ${!isOpen ? 'h-0 opacity-0' : 'opacity-100'
           }`}
       >
         <RenderLoadableJupiter {...props} />

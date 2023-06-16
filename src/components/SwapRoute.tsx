@@ -77,7 +77,7 @@ const SwapRoute: React.FC<{
     >
       <div
         className={classNames({
-          'flex items-center justify-between p-4 rounded-lg dark:text-white dark:border-transparent text-[13px] bg-white/80 dark:bg-[rgba(62,62,69,0.9)]':
+          'flex items-center justify-between p-4 rounded-lg dark:text-[#4A5568] dark:border-transparent text-[13px] bg-white/80 dark:bg-[rgba(62,62,69,0.9)]':
             true,
         })}
       >
@@ -88,7 +88,7 @@ const SwapRoute: React.FC<{
 
           <div className="flex space-x-1">
             {path.map((item, idx) => (
-              <div className="flex space-x-1 text-black/50 dark:text-white/50" key={idx}>
+              <div className="flex space-x-1 text-black/50 dark:text-[#4A5568]/50" key={idx}>
                 <div className="font-semibold text-[11px]">
                   <span>{item}</span>
                 </div>
@@ -104,7 +104,7 @@ const SwapRoute: React.FC<{
         </div>
 
         <div className="text-right">
-          <div className={classNames('font-semibold dark:text-white lg:text-md', mobileTextSize)}>{amountToRender}</div>
+          <div className={classNames('font-semibold dark:text-[#4A5568] lg:text-md', mobileTextSize)}>{amountToRender}</div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { SwapMode } from '@jup-ag/react-hook';
 import { PublicKey } from '@solana/web3.js';
-import { DEFAULT_EXPLORER, FormProps } from 'src/types';
+import { DEFAULT_EXPLORER, FormProps, THEME } from 'src/types';
 
-export const JUPITER_DEFAULT_RPC = process.env.NEXT_PUBLIC_JUPITER_DEFAULT_RPC || 'https://neat-hidden-sanctuary.solana-mainnet.discover.quiknode.pro/2af5315d336f9ae920028bbb90a73b724dc1bbed';
+export const JUPITER_DEFAULT_RPC = process.env.NEXT_PUBLIC_JUPITER_DEFAULT_RPC || 'https://solend.rpcpool.com/a3e03ba77d5e870c8c694b19d61c';
 
 export const WRAPPED_SOL_MINT = new PublicKey('So11111111111111111111111111111111111111112');
 export const SOL_MINT_TOKEN_INFO = {
@@ -24,22 +24,19 @@ export const SOL_MINT_TOKEN_INFO = {
 
 export interface IFormConfigurator {
   useWalletPassthrough: boolean;
-  strictTokenList: boolean;
   defaultExplorer: DEFAULT_EXPLORER;
   formProps: FormProps;
+  theme: THEME;
 }
 
 export const INITIAL_FORM_CONFIG: IFormConfigurator = Object.freeze({
   useWalletPassthrough: false,
   strictTokenList: true,
   defaultExplorer: 'Solana Explorer',
+  theme: 'light',
   formProps: {
-    fixedInputMint: false,
-    fixedOutputMint: false,
-    swapMode: SwapMode.ExactIn,
-    fixedAmount: false,
     initialAmount: '',
-    initialInputMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    initialOutputMint: WRAPPED_SOL_MINT.toString(),
+    fixedInputMint: false,
+    fixedAmount: false,
   }
 })

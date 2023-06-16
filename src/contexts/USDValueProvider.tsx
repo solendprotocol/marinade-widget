@@ -5,6 +5,7 @@ import { splitIntoChunks } from 'src/misc/utils';
 import { useAccounts } from './accounts';
 import { useTokenContext } from './TokenContextProvider';
 import { useSwapContext } from './SwapContext';
+import { PRICE_MINTS } from 'src/misc/constants';
 
 const MAXIMUM_PARAM_SUPPORT = 100;
 const CACHE_EXPIRE_TIME = 1000 * 60 * 1; // 1 min
@@ -41,23 +42,9 @@ const hasExpired = (timestamp: number) => {
   return false;
 };
 
+
 export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const { accounts } = useAccounts();
-  const { tokenMap } = useTokenContext();
-  const { fromTokenInfo, toTokenInfo,
-  } = useSwapContext();
-
   const [cachedPrices, setCachedPrices] = useLocalStorage<ITokenUSDValue>(STORAGE_KEY, {});
-  const [addresses, setAddresses] = useState<Set<string>>(new Set());
-  const [debouncedAddresses, setDebouncedAddresses] = useState<string[]>([]);
-
-  useDebounce(
-    () => {
-      setDebouncedAddresses(Array.from(addresses));
-    },
-    250,
-    [addresses],
-  );
 
   const getPriceFromJupAPI = useCallback(async (addresses: string[]) => {
     const { data }: { data: JupPriceResponse } = await fetch(
@@ -93,12 +80,12 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   const { data: tokenPriceMap, isFetched: isLatest } = useQuery<ITokenUSDValue>(
-    [debouncedAddresses, Object.keys(cachedPrices || {}).length],
+    [PRICE_MINTS, Object.keys(cachedPrices || {}).length],
     async () => {
       let results: ITokenUSDValue = {};
       const tokenAddressToFetch: string[] = [];
 
-      debouncedAddresses.forEach((address) => {
+      PRICE_MINTS.forEach((address) => {
         // could be empty string
         if (address) {
           const cachePrice = (cachedPrices || {})[address];
@@ -165,34 +152,6 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
         ),
     );
   }, []);
-
-  useEffect(() => {
-    if (!Object.keys(accounts).length || !tokenMap.size) return;
-
-    const userAccountAddresses: string[] = Object.keys(accounts)
-      .map((key) => {
-        const token = tokenMap.get(key);
-
-        if (!token) return undefined;
-
-        return token.address;
-      })
-      .filter(Boolean) as string[];
-
-    setAddresses((prev) => {
-      return new Set([...prev, ...userAccountAddresses]);
-    });
-  }, [accounts, tokenMap]);
-
-  // Make sure form token always have USD values
-  useEffect(() => {
-    setAddresses((prev) => {
-      const newSet = new Set([...prev]);
-      if (fromTokenInfo?.address) newSet.add(fromTokenInfo?.address);
-      if (toTokenInfo?.address) newSet.add(toTokenInfo?.address);
-      return newSet
-    });
-  }, [fromTokenInfo, toTokenInfo])
 
   // use memo so that it avoid a rerendering
   const priceMap = useMemo(() => {

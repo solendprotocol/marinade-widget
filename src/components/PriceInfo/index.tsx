@@ -73,7 +73,7 @@ const Index = ({
   return (
     <div className={classNames('mt-4 space-y-4 border border-white/5 rounded-xl p-3', containerClassName)}>
       <div className="flex items-center justify-between text-xs">
-        <div className="text-white/30">{<span>Rate</span>}</div>
+        <div className="text-[#4A5568]/30">{<span>Rate</span>}</div>
         {JSBI.greaterThan(rateParams.inAmount, ZERO) && JSBI.greaterThan(rateParams.outAmount, ZERO) ? (
           <ExchangeRate
             loading={loading}
@@ -83,11 +83,11 @@ const Index = ({
             reversible={true}
           />
         ) : (
-          <span className="text-white/30">{'-'}</span>
+          <span className="text-[#4A5568]/30">{'-'}</span>
         )}
       </div>
 
-      <div className="flex items-center justify-between text-xs text-white/30">
+      <div className="flex items-center justify-between text-xs text-[#4A5568]/30">
         <div>
           <span>Price Impact</span>
         </div>
@@ -95,14 +95,14 @@ const Index = ({
       </div>
 
       <div className="flex items-center justify-between text-xs">
-        <div className="text-white/30">
+        <div className="text-[#4A5568]/30">
           {selectedSwapRoute?.swapMode === SwapMode.ExactIn ? (
             <span>Minimum Received</span>
           ) : (
             <span>Maximum Consumed</span>
           )}
         </div>
-        <div className="text-white/30">{otherAmountThresholdText}</div>
+        <div className="text-[#4A5568]/30">{otherAmountThresholdText}</div>
       </div>
 
       {showFullDetails ? (
@@ -113,10 +113,10 @@ const Index = ({
 
           {priorityFeeInSOL > 0 ? (
             <div className="flex items-center justify-between text-xs">
-              <div className="text-white/30">
+              <div className="text-[#4A5568]/30">
                 Priority Fee
               </div>
-              <div className="text-white/30">{new Decimal(priorityFeeInSOL).toString()}</div>
+              <div className="text-[#4A5568]/30">{new Decimal(priorityFeeInSOL).toString()}</div>
             </div>
           ) : null}
         </>

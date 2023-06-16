@@ -30,7 +30,7 @@ export const WalletButton: FC<{ setIsWalletModalOpen(toggle: boolean): void }> =
   }
 
   return (
-    <div className="cursor-pointer relative">
+    <div className="cursor-pointer relative rounded-lg">
       <div onClick={() => setActive(!active)}>
         <CurrentUserBadge />
       </div>

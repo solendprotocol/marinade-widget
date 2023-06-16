@@ -33,7 +33,7 @@ const rowRenderer = memo((props: ListChildComponentProps) => {
     >
       {index === 0 && (
         <div
-          className={`absolute px-2 py-1 font-semibold text-white p-0.5 bg-[#FBA43A]`}
+          className={`absolute px-2 py-1 font-semibold text-[#4A5568] p-0.5 bg-[#FBA43A]`}
           style={{ borderRadius: 4, left: 0, top: -14, fontSize: 11 }}
         >
           <span>Best price</span>
@@ -46,10 +46,10 @@ const rowRenderer = memo((props: ListChildComponentProps) => {
         } `}
         onClick={onSubmit}
       >
-        <div className="text-white/50 w-[50%]">{marketRoutes}</div>
+        <div className="text-[#4A5568]/50 w-[50%]">{marketRoutes}</div>
 
         <div className="w-[50%] text-right">
-          <p className="text-sm font-semibold text-white truncate">
+          <p className="text-sm font-semibold text-[#4A5568] truncate">
             {data.swapMode === 'ExactOut' ? 
             `${fromLamports(item.inAmount, fromTokenInfo.decimals || 6)} ${fromTokenInfo.symbol}`
             : `${fromLamports(item.outAmount, toTokenInfo.decimals || 6)} ${toTokenInfo.symbol}`}
@@ -92,16 +92,16 @@ const RouteSelectionScreen: React.FC<{ onClose(): void }> = ({ onClose }) => {
   return (
     <div className="flex flex-col h-full w-full py-4 px-2">
       <div className="flex w-full justify-between">
-        <div className="text-white fill-current w-6 h-6 cursor-pointer" onClick={onGoBack}>
+        <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={onGoBack}>
           <LeftArrowIcon width={24} height={24} />
         </div>
 
-        <div className="text-white">Select Route</div>
+        <div className="text-[#4A5568]">Select Route</div>
 
         <div className=" w-6 h-6" />
       </div>
 
-      <p className="text-xs text-white/50 my-3">
+      <p className="text-xs text-[#4A5568]/50 my-3">
         Jupiter automatically selects a route with the best price, however you can select a route manually.
       </p>
 

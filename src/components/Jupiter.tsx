@@ -20,18 +20,28 @@ import SwappingScreen from './screens/SwappingScreen';
 const Content = () => {
   const { screen } = useScreenState();
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [showStakeModeSettings, setShowStakeModeSettings] = useState(false);
+  const [showDelegationStrategy, setShowDelegationStrategy] = useState(false);
 
   return (
     <>
       {screen === 'Initial' ? (
         <>
-          <Header setIsWalletModalOpen={setIsWalletModalOpen} />
-          <InitialScreen isWalletModalOpen={isWalletModalOpen} setIsWalletModalOpen={setIsWalletModalOpen} />
+          <Header 
+            setIsWalletModalOpen={setIsWalletModalOpen} 
+            setShowStakeModeSettings={setShowStakeModeSettings}
+            setShowDelegationStrategy={setShowDelegationStrategy}
+          />
+          <InitialScreen 
+            showStakeModeSettings={showStakeModeSettings} 
+            setShowStakeModeSettings={setShowStakeModeSettings}
+            showDelegationStrategy={showDelegationStrategy}
+            setShowDelegationStrategy={setShowDelegationStrategy}
+            isWalletModalOpen={isWalletModalOpen}
+             setIsWalletModalOpen={setIsWalletModalOpen} 
+          />
         </>
-      ) : null}
-
-      {screen === 'Confirmation' ? <ReviewOrderScreen /> : null}
-      {screen === 'Swapping' ? <SwappingScreen /> : null}
+      ) : <SwappingScreen />}
     </>
   );
 };
@@ -58,33 +68,13 @@ const JupiterApp = (props: IInit) => {
     setAsLegacyTransaction(true)
   }, [wallet?.adapter]);
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AccountsProvider>
-        <SlippageConfigProvider>
-          <JupiterProvider
-            connection={connection}
-            routeCacheDuration={ROUTE_CACHE_DURATION}
-            wrapUnwrapSOL={true}
-            userPublicKey={walletPublicKey || undefined}
-            platformFeeAndAccounts={platformFeeAndAccounts}
-            asLegacyTransaction={asLegacyTransaction}
-          >
-            <SwapContextProvider
-              displayMode={displayMode}
-              formProps={formProps}
-              scriptDomain={props.scriptDomain}
-              asLegacyTransaction={asLegacyTransaction}
-              setAsLegacyTransaction={setAsLegacyTransaction}
-            >
-              <USDValueProvider>
-                <Content />
-              </USDValueProvider>
-            </SwapContextProvider>
-          </JupiterProvider>
-        </SlippageConfigProvider>
+  return (    <QueryClientProvider client={queryClient}>
+    <AccountsProvider>
+      <USDValueProvider>
+      <Content />
+      </USDValueProvider>
       </AccountsProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
   );
 };
 

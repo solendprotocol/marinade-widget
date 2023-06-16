@@ -47,12 +47,11 @@ const { wallet } = useWallet();
     ...(formConfigurator.defaultExplorer !== 'Solana Explorer'
       ? { defaultExplorer: formConfigurator.defaultExplorer }
       : undefined),
-    ...(Object.keys(filteredFormProps || {}).length > 0 ? { formProps: filteredFormProps } : undefined),
   };
 
   const formPropsSnippet = Object.keys(valuesToFormat).length > 0 ? JSON.stringify(valuesToFormat, null, 4) : '';
 
-  const INIT_SNIPPET = `window.Jupiter.init(${formPropsSnippet});`;
+  const INIT_SNIPPET = `window.Marinade.init(${formPropsSnippet});`;
 
   let snippet = formConfigurator.useWalletPassthrough ? `${USE_WALLET_SNIPPET}${INIT_SNIPPET}` : INIT_SNIPPET;
 
@@ -93,12 +92,12 @@ const { wallet } = useWallet();
   return (
     <div className="flex flex-col items-center justify-center mt-12">
       <div className="relative w-full max-w-3xl overflow-hidden px-4 md:px-0">
-        <p className="text-white self-start pb-2 font-semibold">Code snippet</p>
+        <p className="text-[#4A5568] self-start pb-2 font-semibold">Code snippet</p>
 
         <div className='absolute flex space-x-2 top-0 right-4 md:top-10 md:right-2 '>
           <button
             className={classNames(
-              'text-xs text-white border rounded-xl px-2 py-1 opacity-50 hover:opacity-100',
+              'text-xs text-[#4A5568] border rounded-xl px-2 py-1 opacity-50 hover:opacity-100',
               isCopied ? 'opacity-100 cursor-wait' : '',
             )}
             onClick={copyToClipboard}
@@ -108,7 +107,7 @@ const { wallet } = useWallet();
 
           <button
             className={classNames(
-              'text-xs text-white border rounded-xl px-2 py-1 opacity-50 hover:opacity-100',
+              'text-xs text-[#4A5568] border rounded-xl px-2 py-1 opacity-50 hover:opacity-100',
               isCopiedShareLink ? 'opacity-100 cursor-wait' : '',
             )}
             onClick={copyShareLink}

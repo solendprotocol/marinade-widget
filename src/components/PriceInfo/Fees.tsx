@@ -29,14 +29,14 @@ const Fees = ({ marketInfos }: IFees) => {
 
         return (
           <div key={idx} className="flex items-center space-x-4 justify-between text-xs">
-            <div className="text-white/30">
+            <div className="text-[#4A5568]/30">
               <span>
                 <span>
                   Fees paid to <span translate="no">{item.label}</span> LP
                 </span>
               </span>
             </div>
-            <div className="text-white/30 text-right">
+            <div className="text-[#4A5568]/30 text-right">
               {feeAmount} {tokenMint?.symbol} ({formatNumber.format(new Decimal(item.lpFee.pct).mul(100).toNumber())}
               %)
             </div>

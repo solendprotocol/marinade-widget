@@ -72,7 +72,7 @@ const ExchangeRate = ({
 
   return (
     <div
-      className={classnames(className, 'flex cursor-pointer text-white/30 text-xs align-center')}
+      className={classnames(className, 'flex cursor-pointer text-[#4A5568]/30 text-xs align-center')}
       onClick={onReverse}
     >
       <span className={classnames(textClassName, 'max-w-full flex whitespace-nowrap')}>

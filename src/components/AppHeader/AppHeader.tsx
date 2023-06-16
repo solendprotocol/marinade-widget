@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import CloseIcon from 'src/icons/CloseIcon';
-import JupiterLogo from 'src/icons/JupiterLogo';
+import Marinade from 'src/icons/Marinade';
 import MenuIcon from 'src/icons/MenuIcon';
 import HeaderLinks from './HeaderLinks';
 import HeaderLinksMobile from './HeaderLinksMobile';
@@ -24,14 +24,13 @@ const AppHeader: React.FC<{}> = () => {
     <>
       <div className="flex items-center justify-between w-full px-4 py-4 md:px-8">
         <div className="flex items-center flex-1">
-          <button onClick={handleToggleMenu} type="button" className="w-6 mr-3 md:hidden text-white">
+          <button onClick={handleToggleMenu} type="button" className="w-6 mr-3 md:hidden text-[#4A5568]">
             {openMobileMenu ? <CloseIcon /> : <MenuIcon />}
           </button>
 
           <Link href="https://jup.ag" shallow className="flex-1">
-            <h1 className="flex items-center text-lg font-semibold text-white">
-              <JupiterLogo />
-              <span className="ml-3">Jupiter</span>
+            <h1 className="flex items-center text-lg font-semibold text-[#4A5568]">
+              <Marinade />
             </h1>
           </Link>
         </div>

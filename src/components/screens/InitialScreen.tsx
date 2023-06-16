@@ -11,13 +11,25 @@ import { useScreenState } from 'src/contexts/ScreenProvider';
 import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
 import RouteSelectionScreen from './RouteSelectionScreen';
 import UnknownTokenModal from '../UnknownTokenModal/UnknownTokenModal';
+import StakeModeSettings from '../StakeModeSettings';
+import DelegationStrategy from '../DelegationStrategy';
 
 interface Props {
   isWalletModalOpen: boolean;
   setIsWalletModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowStakeModeSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  showStakeModeSettings: boolean;
+  setShowDelegationStrategy: React.Dispatch<React.SetStateAction<boolean>>;
+  showDelegationStrategy: boolean;
 }
 
-const InitialScreen = ({ setIsWalletModalOpen, isWalletModalOpen }: Props) => {
+const InitialScreen = ({ setShowStakeModeSettings, 
+  setIsWalletModalOpen, 
+  isWalletModalOpen, 
+  showStakeModeSettings,
+  setShowDelegationStrategy,
+  showDelegationStrategy
+}: Props) => {
   const { wallet } = useWalletPassThrough();
   const { accounts } = useAccounts();
   const { tokenMap } = useTokenContext();
@@ -120,8 +132,28 @@ const InitialScreen = ({ setIsWalletModalOpen, isWalletModalOpen }: Props) => {
         />
       </form>
 
+      {showDelegationStrategy ? (
+        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+          <DelegationStrategy
+            onSubmit={() => {}}
+            tokenInfos={[...tokenMap.values()]}
+            onClose={() => setShowDelegationStrategy(false)}
+          />
+        </div>
+      ) : null}
+
+      {showStakeModeSettings ? (
+        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+          <StakeModeSettings
+            onSubmit={() => {}}
+            tokenInfos={[...tokenMap.values()]}
+            onClose={() => setShowStakeModeSettings(false)}
+          />
+        </div>
+      ) : null}
+
       {selectPairSelector !== null ? (
-        <div className="absolute top-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
           <FormPairSelector
             onSubmit={onSelectMint}
             tokenInfos={availableMints}
@@ -131,13 +163,13 @@ const InitialScreen = ({ setIsWalletModalOpen, isWalletModalOpen }: Props) => {
       ) : null}
 
       {showRouteSelector ? (
-        <div className="absolute top-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
           <RouteSelectionScreen onClose={() => setShowRouteSelector(false)} />
         </div>
       ) : null}
 
       {isWalletModalOpen ? (
-        <div className="absolute h-full w-full flex justify-center items-center bg-black/50 rounded-lg overflow-hidden">
+        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
           <WalletModal setIsWalletModalOpen={setIsWalletModalOpen} />
         </div>
       ) : null}

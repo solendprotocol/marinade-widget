@@ -24,9 +24,9 @@ const HeaderLink = ({
       href={href}
       shallow
       className={classNames(
-        'flex items-center font-semibold text-white/50 hover:text-white ',
+        'flex items-center font-semibold text-[#4A5568]/50 hover:text-[#4A5568] ',
         {
-          '!text-white ': isActive,
+          '!text-[#4A5568] ': isActive,
         },
         className,
       )}
@@ -45,7 +45,7 @@ const HeaderLink = ({
 
 const HeaderLinks = () => {
   return (
-    <div className="flex-1 justify-center hidden md:!flex text-sm text-white-35 space-x-10 fill-current">
+    <div className="flex-1 justify-center hidden md:!flex text-sm text-[#4A5568]-35 space-x-10 fill-current">
       <HeaderLink href="/" isActive title={'Demo'} icon={<SwapIcon width="20" height="20" />} />
       <HeaderLink
         href="https://github.com/jup-ag/terminal"

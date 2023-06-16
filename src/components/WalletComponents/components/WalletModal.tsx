@@ -51,11 +51,11 @@ export const WalletModal: FC<WalletModalProps> = ({ setIsWalletModalOpen }) => {
   return (
     <div className="flex flex-col h-full w-full py-4 px-2 bg-jupiter-bg">
       <div className="flex w-full justify-between">
-        <div className="text-white fill-current w-6 h-6 cursor-pointer" onClick={() => setIsWalletModalOpen(false)}>
+        <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={() => setIsWalletModalOpen(false)}>
           <LeftArrowIcon width={24} height={24} />
         </div>
 
-        <div className="text-white">Connect Wallet</div>
+        <div className="text-[#4A5568]">Connect Wallet</div>
 
         <div className=" w-6 h-6" />
       </div>

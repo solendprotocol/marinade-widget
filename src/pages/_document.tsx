@@ -16,15 +16,13 @@ class MyDocument extends Document {
 
           <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
           <link rel="apple-touch-icon" href="/apple-icon-57x57.png" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
+          <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="use-credentials"/>
+<link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
         </Head>
         {/* Default to dark mode */}
-        <body className="text-black dark:text-white">
+        <body className="text-black dark:text-[#4A5568]">
           <Main />
           <NextScript />
         </body>

@@ -14,28 +14,22 @@ const FormPairRow: React.FC<{
   style: CSSProperties;
   onSubmit(item: TokenInfo): void;
 }> = ({ item, style, onSubmit }) => {
-  const isUnknown = useMemo(() => item.tags?.length === 0, [item.tags])
-
   const { accounts } = useAccounts();
   const { tokenPriceMap } = useUSDValueProvider();
 
   const totalUsdValue = useMemo(() => {
-    const tokenPrice = tokenPriceMap[item.address]?.usd;
-    const balance = accounts[item.address]?.balance;
-    if (!tokenPrice || !balance) return null;
-
-    const totalAValue = new Decimal(tokenPrice).mul(balance);
+    const totalAValue = new Decimal(1);
     return totalAValue;
   }, [accounts, tokenPriceMap])
 
   return (
     <li
       className={`cursor-pointer list-none `}
-      style={{ maxHeight: PAIR_ROW_HEIGHT, height: PAIR_ROW_HEIGHT, ...style }}
+      style={{ maxHeight: PAIR_ROW_HEIGHT, height: PAIR_ROW_HEIGHT, ...style, right: 0 }}
       translate="no"
     >
       <div
-        className="flex items-center rounded-xl space-x-4 my-2 p-3 justify-between bg-[#2C2D33] hover:bg-black/10"
+        className="flex items-center rounded-lg space-x-4 my-2 p-3 justify-between hover:bg-black/10"
         onClick={() => onSubmit(item)}
       >
         <div className="flex-shrink-0">
@@ -46,28 +40,26 @@ const FormPairRow: React.FC<{
 
         <div className="flex-1 min-w-0">
           <div className='flex flex-row space-x-2'>
-            <p className="text-sm text-white truncate">
+            <p className="text-sm font-bold text-[#4A5568] truncate">
               {item.symbol}
             </p>
-            <TokenLink tokenInfo={item} />
           </div>
 
           <div className="mt-1 text-xs text-gray-500 truncate flex space-x-1">
-            <CoinBalance mintAddress={item.address} />
-
-            {totalUsdValue && totalUsdValue.gt(0.01) ? (
-              <span className='ml-1'>
-                | ${totalUsdValue.toFixed(2)}
-              </span>
-            ) : null}
+            {item.name}
           </div>
         </div>
+        <div className="flex-shrink-0 text-right">
+          <div className='flex flex-row space-x-2'>
+            <p className="text-sm font-bold text-[#4A5568] truncate">
+              <CoinBalance mintAddress={item.address} />
+            </p>
+          </div>
 
-        {isUnknown ? (
-          <p className="ml-auto border rounded-md text-xxs py-[1px] px-1 border-warning text-warning">
-            <span>Unknown</span>
-          </p>
-        ) : null}
+          <div className="mt-1 text-xs text-gray-500 truncate space-x-1">
+            ${item.decimals}.00
+          </div>
+        </div>
       </div>
     </li>
   );

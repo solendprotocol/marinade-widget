@@ -168,12 +168,12 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
   };
 
   return (
-    <div className={classNames('w-full rounded-xl flex flex-col bg-jupiter-bg text-white shadow-xl max-h-[90%]')}>
+    <div className={classNames('w-full rounded-xl flex flex-col bg-jupiter-bg text-[#4A5568] shadow-xl max-h-[90%]')}>
       <div className="flex justify-between items-center p-4 border-b border-white/10">
         <div className="text-sm font-semibold">
           <span>Swap Settings</span>
         </div>
-        <div className="text-white fill-current cursor-pointer" onClick={() => closeModal()}>
+        <div className="text-[#4A5568] fill-current cursor-pointer" onClick={() => closeModal()}>
           <CloseIcon width={14} height={14} />
         </div>
       </div>
@@ -191,19 +191,19 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
         <div>
           <div className={classNames('mt-2 px-5')}>
             {/**************************** PRIORTY *****************************/}
-            <div className="flex items-center text-sm text-white/75 font-[500]">
+            <div className="flex items-center text-sm text-[#4A5568]/75 font-[500]">
               <span>Transaction Priority</span>
               <Tooltip
                 variant="dark"
                 className='!left-24 !top-16 w-[50%]'
                 content={
-                  <span className="flex rounded-lg text-xs text-white/75">
+                  <span className="flex rounded-lg text-xs text-[#4A5568]/75">
                     The priority fee is paid to the Solana network. This additional fee helps boost how a transaction
                     is prioritized against others, resulting in faster transaction execution times.
                   </span>
                 }
               >
-                <div className="flex ml-2.5 items-center text-white-35 fill-current">
+                <div className="flex ml-2.5 items-center text-[#4A5568]-35 fill-current">
                   <InfoIconSVG width={12} height={12} />
                 </div>
               </Tooltip>
@@ -232,7 +232,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
                             }}
                           >
                             <div>
-                              <p className="text-sm text-white">{name}</p>
+                              <p className="text-sm text-[#4A5568]">{name}</p>
                               <span className="mt-1 text-xs">{item} SOL</span>
                             </div>
                           </SwapSettingButton>
@@ -245,7 +245,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
             </div>
 
             <div className='mt-1'>
-              <span className="text-white/75 font-500 text-xs">or set manually:</span>
+              <span className="text-[#4A5568]/75 font-500 text-xs">or set manually:</span>
 
               <div
                 className={`relative mt-1 ${inputPriorityFocused ? 'v2-border-gradient v2-border-gradient-center' : ''
@@ -278,18 +278,18 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
                         }}
                         maxLength={12}
                         placeholder={'0.0000'}
-                        className={`text-left h-full w-full bg-[#1B1B1E] placeholder:text-white/25 py-4 px-5 text-sm rounded-xl ring-1ring-white/5 text-white/50 pointer-events-all relative`}
+                        className={`text-left h-full w-full bg-[#1B1B1E] placeholder:text-[#4A5568]/25 py-4 px-5 text-sm rounded-xl ring-1ring-white/5 text-[#4A5568]/50 pointer-events-all relative`}
                         decimalSeparator={detectedSeparator}
                       />
                     );
                   }}
                 />
-                <span className="absolute right-4 top-4 text-sm text-white/50">SOL</span>
+                <span className="absolute right-4 top-4 text-sm text-[#4A5568]/50">SOL</span>
               </div>
 
               <div className="">
                 {typeof priorityInSOLPreset === 'undefined' && priorityInSOLInput !== 0 ? (
-                  <span className="text-xs text-white/50">
+                  <span className="text-xs text-[#4A5568]/50">
                     <span>This will cost an additional {new Decimal(priorityInSOLInput || 0).toString()} SOL.</span>
                   </span>
                 ) : null}
@@ -314,7 +314,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
 
             <Separator />
             {/**************************** SLIPPAGE *****************************/}
-            <div className="flex items-center text-sm text-white/75 font-[500]">
+            <div className="flex items-center text-sm text-[#4A5568]/75 font-[500]">
               <span>Slippage Settings</span>
             </div>
 
@@ -356,7 +356,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
                   inputRef.current?.focus();
                   setInputFocused(true);
                 }}
-                className={`flex items-center justify-between cursor-text w-[120px] h-full text-white/50 bg-[#1B1B1E] pl-2 text-sm relative border-l border-black-10 border-white/5 ${inputFocused ? 'v2-border-gradient v2-border-gradient-right' : ''
+                className={`flex items-center justify-between cursor-text w-[120px] h-full text-[#4A5568]/50 bg-[#1B1B1E] pl-2 text-sm relative border-l border-black-10 border-white/5 ${inputFocused ? 'v2-border-gradient v2-border-gradient-right' : ''
                   }`}
               >
                 <span className="text-xs">
@@ -386,7 +386,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
                       }}
                       allowLeadingZeros={false}
                       suffix="%"
-                      className="h-full w-full bg-transparent py-4 pr-4 text-sm rounded-lg placeholder:text-white/25 text-white/50 text-right pointer-events-all"
+                      className="h-full w-full bg-transparent py-4 pr-4 text-sm rounded-lg placeholder:text-[#4A5568]/25 text-[#4A5568]/50 text-right pointer-events-all"
                       decimalSeparator={detectedSeparator}
                       placeholder={detectedSeparator === ',' ? '0,00%' : '0.00%'}
                     />
@@ -429,7 +429,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
                 onClick={() => form.setValue('asLegacyTransaction', !asLegacyTransactionInput)}
               />
             </div>
-            <p className='mt-2 text-xs text-white/50'>
+            <p className='mt-2 text-xs text-[#4A5568]/50'>
               Versioned Tx is a significant upgrade that allows for more advanced routings and better prices! Make
               sure your connected wallet is compatible before toggling on Ver. Tx. Current compatible wallets:
               Phantom, Solflare, Glow and Backpack.
@@ -450,7 +450,7 @@ const SetSlippage: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
                 onClick={() => form.setValue('preferredTokenListMode', preferredTokenListModeInput === 'strict' ? 'all' : 'strict')}
               />
             </div>
-            <p className='mt-2 text-xs text-white/50'>
+            <p className='mt-2 text-xs text-[#4A5568]/50'>
               {`The strict list contains a smaller set of validated tokens. To see all tokens, toggle "off".`}
             </p>
           </div>

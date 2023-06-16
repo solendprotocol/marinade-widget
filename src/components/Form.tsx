@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { useAccounts } from '../contexts/accounts';
 
-import { MAX_INPUT_LIMIT, MINIMUM_SOL_BALANCE } from '../misc/constants';
+import { MAX_INPUT_LIMIT, MINIMUM_SOL_BALANCE, MSOL_MINT } from '../misc/constants';
 
 import CoinBalance from './Coinbalance';
 import FormError from './FormError';
@@ -18,13 +18,18 @@ import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
 import WalletIcon from 'src/icons/WalletIcon';
 import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import PriceInfo from './PriceInfo/index';
-import { RoutesSVG } from 'src/icons/RoutesSVG';
+import { FaWallet } from 'react-icons/fa'
 import SexyChameleonText from './SexyChameleonText/SexyChameleonText';
-import SwitchPairButton from './SwitchPairButton';
 import { SwapMode } from '@jup-ag/react-hook';
 import classNames from 'classnames';
 import { detectedSeparator } from 'src/misc/utils';
 import CoinBalanceUSD from './CoinBalanceUSD';
+import Marinade from 'src/icons/Marinade';
+import { useTokenContext } from 'src/contexts/TokenContextProvider';
+import { useData } from 'src/contexts/DataProvider';
+import { NATIVE_MINT } from '@solana/spl-token';
+import { formatAddress } from './ValidatorRow';
+import ChevronUpIcon from 'src/icons/ChevronUpIcon';
 
 const Form: React.FC<{
   onSubmit: () => void;
@@ -35,6 +40,9 @@ const Form: React.FC<{
 }> = ({ onSubmit, isDisabled, setSelectPairSelector, setIsWalletModalOpen, setShowRouteSelector }) => {
   const { connect, wallet } = useWalletPassThrough();
   const { accounts } = useAccounts();
+  const [showTransactionInfo, setShowTransactionInfo] = useState<boolean>(false);
+  const { target, setTargetAmount, marinadeStats, deposit } = useData();
+  const { tokenMap } = useTokenContext();
   const {
     form,
     setForm,
@@ -65,18 +73,6 @@ const Form: React.FC<{
   };
 
   const walletPublicKey = useMemo(() => wallet?.adapter.publicKey?.toString(), [wallet?.adapter.publicKey]);
-
-  const onChangeFromValue = (value: string) => {
-    if (value === '') {
-      setForm((form) => ({ ...form, fromValue: '', toValue: '' }));
-      return;
-    }
-
-    const isInvalid = Number.isNaN(value);
-    if (isInvalid) return;
-
-    setForm((form) => ({ ...form, fromValue: value }));
-  };
 
   const onChangeToValue = (value: string) => {
     if (value === '') {
@@ -115,18 +111,10 @@ const Form: React.FC<{
     [balance, fromTokenInfo],
   );
 
-  const onClickSwitchPair = () => {
-    setForm((prev) => ({
-      ...prev,
-      fromValue: '',
-      toValue: '',
-      fromMint: prev.toMint,
-      toMint: prev.fromMint,
-    }));
-  };
+  const msolTokenInfo = tokenMap.get(MSOL_MINT.toBase58());
+  const solTokenInfo = tokenMap.get(NATIVE_MINT.toBase58());
 
-  const hasFixedMint = useMemo(() => fixedInputMint || fixedOutputMint, [fixedInputMint, fixedOutputMint]);
-  const { inputAmountDisabled, outputAmountDisabled } = useMemo(() => {
+  const { inputAmountDisabled } = useMemo(() => {
     const result = { inputAmountDisabled: true, outputAmountDisabled: true };
     if (!fixedAmount) {
       if (swapMode === SwapMode.ExactOut) {
@@ -162,183 +150,191 @@ const Form: React.FC<{
     ({ floatValue }: NumberFormatValues) =>
       !floatValue || floatValue <= MAX_INPUT_LIMIT,
     []);
+    
+    const solAccount = accounts[NATIVE_MINT.toString()];
+    const mSolAccount = accounts[MSOL_MINT.toString()];
 
   return (
-    <div className="h-full flex flex-col items-center justify-center pb-4">
+    <div className="h-full flex flex-col items-center justify-center pb-1">
       <div className="w-full mt-2 rounded-xl flex flex-col px-2">
         <div className="flex-col">
-          <div className={classNames("border-b border-transparent bg-[#212128] rounded-xl transition-all", fixedOutputFomMintClass)}>
+        <div className="flex justify-between items-center">
+        <span className='text-xs text-[#4A5568] font-semibold mb-1'>
+          You're staking
+          </span>
+            {target?.type === 'native' && <span className='text-xs text-[#4A5568] text-thin'>
+              <FaWallet className='inline text-[#CBD5E0]' /> {solAccount?.balance ?? 0} SOL{" "}
+              <button type="button" className='font-light text-[#308D8A]' onClick={() => setTargetAmount(solAccount ? solAccount.balance / 2 : 0)}>
+                HALF
+                </button>
+                {" "}
+                <button type="button" className='font-light text-[#308D8A]' onClick={() => setTargetAmount(solAccount?.balance ?? 0)}>
+                MAX
+                </button>
+            </span>}
+          </div>
+          <div className={classNames("border-b border-transparent bg-[#F7FAFC] rounded-xl transition-all", fixedOutputFomMintClass)}>
             <div className={classNames("px-x border-transparent rounded-xl ")}>
               <div>
-                <div className={classNames("py-5 px-4 flex flex-col dark:text-white")}>
+                <div className={classNames("p-4 flex flex-col dark:text-[#4A5568]")}>
                   <div className="flex justify-between items-center">
                     <button
                       type="button"
-                      className="py-2 px-3 rounded-2xl flex items-center bg-[#36373E] hover:bg-white/20 text-white"
+                      className={`py-2 px-2 rounded-lg flex items-center ${target ? '' : 'bg-[#308D8A]'} hover:bg-[#308D8A]/${target ? '25' : '75'} text-[#4A5568]`}
                       disabled={fixedInputMint}
                       onClick={onClickSelectFromMint}
-                    >
-                      <div className="h-5 w-5">
-                        <TokenIcon tokenInfo={fromTokenInfo} width={20} height={20} />
+                    > 
+
+                      {target && <div className="h-5 w-5">
+                        {(target?.type === 'native' ? <TokenIcon tokenInfo={solTokenInfo} width={20} height={20} /> : null) ?? (target?.type === 'stakeAccount' ? <div className="h-5 w-5 rounded-full" style={{
+            background: target.stakeAccount.background
+          }} /> : null)}
+                      </div>}
+                      <div className="ml-2 font-semibold" translate="no">
+                        {target && <span className="text-[#4A5568]">{' '}SOL</span>}
+                        {!target && <span className={`${target ? 'text-[#4A5568]' : 'text-white'} fill-current mx-2`}>Select</span>}
                       </div>
-                      <div className="ml-4 mr-2 font-semibold" translate="no">
-                        {fromTokenInfo?.symbol}
-                      </div>
-                      {fixedInputMint ? null : (
-                        <span className="text-white/25 fill-current">
+
+                      <span className={`${target ? 'text-[#4A5568]' : 'text-white'} fill-current mx-2`}>
                           <ChevronDownIcon />
                         </span>
-                      )}
                     </button>
 
                     <div className="text-right">
                       <NumericFormat
-                        disabled={swapMode === 'ExactOut'}
-                        value={typeof form.fromValue === 'undefined' ? '' : form.fromValue}
+                        disabled={!(target?.type === 'native')}
+                        value={target?.amount}
                         decimalScale={fromTokenInfo?.decimals}
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
-                        onValueChange={({ value }) => onChangeFromValue(value)}
+                        onValueChange={({ value }) => setTargetAmount(Number(value))}
                         placeholder={'0.00'}
-                        className={classNames("h-full w-full bg-transparent text-white text-right font-semibold dark:placeholder:text-white/25 text-lg", { 'cursor-not-allowed': inputAmountDisabled })}
+                        className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 text-lg", { 'cursor-not-allowed': inputAmountDisabled })}
                         decimalSeparator={detectedSeparator}
                         isAllowed={withValueLimit}
                       />
-                    </div>
-                  </div>
-
-                  {fromTokenInfo?.address ? (
-                    <div className='flex justify-between items-center'>
-                      <div
-                        className={classNames("flex mt-3 space-x-1 text-xs items-center text-white/30 fill-current", { "cursor-pointer": swapMode !== 'ExactOut' })}
-                        onClick={onClickMax}
-                      >
-                        <WalletIcon width={10} height={10} />
-                        <CoinBalance mintAddress={fromTokenInfo.address} />
-                        <span>{fromTokenInfo.symbol}</span>
-                      </div>
-
-                      {form.fromValue ? (
-                        <span className='text-xs text-white/30'>
-                          <CoinBalanceUSD tokenInfo={fromTokenInfo} amount={form.fromValue} />
-                        </span>
+                      {solTokenInfo?.address ? (
+                        <div className='flex justify-end items-center'>
+                          {target ? (
+                            <span className='text-xs text-[#4A5568]'>
+                              {' '}<CoinBalanceUSD tokenInfo={solTokenInfo} amount={target.amount.toString()} />
+                            </span>
+                          ) : null}
+                        </div>
                       ) : null}
                     </div>
-                  ) : null}
+                  </div>
+                  <span className='text-xs text-[#4A5568] mb-[-12px] mt-[-4px]'>
+          {target?.type === 'stakeAccount' ? `Stake account: ${formatAddress(target.stakeAccount.address)}` : <div className='h-4' />}
+          </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className={"my-2"}>{hasFixedMint ? null : <SwitchPairButton onClick={onClickSwitchPair} className={classNames("transition-all", fixedOutputFomMintClass)} />}</div>
-
-          <div className="border-b border-transparent bg-[#212128] rounded-xl">
+          <div className="flex justify-between items-center mt-8 mb-1">
+            <span className='text-xs text-[#4A5568] font-semibold'>
+            To receive
+            </span>
+            <span className='text-xs text-[#4A5568]'>
+            <FaWallet className='inline text-[#CBD5E0]' /> {mSolAccount?.balance ?? 0} mSOL{" "}
+            </span>
+          </div>
+          <div className="border-b border-transparent bg-[#F7FAFC] rounded-xl">
             <div className="px-x border-transparent rounded-xl">
               <div>
-                <div className="py-5 px-4 flex flex-col dark:text-white">
+                <div className={classNames("p-4 flex flex-col dark:text-[#4A5568]")}>
                   <div className="flex justify-between items-center">
                     <button
                       type="button"
-                      className="py-2 px-3 rounded-2xl flex items-center bg-[#36373E] hover:bg-white/20 disabled:hover:bg-[#36373E] text-white"
-                      disabled={fixedOutputMint}
+                      className="py-2 px-2 rounded-lg flex items-center text-[#4A5568]"
+                      disabled={true}
                       onClick={onClickSelectToMint}
                     >
-                      <div className="h-5 w-5">
-                        <TokenIcon tokenInfo={toTokenInfo} width={20} height={20} />
+                      <div className="h-5 w-5"><TokenIcon tokenInfo={msolTokenInfo} width={20} height={20} /></div>
+                      <div className="mx-2 font-semibold" translate="no">
+                        <span className="text-[#4A5568]">mSOL</span>
                       </div>
-                      <div className="ml-4 mr-2 font-semibold" translate="no">
-                        {toTokenInfo?.symbol}
-                      </div>
-
-                      {fixedOutputMint ? null : (
-                        <span className="text-white/25 fill-current">
-                          <ChevronDownIcon />
-                        </span>
-                      )}
                     </button>
 
-                    <div className="text-right">
+                    {(msolTokenInfo && marinadeStats && target) ? (<div className="text-right">
                       <NumericFormat
                         disabled={!swapMode || swapMode === 'ExactIn'}
-                        value={typeof form.toValue === 'undefined' ? '' : form.toValue}
-                        decimalScale={toTokenInfo?.decimals}
+                        value={((target?.amount ?? 0) / marinadeStats.msolSolPrice).toString()}
+                        decimalScale={mSolAccount.decimals}
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
                         onValueChange={({ value }) => onChangeToValue(value)}
                         placeholder={swapMode === 'ExactOut' ? 'Enter desired amount' : ''}
-                        className={classNames("h-full w-full bg-transparent text-white text-right font-semibold dark:placeholder:text-white/25 placeholder:text-sm placeholder:font-normal text-lg")}
+                        className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 placeholder:text-sm placeholder:font-normal text-lg")}
                         decimalSeparator={detectedSeparator}
                         isAllowed={withValueLimit}
                       />
-                    </div>
-                  </div>
-
-                  {toTokenInfo?.address ? (
-                    <div className='flex justify-between items-center'>
-                      <div className="flex mt-3 space-x-1 text-xs items-center text-white/30 fill-current">
-                        <WalletIcon width={10} height={10} />
-                        <CoinBalance mintAddress={toTokenInfo.address} />
-                        <span>{toTokenInfo.symbol}</span>
-                      </div>
-
-                      {form.toValue ? (
-                        <span className='text-xs text-white/30'>
-                          <CoinBalanceUSD tokenInfo={toTokenInfo} amount={form.toValue} />
+                      <div className='flex justify-end items-center'>
+                        <span className='text-xs text-[#4A5568]'>
+                          {' '}<CoinBalanceUSD tokenInfo={msolTokenInfo} amount={(target.amount / marinadeStats.msolSolPrice).toString()} />
                         </span>
-                      ) : null}
+                        </div>
                     </div>
-                  ) : null}
+                      ) : null}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {routes ? (
-            <div className="flex items-center mt-2 text-xs space-x-1">
-              <div
-                className="bg-black/20 rounded-xl px-2 py-1 cursor-pointer text-white/50 flex items-center space-x-1"
-                onClick={() => setShowRouteSelector(true)}
-              >
-                <span>{routes?.length}</span>
-                <RoutesSVG width={7} height={9} />
-              </div>
-              <span className="text-white/30">using</span>
-              <span className="text-white/50 overflow-hidden whitespace-nowrap text-ellipsis max-w-[70%]">{marketRoutes}</span>
-            </div>
-          ) : null}
         </div>
 
         {walletPublicKey ? <FormError errors={errors} /> : null}
       </div>
 
+<div className="flex justify-between w-full p-2">
+<span className='font-normal text-xs text-[#4A5568]'>
+  Deposit fee: {((target?.type === 'native' ? marinadeStats?.rewardDepositFee : marinadeStats?.rewardDepositStakeFee) ?? 0) / 100}%
+</span>
+<span className='font-normal text-xs text-[#4A5568] '>
+  
+</span>
+</div>
       <div className="w-full px-2">
         {!walletPublicKey ? (
-          <JupButton size="lg" className="w-full mt-4" type="button" onClick={onConnectWallet}>
+          <JupButton size="lg" className="w-full" type="button" onClick={onConnectWallet}>
             Connect Wallet
           </JupButton>
         ) : (
           <JupButton
-            size="lg"
-            className="w-full mt-4 disabled:opacity-50"
+            size="md"
+            className="w-full disabled:opacity-50 bg-[#308D8A]"
             type="button"
-            onClick={onSubmit}
-            disabled={isDisabled || loading}
+            onClick={deposit}
+            disabled={!target || !target.amount}
           >
-            {loading ? <span className="text-sm">Loading...</span> : <SexyChameleonText>Swap</SexyChameleonText>}
+            {loading ? <span className="text-sm">Loading...</span> : <SexyChameleonText>Stake</SexyChameleonText>}
           </JupButton>
         )}
+      </div>
+      <div className='flex flex-col gap-1 w-full'>
+      {target && marinadeStats && <div className="flex justify-between w-full px-2 mt-2">
+      <span className='font-normal text-xs text-[#4A5568]'>
+        1 mSOL ≈ {marinadeStats.msolSolPrice.toFixed(6)} SOL
+      </span>
+      <span className='flex items-center gap-1 font-normal text-xs text-[#4A5568] cursor-pointer' onClick={() => setShowTransactionInfo(!showTransactionInfo)}>
+      {showTransactionInfo ? <><ChevronDownIcon/> Hide</> : <><ChevronUpIcon/> Show</>} transaction info
+      </span>
+      </div>}
+      {target && marinadeStats && <div className="flex justify-between w-full px-2">
+      <span className='font-normal text-xs text-[#4A5568]'>
+        Staking reward fee
+      </span>
+      <span className='font-normal text-xs text-[#4A5568] '>
+        {marinadeStats.stakingRewardFee}%
+      </span>
+      </div>}
+      </div>
 
-        {routes && selectedSwapRoute && fromTokenInfo && toTokenInfo ? (
-          <PriceInfo
-            routes={routes}
-            selectedSwapRoute={selectedSwapRoute}
-            fromTokenInfo={fromTokenInfo}
-            toTokenInfo={toTokenInfo}
-            loading={loading}
-          />
-        ) : null}
+      <div className='flex justify-between items-center mt-6'>
+        <Marinade />
       </div>
     </div>
   );

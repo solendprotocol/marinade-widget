@@ -77,18 +77,18 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <DefaultSeo
-        title={'Jupiter Terminal'}
+        title={'Marinade Widget'}
         openGraph={{
           type: 'website',
           locale: 'en',
-          title: 'Jupiter Terminal',
-          description: 'Jupiter Terminal: An open-sourced, lite version of Jupiter that provides end-to-end swap flow.',
+          title: 'Marinade Widget',
+          description: 'Marinade Widget: An open-sourced, lite version of Jupiter that provides end-to-end swap flow.',
           url: 'https://terminal.jup.ag/',
-          site_name: 'Jupiter Terminal',
+          site_name: 'Marinade Widget',
           images: [
             {
               url: `https://og.jup.ag/api/jupiter`,
-              alt: 'Jupiter Aggregator',
+              alt: 'Marinade Widget',
             }
           ],
         }}
@@ -106,24 +106,24 @@ export default function App({ Component, pageProps }: AppProps) {
           <div className="">
             <div className="flex flex-col items-center h-full w-full mt-4 md:mt-14">
               <div className="flex flex-col justify-center items-center text-center">
-                <SexyChameleonText className="text-4xl md:text-[52px] font-semibold px-4 pb-2 md:px-0">
-                  Jupiter Terminal
-                </SexyChameleonText>
+                <span className="text-4xl md:text-[52px] font-semibold px-4 pb-2 md:px-0 text-black">
+                  Marinade Widget
+                </span>
                 <p className="text-[#9D9DA6] w-[80%] md:max-w-[60%] text-md mt-4 heading-[24px]">
-                  An open-sourced, lite version of Jupiter that provides end-to-end swap flow by linking it in your HTML.
+                  An open-sourced, Marinade widget that provides end-to-end swap flow by linking it in your HTML.
                   Check out the visual demo for the various integration modes below.
                 </p>
               </div>
             </div>
 
             <div className="flex justify-center">
-              <div className="max-w-6xl bg-black/25 mt-12 rounded-xl flex flex-col md:flex-row w-full md:p-4">
+              <div className="max-w-6xl bg-white mt-12 rounded-xl flex flex-col md:flex-row w-full md:p-4">
                 {/* Desktop configurator */}
                 <div className='hidden md:flex'>
                   <FormConfigurator {...watchAllFields} reset={reset} setValue={setValue} formState={formState} />
                 </div>
 
-                <div className="mt-8 md:mt-0 md:ml-4 h-full w-full bg-black/40 rounded-xl flex flex-col">
+                <div className="mt-8 md:mt-0 md:ml-4 h-full w-full bg-[#f7fafc] rounded-xl flex flex-col">
                   <div className="mt-4 flex justify-center ">
                     <button
                       onClick={() => {
@@ -135,10 +135,10 @@ export default function App({ Component, pageProps }: AppProps) {
                         tab === 'modal' ? '' : 'opacity-20 hover:opacity-70',
                       )}
                     >
-                      <div className="flex items-center text-md text-white">Modal</div>
+                      <div className="flex items-center text-md text-[#4A5568]">Modal</div>
 
                       {tab === 'modal' ? (
-                        <div className="absolute left-0 bottom-[-8px] w-full h-0.5 bg-gradient-to-r from-[rgba(252,192,10,1)] to-[rgba(78,186,233,1)]" />
+                        <div className="absolute left-0 bottom-[-8px] w-full h-0.5 bg-[#308D8A]" />
                       ) : (
                         <div className="absolute left-0 bottom-[-8px] w-full h-[1px] bg-white/50" />
                       )}
@@ -154,9 +154,9 @@ export default function App({ Component, pageProps }: AppProps) {
                         tab === 'integrated' ? '' : 'opacity-20 hover:opacity-70',
                       )}
                     >
-                      <div className="flex items-center text-md text-white">Integrated</div>
+                      <div className="flex items-center text-md text-[#4A5568]">Integrated</div>
                       {tab === 'integrated' ? (
-                        <div className="absolute left-0 bottom-[-8px] w-full h-0.5 bg-gradient-to-r from-[rgba(252,192,10,1)] to-[rgba(78,186,233,1)]" />
+                        <div className="absolute left-0 bottom-[-8px] w-full h-0.5 bg-[#308D8A]" />
                       ) : (
                         <div className="absolute left-0 bottom-[-8px] w-full h-[1px] bg-white/50" />
                       )}
@@ -172,9 +172,9 @@ export default function App({ Component, pageProps }: AppProps) {
                         tab === 'widget' ? '' : 'opacity-20 hover:opacity-70',
                       )}
                     >
-                      <div className="flex items-center text-md text-white">Widget</div>
+                      <div className="flex items-center text-md text-[#4A5568]">Widget</div>
                       {tab === 'widget' ? (
-                        <div className="absolute left-0 bottom-[-8px] w-full h-0.5 bg-gradient-to-r from-[rgba(252,192,10,1)] to-[rgba(78,186,233,1)]" />
+                        <div className="absolute left-0 bottom-[-8px] w-full h-0.5 bg-red" />
                       ) : (
                         <div className="absolute left-0 bottom-[-8px] w-full h-[1px] bg-white/50" />
                       )}
@@ -189,7 +189,7 @@ export default function App({ Component, pageProps }: AppProps) {
                       : null}
                   </span>
 
-                  <div className="flex flex-grow items-center justify-center text-white/75">
+                  <div className="flex flex-grow items-center justify-center text-[#4A5568]/75">
                     {tab === 'modal' ? (
                       <ModalTerminal
                         rpcUrl={rpcUrl}

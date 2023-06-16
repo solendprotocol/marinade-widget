@@ -10,6 +10,7 @@ import SuccessIcon from 'src/icons/SuccessIcon';
 import PriceInfo from '../PriceInfo/index';
 import { fromLamports } from 'src/misc/utils';
 import { usePreferredExplorer } from 'src/contexts/preferredExplorer';
+import { useData } from 'src/contexts/DataProvider';
 
 const ErrorIcon = () => {
   return (
@@ -46,7 +47,8 @@ const SwappingScreen = () => {
     toTokenInfo,
     jupiter: { routes, refresh },
   } = useSwapContext();
-  const { screen, setScreen } = useScreenState();
+  const { context, screen, setScreen } = useScreenState();
+  const { target } = useData();
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -107,62 +109,38 @@ const SwappingScreen = () => {
 
   const { explorer, getExplorer } = usePreferredExplorer();
 
-  const Content = () => {
+  const Content = ({text}: {text: string}) => {
     return (
       <>
         <div className="flex w-full justify-center">
-          <div className="text-white">{swapState === 'loading' ? 'Performing Swap' : ''}</div>
+          <div className="text-[#4A5568]">{swapState === 'loading' ? 'Staking...' : ''}</div>
         </div>
 
         <div className="flex w-full justify-center items-center mt-9">
-          <div className="h-16 w-16">
-            <Rive
-              src={`${scriptDomain}/swap-animation.riv`}
-              layout={new Layout({ fit: Fit.Contain, alignment: Alignment.TopCenter })}
-            />
-          </div>
+          <div
+  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+  role="status">
+  <span
+    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+    >Loading...</span
+  >
+</div>
         </div>
 
         {totalTxs === 0 ? (
-          <span className="text-white text-center mt-8 text-sm px-4">Awaiting approval from your wallet...</span>
+          <span className="text-[#4A5568] text-center mt-8 text-sm px-4">{text}</span>
         ) : null}
-        {totalTxs > 1 ? (
-          <span className="text-white text-center mt-8 text-sm px-4">
-            Because of transaction size limits, we need to split up the transactions
-          </span>
-        ) : (
-          ''
-        )}
-
-        <div className="flex flex-col w-full justify-center items-center px-5 mt-7">
-          {txStatus &&
-            txStatus.map((item) => (
-              <div key={item.txid} className="flex items-center w-full rounded-xl p-4 bg-[#25252D] mb-2">
-                <Spinner spinnerColor={'white'} />
-
-                <div className="ml-4 text-white text-sm">
-                  {item.txDescription === 'SETUP' ? <span>Setup</span> : null}
-                  {item.txDescription === 'SWAP' ? <span>Swap</span> : null}
-                  {item.txDescription === 'CLEANUP' ? <span>Cleanup</span> : null}
-                </div>
-              </div>
-            ))}
-        </div>
       </>
     );
   };
 
   const SuccessContent = () => {
-    if (!lastSwapResult || !fromTokenInfo || !toTokenInfo || !routes || !selectedSwapRoute) {
-      return null;
-    }
-
-    const explorerLink = (lastSwapResult as any).txid ? getExplorer((lastSwapResult as any).txid) : null
+    const explorerLink = context?.message ? getExplorer(context.message) : null;
 
     return (
       <>
         <div className="flex justify-center mt-12">
-          <div className="absolute top-[52px] bg-[#23C1AA] bg-opacity-[15%] rounded-full w-20 h-20 flex justify-center items-center animate-pulse" />
+          <div className="absolute top-[68px] bg-[#23C1AA] bg-opacity-[15%] rounded-full w-20 h-20 flex justify-center items-center animate-pulse" />
 
           <div className="h-[56px] w-[56px] bg-white rounded-full">
             <SuccessIcon />
@@ -170,54 +148,39 @@ const SwappingScreen = () => {
         </div>
 
         <div className="flex flex-col justify-center items-center">
-          <p className="mt-5 text-white text-xl font-semibold">Swap successful</p>
+          <p className="mt-5 text-[#4A5568] text-xl font-semibold">Staking successful</p>
 
-          <div className="mt-4 bg-[#25252D] rounded-xl overflow-y-auto w-full webkit-scrollbar py-4 max-h-[260px]">
+          <div className="mt-4 bg-[#F7FAFC] rounded-xl overflow-y-auto w-full webkit-scrollbar py-4 max-h-[260px]">
             <div className="mt-2 flex flex-col items-center justify-center text-center px-4">
-              <p className="text-xs font-semibold text-white/75">
-                Swapped {fromLamports((lastSwapResult as any).inputAmount, fromTokenInfo.decimals)}{' '}
-                {fromTokenInfo.symbol} to
-              </p>
-              <p className="text-2xl font-semibold text-white/75">
-                {fromLamports((lastSwapResult as any).outputAmount, toTokenInfo.decimals)} {toTokenInfo.symbol}
+              <p className="text-xs font-semibold text-[#4A5568]/75">
+                Successfully staked {target?.amount} SOL!
               </p>
             </div>
-
-            <PriceInfo
-              routes={routes}
-              selectedSwapRoute={selectedSwapRoute}
-              fromTokenInfo={fromTokenInfo}
-              toTokenInfo={toTokenInfo}
-              loading={false}
-              showFullDetails
-              containerClassName="bg-[#25252D] border-none mt-0"
-            />
           </div>
         </div>
 
+        <div className="flex flex-col justify-center items-center">
         {explorerLink ? (
           <a
             href={explorerLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="cursor-pointer text-white/50 mt-2 ml-2 text-xs hover:underline"
+            className="cursor-pointer text-[#4A5568]/50 mt-2 ml-2 text-xs hover:underline"
           >
             View on {explorer}
           </a>
         ) : null}
-
+</div>
         <div className="mt-auto px-5 pb-4 flex space-x-2">
-          <JupButton size="lg" className="w-full mt-4" type="button" onClick={onSwapMore}>
-            <SexyChameleonText>
-              <span className="text-sm">Swap More</span>
+          <JupButton size="lg" className="w-full mt-4 bg-[#308D8A]" type="button" onClick={() => {
+            if (context.callback) {
+              context.callback();
+            }
+          }}>
+            <SexyChameleonText >
+              <span className="text-sm">Stake more</span>
             </SexyChameleonText>
           </JupButton>
-
-          {displayMode !== 'integrated' ? (
-            <JupButton size="lg" className="w-full mt-4" type="button" onClick={onClose}>
-              <span className="text-sm">Close</span>
-            </JupButton>
-          ) : null}
         </div>
       </>
     );
@@ -225,23 +188,25 @@ const SwappingScreen = () => {
 
   return (
     <div className="flex flex-col h-full w-full py-4 px-2">
-      {errorMessage || swapState === 'error' ? (
+      {screen === 'Error' ? (
         <div className="flex justify-center">
           <div className="flex flex-col items-center justify-center text-center mt-12">
             <ErrorIcon />
 
-            <p className="text-white mt-2">Swap Failed</p>
-            <p className="text-white/50 text-xs mt-2">We were unable to complete the swap, please try again.</p>
-            {errorMessage ? <p className="text-white/50 text-xs mt-2">{errorMessage}</p> : ''}
+            <p className="text-[#4A5568] mt-2">Transaction failed</p>
+            <p className="text-[#4A5568]/50 text-xs mt-2">{context.message}</p>
+            {errorMessage ? <p className="text-[#4A5568]/50 text-xs mt-2">{errorMessage}</p> : ''}
 
-            <JupButton size="lg" className="w-full mt-6 disabled:opacity-50" type="button" onClick={onGoBack}>
-              <SexyChameleonText>Retry</SexyChameleonText>
+            <JupButton size="lg" className="w-full mt-6 disabled:opacity-50 bg-[#308D8A]" type="button" onClick={onGoBack}>
+              <SexyChameleonText>Back</SexyChameleonText>
             </JupButton>
           </div>
         </div>
       ) : null}
 
-      {!errorMessage && swapState === 'loading' ? <Content /> : null}
+      {screen === 'Signing' ? <Content text="Awaiting approval from your wallet..." /> : null}
+      {screen === 'Confirming' ? <Content text="Transaction sent. Awaiting confirmation..." /> : null}
+      {screen === 'Success' ? <SuccessContent /> : null}
       {!errorMessage && swapState === 'success' ? <SuccessContent /> : null}
     </div>
   );
