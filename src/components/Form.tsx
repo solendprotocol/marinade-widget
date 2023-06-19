@@ -84,14 +84,8 @@ const Form: React.FC<{
     setForm((form) => ({ ...form, toValue: value }));
   };
 
-  const balance = useMemo(() => {
-    return fromTokenInfo ? accounts[fromTokenInfo.address]?.balance || 0 : 0;
-  }, [accounts, fromTokenInfo]);
-
   const msolTokenInfo = tokenMap.get(MSOL_MINT.toBase58());
   const solTokenInfo = tokenMap.get(NATIVE_MINT.toBase58());
-
-  const marketRoutes = selectedSwapRoute ? selectedSwapRoute.marketInfos.map(({ label }) => label).join(', ') : '';
 
   const onClickSelectFromMint = useCallback(() => {
     if (fixedInputMint) return;
@@ -181,7 +175,7 @@ const Form: React.FC<{
                     </div>
                   </div>
                   <span className='text-xs text-[#4A5568] mb-[-12px] mt-[-4px]'>
-          {target?.type === 'stakeAccount' ? `Stake account: ${formatAddress(target.stakeAccount.address)}` : <div className='h-4' />}
+          {target?.type === 'stakeAccount' ? <><span className='font-semibold'>Stake account</span> {formatAddress(target.stakeAccount.address)}</> : <div className='h-4' />}
           </span>
                 </div>
               </div>

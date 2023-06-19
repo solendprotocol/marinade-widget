@@ -183,11 +183,16 @@ const defaultConfig = new MarinadeConfig({
     
             const bnAmount = new BN(solToLamports(target.amount));
             
-            const { transaction } = await marinade.deposit(
+            const { transaction } = target.type === 'native' ? await marinade.deposit(
                 bnAmount,
                 {
                     directToValidatorVoteAddress: delegationStrategy ? new PublicKey(delegationStrategy.voteAddress) : undefined
                 }
+            ) : await marinade.depositStakeAccount(
+              new PublicKey(target.stakeAccount.address),
+              {
+                directToValidatorVoteAddress: delegationStrategy ? new PublicKey(delegationStrategy.voteAddress) : undefined
+              },
             );
     
             setScreen('Signing')
