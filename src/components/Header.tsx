@@ -38,8 +38,8 @@ const Header: React.FC<{
           <button
             type="button"
             onClick={() => refresh()}
-            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 border-[#C8ECE1] fill-current">
-            <RefreshSVG/>
+            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 border-[#C8ECE1] fill-current text-[#4A5568]">
+            <RefreshSVG />
           </button>
         </div>
         <WalletButton setIsWalletModalOpen={setIsWalletModalOpen} />

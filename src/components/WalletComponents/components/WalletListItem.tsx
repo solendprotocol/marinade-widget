@@ -1,6 +1,5 @@
 import { Adapter } from '@solana/wallet-adapter-base';
 import React, { DetailedHTMLProps, FC, ImgHTMLAttributes, MouseEventHandler, useCallback, useRef } from 'react';
-import Image from 'next/image';
 
 import { isMobile } from '../../../misc/utils';
 
@@ -40,7 +39,7 @@ export const WalletIcon: FC<WalletIconProps> = ({ wallet, ...props }) => {
 
   if (wallet && src && !hasError) {
     return (
-      <Image
+      <img
         width={props.width || 24}
         height={props.height || 24}
         src={src}
