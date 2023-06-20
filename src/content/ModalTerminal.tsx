@@ -2,13 +2,14 @@ import React from 'react';
 
 import { Wallet } from '@solana/wallet-adapter-react';
 
-import { DEFAULT_EXPLORER, FormProps } from 'src/types';
+import { DEFAULT_EXPLORER, FormProps, PaletteType } from 'src/types';
 
 import WalletDisconnectedGraphic from 'src/icons/WalletDisconnectedGraphic';
 
 const ModalTerminal = (props: {
   rpcUrl: string;
   formProps: FormProps;
+  palette: PaletteType;
   fakeWallet: Wallet | null;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
@@ -16,6 +17,7 @@ const ModalTerminal = (props: {
     rpcUrl,
     formProps,
     fakeWallet,
+    palette,
     defaultExplorer
   } = props;
   
@@ -23,6 +25,7 @@ const ModalTerminal = (props: {
     window.Jupiter.init({
       endpoint: rpcUrl,
       formProps,
+      palette,
       passThroughWallet: fakeWallet,
       defaultExplorer
     });

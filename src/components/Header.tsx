@@ -19,29 +19,14 @@ const Header: React.FC<{
   setIsWalletModalOpen(toggle: boolean): void;
   setShowStakeModeSettings(arg: boolean): void;
   setShowDelegationStrategy(arg: boolean): void;
-}> = ({ setIsWalletModalOpen, setShowStakeModeSettings, setShowDelegationStrategy }) => {
-  const { slippage } = useSlippageConfig();
-  const {
-    form,
-    jupiter: { refresh },
-  } = useSwapContext();
-  const { delegationStrategy } = useData();
+}> = ({ setIsWalletModalOpen, setShowDelegationStrategy }) => {
+  const { allowDirectStake, delegationStrategy, refresh } = useData();
 
   return (
     <div className="mt-2 h-7 px-2 mb-4">
       <div className="w-full flex items-center justify-between ">
         <div className="flex space-x-1 items-center">
-          {/* <button
-            type="button"
-            className="p-2 h-7 flex items-center justify-center border rounded-lg border-white/10 border-solid border-1 border-[#C8ECE1] text-[#4A5568]/30 fill-current"
-            onClick={() => setShowStakeModeSettings(true)}
-          >
-            <span suppressHydrationWarning className="text-xs text-[#4A5568]">
-              <TbDroplet className='inline'/> Liquid
-            </span>
-          </button> */}
-
-          <button
+          {allowDirectStake && <button
             type="button"
             className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 border-[#C8ECE1] text-[#4A5568]/30 fill-current"
             onClick={() => setShowDelegationStrategy(true)}
@@ -49,6 +34,12 @@ const Header: React.FC<{
             <span suppressHydrationWarning className="text-xs text-[#4A5568]">
               <TbSettingsAutomation className='inline'/> {delegationStrategy ? delegationStrategy.name : 'Automatic'}
             </span>
+          </button>}
+          <button
+            type="button"
+            onClick={() => refresh()}
+            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 border-[#C8ECE1] fill-current">
+            <RefreshSVG/>
           </button>
         </div>
         <WalletButton setIsWalletModalOpen={setIsWalletModalOpen} />

@@ -15,23 +15,38 @@ export type WidgetPosition = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-
 export type WidgetSize = 'sm' | 'default';
 
 export interface FormProps {
-  referralCode?: string; 
-  initialInputMint?: string;
+  referralCode?: string;
+  allowDirectStake?: boolean;
   initialValidator?: string;
-
-  initialAmount?: string;
-  fixedAmount?: boolean;
-  fixedInputMint?: boolean;
 }
 
-export type THEME = 'light' | 'dark';
+export type ThemeType = 'light' | 'dark' | 'auto';
 
 export type DEFAULT_EXPLORER = 'Solana Explorer' | 'Solscan' | 'Solana Beach' | 'SolanaFM';
+
+export type PaletteType = {
+    // Light
+    primaryLight: string,
+    secondaryLight: string,
+    primaryBgLight: string,
+    secondaryBgLight: string,
+    textLight: string,
+    disabledTextLight: string,
+
+    // Dark
+    primaryDark: string,
+    secondaryDark: string,
+    primaryBgDark: string,
+    secondaryBgDark: string,
+    textDark: string,
+    disabledTextDark: string,
+}
 export interface IInit {
   endpoint: string;
   formProps?: FormProps;
   defaultExplorer?: DEFAULT_EXPLORER;
-  theme?: 'light',
+  theme?: ThemeType,
+  palette: PaletteType,
   
   // Display & Styling
   displayMode?: 'modal' | 'integrated' | 'widget';

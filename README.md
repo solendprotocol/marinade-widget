@@ -154,9 +154,6 @@ Configure Terminal's behaviour and allowed actions for your user
   - On `ExactOut`, user input the desired amount of token they want to receive.
 - initialAmount?: `string`
   - The initial amount
-- fixedAmount?: `boolean`
-  - The initial amount is fixed, user cannot change the amount.
-  - Depending on swapMode, fixedAmount will be applied to input or output amount.
 - initialInputMint?: `string`
   - The default input mint
   - can be used with `fixedInputMint`

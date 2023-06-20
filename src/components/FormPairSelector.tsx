@@ -41,6 +41,7 @@ const FormPairSelector = ({
   useEffect(() => inputRef.current?.focus(), [inputRef]);
 
   const solAccount = tokenInfos.find(r => r.symbol === 'SOL');
+
   return (
     <div className="flex flex-col h-full w-full p-4">
       <div className="flex w-full justify-between">
@@ -67,7 +68,7 @@ const FormPairSelector = ({
         <span className='pl-2 text-xs text-[#4A5568] font-semibold mb-1'>
           Stake accounts
         </span>
-        {stakeAccounts.map(r => 
+        {stakeAccounts.filter(s => s.status !== 'minBalance').map(r => 
           <FormAccountRow key={r.address} item={r} style={{}} onSubmit={() => {
             setTarget({
             type: 'stakeAccount',
@@ -76,6 +77,17 @@ const FormPairSelector = ({
           })
           onClose();}} /> )}
       </div>
+      <span className='pl-2 text-xs text-[#4A5568] mb-1'>
+          Amount must be &gt; 1 SOL
+        </span>
+        {stakeAccounts.filter(s => s.status === 'minBalance').map(r => 
+          <FormAccountRow key={r.address} item={r} style={{}} onSubmit={() => {
+            setTarget({
+            type: 'stakeAccount',
+            stakeAccount: r,
+            amount: Number(r.balance)
+          })
+          onClose();}} /> )}
     </div>
   );
 };

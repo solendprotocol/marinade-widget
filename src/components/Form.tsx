@@ -20,7 +20,6 @@ import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import PriceInfo from './PriceInfo/index';
 import { FaWallet } from 'react-icons/fa'
 import SexyChameleonText from './SexyChameleonText/SexyChameleonText';
-import { SwapMode } from '@jup-ag/react-hook';
 import classNames from 'classnames';
 import { detectedSeparator } from 'src/misc/utils';
 import CoinBalanceUSD from './CoinBalanceUSD';
@@ -41,7 +40,7 @@ const Form: React.FC<{
   const { connect, wallet } = useWalletPassThrough();
   const { accounts } = useAccounts();
   const [showTransactionInfo, setShowTransactionInfo] = useState<boolean>(false);
-  const { target, setTargetAmount, marinadeStats, deposit } = useData();
+  const { target, setTargetAmount, marinadeStats, deposit, palette, colors } = useData();
   const { tokenMap } = useTokenContext();
   const {
     form,
@@ -50,10 +49,6 @@ const Form: React.FC<{
     fromTokenInfo,
     toTokenInfo,
     selectedSwapRoute,
-    formProps: {
-      fixedAmount,
-      fixedInputMint,
-    },
     jupiter: { routes, loading, refresh },
   } = useSwapContext();
   const [hasExpired, timeDiff] = useTimeDiff();
@@ -88,9 +83,8 @@ const Form: React.FC<{
   const solTokenInfo = tokenMap.get(NATIVE_MINT.toBase58());
 
   const onClickSelectFromMint = useCallback(() => {
-    if (fixedInputMint) return;
     setSelectPairSelector('fromMint')
-  }, [fixedInputMint])
+  }, [])
 
 
   const thousandSeparator = useMemo(() => detectedSeparator === ',' ? '.' : ',', []);
@@ -108,29 +102,49 @@ const Form: React.FC<{
       <div className="w-full mt-2 rounded-xl flex flex-col px-2">
         <div className="flex-col">
         <div className="flex justify-between items-center">
-        <span className='text-xs text-[#4A5568] font-semibold mb-1'>
+        <span 
+        style={{
+          color: colors.disabledTextDark
+        }}
+        className={`text-xs font-semibold mb-1`}>
           You&apos;re staking
           </span>
-            {target?.type === 'native' && <span className='text-xs text-[#4A5568] text-thin'>
+            {target?.type === 'native' && <span
+            style={{
+              color: colors.disabledTextDark
+            }}
+              className={`text-xs text-thin`}
+            >
               <FaWallet className='inline text-[#CBD5E0]' /> {solAccount?.balance ?? 0} SOL{" "}
-              <button type="button" className='font-light text-[#308D8A]' onClick={() => setTargetAmount(solAccount ? solAccount.balance / 2 : 0)}>
+              <button 
+              style={{
+                color: palette.primary
+              }}
+              type="button" className='font-light' onClick={() => setTargetAmount(solAccount ? solAccount.balance / 2 : 0)}>
                 HALF
                 </button>
                 {" "}
-                <button type="button" className='font-light text-[#308D8A]' onClick={() => setTargetAmount(solAccount?.balance ?? 0)}>
+                <button 
+                style={{
+                  color: palette.primary
+                }}
+                type="button" className='font-light' onClick={() => setTargetAmount(solAccount?.balance ?? 0)}>
                 MAX
                 </button>
             </span>}
           </div>
-          <div className={classNames("border-b border-transparent bg-[#F7FAFC] rounded-xl transition-all")}>
-            <div className={classNames("px-x border-transparent rounded-xl ")}>
+          <div 
+          style={{
+            background: palette.secondaryBg
+          }}
+            className={classNames(`border-b border-transparent rounded-xl transition-all`)}>
+            <div className={`px-x border-transparent rounded-xl `}>
               <div>
-                <div className={classNames("p-4 flex flex-col dark:text-[#4A5568]")}>
+                <div className={`p-4 flex flex-col dark:text-[#4A5568]`}>
                   <div className="flex justify-between items-center">
                     <button
                       type="button"
                       className={`py-2 px-2 rounded-lg flex items-center ${target ? '' : 'bg-[#308D8A]'} hover:bg-[#308D8A]/${target ? '25' : '75'} text-[#4A5568]`}
-                      disabled={fixedInputMint}
                       onClick={onClickSelectFromMint}
                     > 
 
@@ -183,10 +197,10 @@ const Form: React.FC<{
           </div>
 
           <div className="flex justify-between items-center mt-8 mb-1">
-            <span className='text-xs text-[#4A5568] font-semibold'>
+            <span className={`text-xs text-[${colors.disabledTextDark}] font-semibold`}>
             To receive
             </span>
-            <span className='text-xs text-[#4A5568]'>
+            <span className={`text-xs text-[${colors.disabledTextDark}] text-thin`}>
             <FaWallet className='inline text-[#CBD5E0]' /> {mSolAccount?.balance ?? 0} mSOL{" "}
             </span>
           </div>

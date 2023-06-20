@@ -1,18 +1,7 @@
 import { TokenInfo } from '@solana/spl-token-registry';
-import classNames from 'classnames';
-import React, { ReactElement, createRef, memo, useEffect, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { areEqual, FixedSizeList, ListChildComponentProps } from 'react-window';
+import React, { createRef, useEffect, useState } from 'react';
 import LeftArrowIcon from 'src/icons/LeftArrowIcon';
-import SearchIcon from 'src/icons/SearchIcon';
-import { PAIR_SELECTOR_TOP_TOKENS } from 'src/misc/constants';
 import { FaCheckCircle, FaRegCircle } from 'react-icons/fa'
-
-import { useAccounts } from '../contexts/accounts';
-
-import FormPairRow from './FormPairRow';
-import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
-import Decimal from 'decimal.js';
 import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import ValidatorSelector from './ValidatorSelector';
 import { ValidatorType, useData } from 'src/contexts/DataProvider';

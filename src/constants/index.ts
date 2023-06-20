@@ -1,6 +1,5 @@
-import { SwapMode } from '@jup-ag/react-hook';
 import { PublicKey } from '@solana/web3.js';
-import { DEFAULT_EXPLORER, FormProps, THEME } from 'src/types';
+import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
 
 export const JUPITER_DEFAULT_RPC = process.env.NEXT_PUBLIC_JUPITER_DEFAULT_RPC || 'https://solend.rpcpool.com/a3e03ba77d5e870c8c694b19d61c';
 
@@ -25,18 +24,40 @@ export const SOL_MINT_TOKEN_INFO = {
 export interface IFormConfigurator {
   useWalletPassthrough: boolean;
   defaultExplorer: DEFAULT_EXPLORER;
+  allowDirectStake?: boolean;
   formProps: FormProps;
-  theme: THEME;
+  theme: ThemeType;
+  palette: PaletteType;
+}
+
+export const COLOR_PALETTE = {
+  darkText: '#4A5568'
 }
 
 export const INITIAL_FORM_CONFIG: IFormConfigurator = Object.freeze({
   useWalletPassthrough: false,
-  strictTokenList: true,
   defaultExplorer: 'Solana Explorer',
   theme: 'light',
   formProps: {
-    initialAmount: '',
+    referralCode: '',
+    allowDirectStake: true,
     fixedInputMint: false,
-    fixedAmount: false,
+  },
+  palette: {
+    // Light
+    primaryLight: '#308D8A',
+    secondaryLight: '#EDF2F7',
+    primaryBgLight: '#FFFFFF',
+    secondaryBgLight: '#F7FAFC',
+    textLight: '#171923',
+    disabledTextLight: '#718096',
+
+    // Dark
+    primaryDark: '#08B898',
+    secondaryDark: '#4A5568',
+    primaryBgDark: '#242731',
+    secondaryBgDark: '#353841',
+    textDark: '#A0AEC0',
+    disabledTextDark: '#4A5568',
   }
 })

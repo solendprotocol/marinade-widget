@@ -42,7 +42,6 @@ const hasExpired = (timestamp: number) => {
   return false;
 };
 
-
 export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [cachedPrices, setCachedPrices] = useLocalStorage<ITokenUSDValue>(STORAGE_KEY, {});
 
@@ -79,7 +78,7 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return result;
   }, []);
 
-  const { data: tokenPriceMap, isFetched: isLatest } = useQuery<ITokenUSDValue>(
+  const { data: tokenPriceMap } = useQuery<ITokenUSDValue>(
     [PRICE_MINTS, Object.keys(cachedPrices || {}).length],
     async () => {
       let results: ITokenUSDValue = {};

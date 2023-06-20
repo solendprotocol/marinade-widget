@@ -47,7 +47,7 @@ const FormAccountRow: React.FC<{
           </div>
 
           <div className="mt-1 text-xs text-gray-500 truncate flex space-x-1">
-            Stake account: {formatAddress(item.address)}
+            {item.status === 'active' ? `Stake account: ${formatAddress(item.address)}` : <span>Inactive... Wait {item.waitEpoch} epoch{item.waitEpoch === 1 ? '' : 's'}</span>}
           </div>
         </div>
         <div className="flex-shrink-0 text-right">

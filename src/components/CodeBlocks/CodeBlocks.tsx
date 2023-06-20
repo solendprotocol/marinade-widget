@@ -22,8 +22,8 @@ const CodeBlocks = ({
   displayMode: IInit['displayMode'];
 }) => {
   const USE_WALLET_SNIPPET = `import { useWallet } from '@solana/wallet-adapter-react';
-const { wallet } = useWallet();
-`;
+    const { wallet } = useWallet();
+  `;
 
   const DISPLAY_MODE_VALUES = (() => {
     if (displayMode === 'modal') return {};
@@ -46,6 +46,7 @@ const { wallet } = useWallet();
     ...(formConfigurator.defaultExplorer !== 'Solana Explorer'
       ? { defaultExplorer: formConfigurator.defaultExplorer }
       : undefined),
+      ...(Object.keys(filteredFormProps || {}).length > 0 ? { formProps: filteredFormProps } : undefined),
   };
 
   const formPropsSnippet = Object.keys(valuesToFormat).length > 0 ? JSON.stringify(valuesToFormat, null, 4) : '';

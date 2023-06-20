@@ -1,15 +1,17 @@
-import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState } from 'react';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { useConnection } from '@solana/wallet-adapter-react';
 import axios from 'axios';
-import { BN, Marinade, MarinadeConfig, MarinadeState } from '@marinade.finance/marinade-ts-sdk';
+import { BN, Marinade, MarinadeConfig } from '@marinade.finance/marinade-ts-sdk';
 import { solToLamports, STAKE_PROGRAM_ID } from '@marinade.finance/marinade-ts-sdk/dist/src/util';
 import { useWalletPassThrough } from './WalletPassthroughProvider';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { useSwapContext } from './SwapContext';
-import { IInit } from 'src/types';
+import { IInit, PaletteType } from 'src/types';
 import { formatAddress } from 'src/components/ValidatorRow';
 import { AnchorProvider, Wallet } from '@coral-xyz/anchor';
 import { useScreenState } from './ScreenProvider';
+import { useMediaQuery } from "react-responsive";
+import { INITIAL_FORM_CONFIG } from 'src/constants';
 
 type ValidatorsResponseType = {
     validators: Array<{
@@ -29,6 +31,15 @@ export type ValidatorType = {
     score: number;
 }
 
+type AppPaletteType = {
+    primary: string,
+    secondary: string,
+    primaryBg: string,
+    secondaryBg: string,
+    text: string,
+    disabledText: string,
+}
+
 type StakeModeType = 'liquid' | 'native';
 
 type DataType = {
@@ -38,9 +49,13 @@ type DataType = {
     delegationStrategy: ValidatorType | null;
     target: TargetType | null;
     marinadeStats: MarinadeStatsType | null;
+    palette: AppPaletteType;
+    colors: PaletteType;
     deposit: () => Promise<string | undefined>;
+    refresh: () => void;
     setStakeMode: (mode: StakeModeType ) => void;
     setTarget: (mode: TargetType | null ) => void;
+    allowDirectStake: boolean;
     setTargetAmount: (amount: number) => void;
     setDelegationStrategy: (validator: ValidatorType | null) => void;
 }
@@ -52,7 +67,18 @@ const defaultContextValues ={
     target: null,
     delegationStrategy: null,
     marinadeStats: null,
+    allowDirectStake: true,
+    palette: {
+        primary: INITIAL_FORM_CONFIG.palette.primaryLight,
+        secondary: INITIAL_FORM_CONFIG.palette.secondaryLight,
+        primaryBg: INITIAL_FORM_CONFIG.palette.primaryBgLight,
+        secondaryBg: INITIAL_FORM_CONFIG.palette.secondaryBgLight,
+        text: INITIAL_FORM_CONFIG.palette.textLight,
+        disabledText: INITIAL_FORM_CONFIG.palette.disabledTextLight,
+    },
+    colors: INITIAL_FORM_CONFIG.palette,
     deposit: () => Promise.resolve(''),
+    refresh: () => undefined,
     setTarget: () => undefined,
     setStakeMode: () => undefined,
     setTargetAmount: () => undefined,
@@ -71,11 +97,14 @@ export function useData(): DataType {
 const WALLET_OFFSET = 44;
 const DATA_SIZE = 200;
 
+type StakeAccountStatusType = 'active' | 'inactive' | 'minBalance';
+
 export type StakeAccountType = {
     balance: string;
     address: string;
-    status: string;
+    status: StakeAccountStatusType;
     background: string;
+    waitEpoch: number;
 };
 
 export type TargetType = {
@@ -94,7 +123,6 @@ type MarinadeStatsType = {
     rewardDepositStakeFee: number,
 }
 
-
 function getRandomHEXColor(seed: string) {
     let output = '#';
     const chars = '0123456789abcdef'
@@ -104,7 +132,7 @@ function getRandomHEXColor(seed: string) {
     return output;
   }
 
-export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children }) => {
+export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children, palette }) => {
   const [validators, setValidators] = useState<DataType['validators']>(defaultContextValues.validators);
   const [stakeMode, setStakeMode] = useState<StakeModeType>(defaultContextValues.stakeMode);
   const [target, setTarget] = useState<TargetType | null>(defaultContextValues.target);
@@ -113,16 +141,31 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   const { connection } = useConnection();
   const { setScreen, setContext } = useScreenState();
   const [ stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([])
-  const [delegationStrategy, setDelegationStrategy] = useState<ValidatorType | null>(defaultContextValues.delegationStrategy);
+  const allowDirectStake = Boolean(formProps?.allowDirectStake);
+  const [directedValidatorAddress, setDirectedValidatorAddress] = useState<string | null>(allowDirectStake ? (formProps?.initialValidator ?? defaultContextValues.delegationStrategy) : null);
+  const delegationStrategy = validators.find(v => v.address === directedValidatorAddress) ?? null;
 
+  const systemPrefersDark = useMediaQuery(
+    {
+      query: "(prefers-color-scheme: dark)"
+    },
+  );
+
+  function setDelegationStrategy(validator: ValidatorType | null) {
+    setDirectedValidatorAddress(validator?.address ?? null);
+  }
+
+  useEffect(() => {
+    setDirectedValidatorAddress(formProps?.initialValidator ?? null);
+  }, [formProps?.initialValidator])
+  
   const marinadeConfig = useMemo(() => {
-const defaultConfig = new MarinadeConfig({
-    connection,
-    publicKey,
-});
+    const defaultConfig = new MarinadeConfig({
+        connection,
+        publicKey,
+    });
     try {
         if (!formProps?.referralCode) return defaultConfig;
-        console.log('never')
             return new MarinadeConfig({
                 referralCode: new PublicKey(
                     formProps.referralCode,
@@ -254,14 +297,14 @@ const defaultConfig = new MarinadeConfig({
     
               const waitEpochs = 2;
               const earliestDepositEpoch = Number(activationEpoch) + waitEpochs;
-              let status = 'active';
+              let status = 'active' as StakeAccountStatusType;
               const balance = s.account.lamports / LAMPORTS_PER_SOL;
     
               if (earliestDepositEpoch > currentEpoch) {
-                status = 'inactive';
+                status = 'inactive' as StakeAccountStatusType;
               }
               if (balance < 1) {
-                status = 'minBalance';
+                status = 'minBalance' as StakeAccountStatusType;
               }
     
               return {
@@ -269,6 +312,7 @@ const defaultConfig = new MarinadeConfig({
                 address: s.pubkey.toString(),
                 background: `linear-gradient(to top,${getRandomHEXColor(s.pubkey.toString())}, ${getRandomHEXColor(s.pubkey.toString().slice(7, 17))})`,
                 status,
+                waitEpoch: Math.max(0, earliestDepositEpoch - currentEpoch),
                 data: s.account,
               };
             })
@@ -285,13 +329,31 @@ const defaultConfig = new MarinadeConfig({
         fetchStakeAccounts();
     }, [publicKey]);
 
+    function refresh() {
+        fetchValidators();
+        fetchMarinadeStats();
+        fetchStakeAccounts();
+    }
+
   return <DataContext.Provider value={{ 
+        allowDirectStake,
         validators, 
         stakeMode,
         setStakeMode,
         stakeAccounts,
         deposit,
         delegationStrategy,
+        palette: {       
+            primary: systemPrefersDark ? palette.primaryDark : palette.primaryLight,
+            secondary: systemPrefersDark ? palette.secondaryDark : palette.secondaryLight,
+            primaryBg: systemPrefersDark ? palette.primaryBgDark : palette.primaryBgLight,
+            secondaryBg: systemPrefersDark ? palette.secondaryBgDark : palette.secondaryBgLight,
+            text: systemPrefersDark ? palette.textDark : palette.textLight,
+            disabledText: systemPrefersDark ? palette.disabledTextDark : palette.disabledTextLight,
+        },
+        // full pallete
+        colors: palette,
+        refresh,
         setDelegationStrategy,
         target,
         marinadeStats,

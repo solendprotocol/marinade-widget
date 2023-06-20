@@ -99,10 +99,6 @@ export const initialSwapContext: ISwapContext = {
   lastSwapResult: null,
   displayMode: 'modal',
   formProps: {
-    initialAmount: undefined,
-    fixedAmount: undefined,
-    initialInputMint: undefined,
-    fixedInputMint: undefined,
   },
   scriptDomain: '',
   swapping: {
@@ -162,7 +158,7 @@ export const SwapContextProvider: FC<{
   const formProps: FormProps = useMemo(() => ({ ...initialSwapContext.formProps, ...originalFormProps }), [originalFormProps])
 
   const [form, setForm] = useState<IForm>({
-    fromMint: formProps?.initialInputMint ?? 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    fromMint: '',
     toMint: WRAPPED_SOL_MINT.toString(),
     fromValue: '',
     toValue: '',
@@ -182,12 +178,12 @@ export const SwapContextProvider: FC<{
 
   // Set value given initial amount
   const setupInitialAmount = useCallback(() => {
-    if (!formProps?.initialAmount || tokenMap.size === 0 || !fromTokenInfo || !toTokenInfo) return;
+    if (tokenMap.size === 0 || !fromTokenInfo || !toTokenInfo) return;
 
     const toUiAmount = (mint: string) => {
       const tokenInfo = mint ? tokenMap.get(mint) : undefined;
       if (!tokenInfo) return;
-      return String(fromLamports(JSBI.BigInt(formProps.initialAmount ?? 0), tokenInfo.decimals));
+      return String(fromLamports(JSBI.BigInt(0), tokenInfo.decimals));
     };
 
     if (jupiterSwapMode === SwapMode.ExactOut) {
@@ -197,11 +193,11 @@ export const SwapContextProvider: FC<{
     } else {
       setForm((prev) => ({ ...prev, fromValue: toUiAmount(prev.fromMint) ?? '' }));
     }
-  }, [formProps?.initialAmount, jupiterSwapMode, tokenMap]);
+  }, [jupiterSwapMode, tokenMap]);
 
   useEffect(() => {
     setupInitialAmount();
-  }, [formProps?.initialAmount, jupiterSwapMode, tokenMap]);
+  }, [jupiterSwapMode, tokenMap]);
 
   const nativeAmount = useMemo(() => {
     if (jupiterSwapMode === SwapMode.ExactOut) {
@@ -272,7 +268,7 @@ export const SwapContextProvider: FC<{
     }>
   >([]);
 
-  const onTransaction: OnTransaction = async (txid, totalTxs, txDescription, awaiter) => {
+  const onTransaction: OnTransaction = async (txid: any, totalTxs: any, txDescription: any, awaiter: any) => {
     setTotalTxs(totalTxs);
 
     const tx = txStatus.find((tx) => tx.txid === txid);

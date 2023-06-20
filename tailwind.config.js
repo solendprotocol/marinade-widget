@@ -7,7 +7,7 @@ module.exports = {
     preflight: isWidgetOnly ? false : true,
   },
   mode: 'jit',
-  darkMode: 'class',
+  darkMode: 'media',
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
   ],

@@ -182,10 +182,10 @@ export default function App({ Component, pageProps }: AppProps) {
                   </div>
 
                   <span className="flex justify-center text-center text-xs text-[#9D9DA6] mt-4">
-                    {tab === 'modal' ? 'Jupiter renders as a modal and takes up the whole screen.' : null}
-                    {tab === 'integrated' ? 'Jupiter renders as a part of your dApp.' : null}
+                    {tab === 'modal' ? 'Marinade renders as a modal and takes up the whole screen.' : null}
+                    {tab === 'integrated' ? 'Marinade renders as a part of your dApp.' : null}
                     {tab === 'widget'
-                      ? 'Jupiter renders as part of a widget that can be placed at different positions on your dApp.'
+                      ? 'Marinade renders as part of a widget that can be placed at different positions on your dApp.'
                       : null}
                   </span>
 
@@ -194,6 +194,7 @@ export default function App({ Component, pageProps }: AppProps) {
                       <ModalTerminal
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
+                        palette={watchAllFields.palette}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
@@ -202,6 +203,7 @@ export default function App({ Component, pageProps }: AppProps) {
                       <IntegratedTerminal
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
+                        palette={watchAllFields.palette}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
@@ -210,6 +212,7 @@ export default function App({ Component, pageProps }: AppProps) {
                       <WidgetTerminal
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
+                        palette={watchAllFields.palette}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
