@@ -14,7 +14,7 @@ export const WalletButton: FC<{ setIsWalletModalOpen(toggle: boolean): void }> =
 
   const base58 = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
-  const passThroughWallet = window.Jupiter.passThroughWallet;
+  const passThroughWallet = window.Marinade.passThroughWallet;
   const onClickDisconnect = () => {
     setActive(false);
     disconnect();

@@ -127,7 +127,7 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
           };
         });
       } catch (error) {
-        console.log('Error fetching prices from Jupiter Pricing API', error);
+        console.log('Error fetching prices from Marinade Pricing API', error);
       }
       return results;
     },

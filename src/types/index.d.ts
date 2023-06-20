@@ -7,7 +7,7 @@ import { SwapMode, SwapResult } from '@jup-ag/react-hook';
 
 declare global {
   interface Window {
-    Jupiter: JupiterTerminal;
+    Marinade: MarinadeTerminal;
   }
 }
 
@@ -86,7 +86,7 @@ export interface IInit {
   scriptDomain?: string;
 }
 
-export interface JupiterTerminal {
+export interface MarinadeTerminal {
   _instance: React.ReactNode;
   init: (props: IInit) => void;
   resume: () => void;

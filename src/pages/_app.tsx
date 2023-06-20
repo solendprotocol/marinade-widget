@@ -27,14 +27,14 @@ const isDeveloping = process.env.NODE_ENV === 'development' && typeof window !==
 const isPreview = Boolean(process.env.NEXT_PUBLIC_IS_NEXT_PREVIEW);
 if ((isDeveloping || isPreview) && typeof window !== 'undefined') {
   // Initialize an empty value, simulate webpack IIFE when imported
-  (window as any).Jupiter = {};
+  (window as any).Marinade = {};
 
   // Perform local fetch on development, and next preview
   Promise.all([import('../library'), import('../index')]).then((res) => {
     const [libraryProps, rendererProps] = res;
 
-    (window as any).Jupiter = libraryProps;
-    (window as any).JupiterRenderer = rendererProps;
+    (window as any).Marinade = libraryProps;
+    (window as any).MarinadeRenderer = rendererProps;
   });
 }
 
@@ -43,8 +43,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Cleanup on tab change
   useEffect(() => {
-    if (window.Jupiter._instance) {
-      window.Jupiter._instance = null;
+    if (window.Marinade._instance) {
+      window.Marinade._instance = null;
     }
   }, [tab]);
 
@@ -82,7 +82,7 @@ export default function App({ Component, pageProps }: AppProps) {
           type: 'website',
           locale: 'en',
           title: 'Marinade Widget',
-          description: 'Marinade Widget: An open-sourced, lite version of Jupiter that provides end-to-end swap flow.',
+          description: 'Marinade Widget: An open-sourced, lite version of Marinade that provides end-to-end swap flow.',
           url: 'https://terminal.jup.ag/',
           site_name: 'Marinade Widget',
           images: [
@@ -95,7 +95,7 @@ export default function App({ Component, pageProps }: AppProps) {
         twitter={{
           cardType: 'summary_large_image',
           site: 'jup.ag',
-          handle: '@JupiterExchange',
+          handle: '@MarinadeExchange',
         }}
       />
 

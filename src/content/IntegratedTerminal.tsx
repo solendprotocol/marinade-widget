@@ -13,7 +13,7 @@ const IntegratedTerminal = (props: {
   const { rpcUrl, palette, formProps, fakeWallet, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
   const launchTerminal = async () => {
-    window.Jupiter.init({
+    window.Marinade.init({
       displayMode: 'integrated',
       integratedTargetId: 'integrated-terminal',
       endpoint: rpcUrl,
@@ -26,9 +26,9 @@ const IntegratedTerminal = (props: {
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | undefined = undefined;
-    if (!isLoaded || !window.Jupiter.init) {
+    if (!isLoaded || !window.Marinade.init) {
       intervalId = setInterval(() => {
-        setIsLoaded(Boolean(window.Jupiter.init));
+        setIsLoaded(Boolean(window.Marinade.init));
       }, 500);
     }
 
@@ -39,7 +39,7 @@ const IntegratedTerminal = (props: {
 
   useDebouncedEffect(
     () => {
-      if (isLoaded && Boolean(window.Jupiter.init)) {
+      if (isLoaded && Boolean(window.Marinade.init)) {
         launchTerminal();
       }
     },

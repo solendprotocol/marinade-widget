@@ -4,11 +4,6 @@ import { useSwapContext } from 'src/contexts/SwapContext';
 import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
 import RefreshSVG from 'src/icons/RefreshSVG';
 import { TbDroplet, TbSettingsAutomation } from 'react-icons/tb';
-import SettingsSVG from 'src/icons/SettingsSVG';
-import { formatNumber } from 'src/misc/utils';
-import { useTokenContext } from 'src/contexts/TokenContextProvider';
-
-import JupiterLogo from '../icons/JupiterLogo';
 
 import { WalletButton } from './WalletComponents';
 import SwapSettingsModal from './SwapSettingsModal/SwapSettingsModal';

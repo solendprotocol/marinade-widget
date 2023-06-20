@@ -72,13 +72,13 @@ const SwappingScreen = () => {
     if (lastSwapResult && 'error' in lastSwapResult) {
       setErrorMessage(lastSwapResult.error?.message || '');
 
-      if (window.Jupiter.onSwapError) {
-        window.Jupiter.onSwapError({ error: lastSwapResult.error });
+      if (window.Marinade.onSwapError) {
+        window.Marinade.onSwapError({ error: lastSwapResult.error });
       }
       return;
     } else if (lastSwapResult && 'txid' in lastSwapResult) {
-      if (window.Jupiter.onSuccess) {
-        window.Jupiter.onSuccess({ txid: lastSwapResult.txid, swapResult: lastSwapResult });
+      if (window.Marinade.onSuccess) {
+        window.Marinade.onSuccess({ txid: lastSwapResult.txid, swapResult: lastSwapResult });
       }
       return;
     }
@@ -86,7 +86,7 @@ const SwappingScreen = () => {
 
   const onClose = () => {
     if (!displayMode || displayMode === 'modal') {
-      window.Jupiter.close();
+      window.Marinade.close();
     }
 
     reset();

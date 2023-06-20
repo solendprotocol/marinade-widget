@@ -99,7 +99,7 @@ const RouteSelectionScreen: React.FC<{ onClose(): void }> = ({ onClose }) => {
       </div>
 
       <p className="text-xs text-[#4A5568]/50 my-3">
-        Jupiter automatically selects a route with the best price, however you can select a route manually.
+        Marinade automatically selects a route with the best price, however you can select a route manually.
       </p>
 
       <div className="mt-2 overflow-y-auto overflow-x-hidden webkit-scrollbar" style={{ flexGrow: 1 }}>

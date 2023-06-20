@@ -13,7 +13,7 @@ const WidgetTerminal = (props: { palette: PaletteType, rpcUrl: string, formProps
   const [size, setSize] = useState<WidgetSize>('default');
 
   const launchTerminal = () => {
-    window.Jupiter.init({
+    window.Marinade.init({
       displayMode: 'widget',
       widgetStyle: {
         position,
@@ -29,9 +29,9 @@ const WidgetTerminal = (props: { palette: PaletteType, rpcUrl: string, formProps
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | undefined = undefined;
-    if (!isLoaded || !window.Jupiter.init) {
+    if (!isLoaded || !window.Marinade.init) {
       intervalId = setInterval(() => {
-        setIsLoaded(Boolean(window.Jupiter.init));
+        setIsLoaded(Boolean(window.Marinade.init));
       }, 500);
     }
 
@@ -41,7 +41,7 @@ const WidgetTerminal = (props: { palette: PaletteType, rpcUrl: string, formProps
   }, []);
 
   useDebouncedEffect(() => {
-    if (isLoaded && Boolean(window.Jupiter.init)) {
+    if (isLoaded && Boolean(window.Marinade.init)) {
       launchTerminal();
     }
   }, [isLoaded, props, position, size], 1000)
@@ -53,9 +53,9 @@ const WidgetTerminal = (props: { palette: PaletteType, rpcUrl: string, formProps
           <div className="relative mt-8 md:mt-0">
             <div className="bg-white/10 rounded-xl flex items-center justify-center w-full md:w-[384px] h-[216px]">
               <span className="text-xs text-[#4A5568]/50 text-center w-[70%]">
-                Click on the arrows to see how the Jupiter Widget will appear on your web browser.
+                Click on the arrows to see how the Marinade Widget will appear on your web browser.
                 <br />
-                Click on the logo to view the Jupiter Swap Modal.
+                Click on the logo to view the Marinade Swap Modal.
               </span>
 
               {/* Top left  */}

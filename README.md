@@ -1,6 +1,6 @@
-# Jupiter Terminal
+# Marinade Terminal
 
-Jupiter Terminal is an open-sourced, lite version of Jupiter that provides end-to-end swap flow by linking it in your HTML.
+Marinade Terminal is an open-sourced, lite version of Marinade that provides end-to-end swap flow by linking it in your HTML.
 
 Visit our Demo / Playground over at https://terminal.jup.ag
 
@@ -46,7 +46,7 @@ Then,
 ```tsx
 document.addEventListener('readystatechange', e => {
   if (document.readyState === "complete") {
-    window.Jupiter.init({ endpoint: 'https://api.mainnet-beta.solana.com' });
+    window.Marinade.init({ endpoint: 'https://api.mainnet-beta.solana.com' });
   }
 });
 ```
@@ -63,9 +63,9 @@ If your user have connected their wallet via your dApp, you may passthrough the 
 const App = () => {
   const { wallet } = useWallet();
 
-  const initJupiter = () => {
+  const initMarinade = () => {
     if (wallet) {
-      window.Jupiter.init({
+      window.Marinade.init({
         endpoint,
         passThroughWallet: wallet,
       });
@@ -76,7 +76,7 @@ const App = () => {
 
 _*Mode 2: Built-in wallet*_
 
-If your user is not connected, Jupiter Terminal have several built-in wallets that user can connect and perform swap directly.
+If your user is not connected, Marinade Terminal have several built-in wallets that user can connect and perform swap directly.
 
 ---
 
@@ -84,31 +84,31 @@ If your user is not connected, Jupiter Terminal have several built-in wallets th
 
 ### _*Modal*_
 
-By default, Jupiter renders as a modal and take up the whole screen.
+By default, Marinade renders as a modal and take up the whole screen.
 <img src="public/demo/modal-demo.png" />
 
 ```tsx
-window.Jupiter.init({ displayMode: 'modal' });
+window.Marinade.init({ displayMode: 'modal' });
 ```
 
 ### _*Integrated*_
 
-Integrated mode renders Jupiter Terminal as a part of your dApp.
+Integrated mode renders Marinade Terminal as a part of your dApp.
 <img src="public/demo/integrated-demo.png" />
 
 ```tsx
-window.Jupiter.init({ displayMode: 'integrated' });
+window.Marinade.init({ displayMode: 'integrated' });
 ```
 
 ### _*Widget*_
 
 <img src="public/demo/widget-demo.png" />
-Widget mode renders Jupiter Terminal as a widget that can be placed at different position.
+Widget mode renders Marinade Terminal as a widget that can be placed at different position.
 
 ````tsx
 
 ```tsx
-window.Jupiter.init({
+window.Marinade.init({
   displayMode: 'widget',
   widgetStyle: {
         position: 'bottom-right', // 'bottom-left', 'top-left', 'top-right'
@@ -131,7 +131,7 @@ Example on how to migrate from `mode` to `formProps`:
 
   ```ts
   // Can be mapped to:
-  window.Jupiter.init({
+  window.Marinade.init({
     endpoint: 'https://api.mainnet-beta.solana.com',
     formProps: {
       fixedInputMint: undefined,
@@ -178,20 +178,20 @@ Configure Terminal's behaviour and allowed actions for your user
 - `close()` function only hide the widget.
 
 ```tsx
-if (window.Jupiter._instance) {
-  window.Jupiter.resume();
+if (window.Marinade._instance) {
+  window.Marinade.resume();
 }
 
-window.Jupiter.close();
+window.Marinade.close();
 ```
 
 ---
 
 ### Fee supports
 
-Similar to Jupiter, Jupiter Terminal supports fee for integrators.
+Similar to Marinade, Marinade Terminal supports fee for integrators.
 
-There are no protocol fees on Jupiter, but integrators can introduce a platform fee on swaps. The platform fee is provided in basis points, e.g. 20 bps for 0.2% of the token output.
+There are no protocol fees on Marinade, but integrators can introduce a platform fee on swaps. The platform fee is provided in basis points, e.g. 20 bps for 0.2% of the token output.
 
 Refer to [Adding your own fees](https://docs.jup.ag/integrating-jupiter/additional-guides/adding-your-own-fees) docs for more details.
 
@@ -200,7 +200,7 @@ _Note: You will need to create the Token fee accounts to collect the platform fe
 ```tsx
 import { getPlatformFeeAccounts } from '@jup-ag/react-hook';
 
-// Jupiter Core provides a helper function that returns all your feeAccounts
+// Marinade Core provides a helper function that returns all your feeAccounts
 const platformFeeAndAccounts = {
   feeBps: 50,
   feeAccounts: await getPlatformFeeAccounts(
@@ -209,7 +209,7 @@ const platformFeeAndAccounts = {
   ), // map of mint to token account pubkey
 };
 
-window.Jupiter.init({
+window.Marinade.init({
   // ...
   platformFeeAndAccounts,
 });
@@ -242,7 +242,7 @@ You can change the default explorer by passing in the explorer name to the `defa
 While `onSwapError()` will be called when an error has occurred.
 
 ```tsx
-window.Jupiter.init({
+window.Marinade.init({
   onSuccess: ({ txid, swapResult }) => {
     console.log({ txid, swapResult });
   },
@@ -261,7 +261,7 @@ Examples:
 - Custom zIndex
 
 ```tsx
-window.Jupiter.init({
+window.Marinade.init({
   // ...
   containerStyles: { zIndex: 100 },
 });
@@ -270,7 +270,7 @@ window.Jupiter.init({
 - Custom height
 
 ```tsx
-window.Jupiter.init({
+window.Marinade.init({
   // ...
   containerStyles: { maxHeight: '90vh' },
 });
@@ -285,7 +285,7 @@ Example:
 - Custom breakpoints
 
 ```tsx
-window.Jupiter.init({
+window.Marinade.init({
   // ...
   containerClassName: 'max-h-[90vh] lg:max-h-[600px]',
 });
@@ -294,12 +294,12 @@ window.Jupiter.init({
 ---
 
 ### Typescript Support
-Since Jupiter Terminal is not published on npm, and are only importable via CDN, to get proper typing, you can create a typing decalarion `jupiter-terminal.d.ts` file in your project, and copy the contents in `src/types/index.d.ts`.
+Since Marinade Terminal is not published on npm, and are only importable via CDN, to get proper typing, you can create a typing decalarion `jupiter-terminal.d.ts` file in your project, and copy the contents in `src/types/index.d.ts`.
 
 ```tsx
 declare global {
   interface Window {
-    Jupiter: JupiterTerminal;
+    Marinade: MarinadeTerminal;
   }
 }
 // ...

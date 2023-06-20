@@ -18,15 +18,15 @@ module.exports = {
   devtool: "source-map",
   mode: "production",
   entry: {
-    "Jupiter": {
+    "Marinade": {
       import: "./src/library.tsx",
       filename: `${bundleName}.js`,
     },
     "Tailwind": {
       import: "./src/styles/globals.css",
     },
-    "JupiterRenderer": {
-      dependOn: "Jupiter",
+    "MarinadeRenderer": {
+      dependOn: "Marinade",
       import: "./src/index.tsx",
       filename: `${bundleName}-app.js`,
     },

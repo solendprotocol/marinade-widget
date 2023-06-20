@@ -11,7 +11,7 @@ const ConfirmationScreen = () => {
   const {
     fromTokenInfo,
     toTokenInfo,
-    onSubmit: onSubmitJupiter,
+    onSubmit: onSubmitMarinade,
     selectedSwapRoute,
     jupiter: { routes, loading, refresh },
   } = useSwapContext();
@@ -26,7 +26,7 @@ const ConfirmationScreen = () => {
   };
   const onSubmit = () => {
     setScreen('Swapping');
-    onSubmitJupiter();
+    onSubmitMarinade();
   };
 
   return (

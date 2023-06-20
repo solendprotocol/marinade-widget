@@ -11,7 +11,7 @@ import { IInit } from 'src/types';
 import { SlippageConfigProvider } from 'src/contexts/SlippageConfigProvider';
 import { USDValueProvider } from 'src/contexts/USDValueProvider';
 
-import Header from '../components/Header';
+import Header from './Header';
 import { AccountsProvider } from '../contexts/accounts';
 import InitialScreen from './screens/InitialScreen';
 import ReviewOrderScreen from './screens/ReviewOrderScreen';

@@ -22,7 +22,7 @@ const ModalTerminal = (props: {
   } = props;
   
   const launchTerminal = () => {
-    window.Jupiter.init({
+    window.Marinade.init({
       endpoint: rpcUrl,
       formProps,
       palette,

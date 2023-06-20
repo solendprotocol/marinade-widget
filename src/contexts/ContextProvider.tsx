@@ -23,7 +23,7 @@ const WalletContextProvider: FC<{ endpoint?: string; children: ReactNode }> = ({
 
   const passThroughWallet = (() => {
     if (typeof window === 'undefined') return undefined;
-    return window.Jupiter.passThroughWallet;
+    return window.Marinade.passThroughWallet;
   })();
 
   const wallets = useMemo(() => {

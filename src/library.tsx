@@ -47,7 +47,7 @@ async function loadRemote(id: string, href: string, type: 'text/javascript' | 's
   });
 }
 
-async function loadJupiter() {
+async function loadMarinade() {
   if (process.env.NODE_ENV === 'development') {
     return;
   }
@@ -59,11 +59,11 @@ async function loadJupiter() {
       loadRemote('jupiter-load-styles-tailwind', `${scriptDomain}/${bundleName}-Tailwind.css`, 'stylesheet'),
       loadRemote('jupiter-load-styles-preflight', `${scriptDomain}/scoped-preflight.css`, 'stylesheet'),
     ]);
-    // The sequence matters! the last imported Jupiter.css takes precendent
-    loadRemote('jupiter-load-styles-jupiter', `${scriptDomain}/${bundleName}-Jupiter.css`, 'stylesheet')
+    // The sequence matters! the last imported Marinade.css takes precendent
+    loadRemote('jupiter-load-styles-jupiter', `${scriptDomain}/${bundleName}-Marinade.css`, 'stylesheet')
   } catch (error) {
-    console.error(`Error loading Jupiter Terminal: ${error}`);
-    throw new Error(`Error loading Jupiter Terminal: ${error}`);
+    console.error(`Error loading Marinade Terminal: ${error}`);
+    throw new Error(`Error loading Marinade Terminal: ${error}`);
   }
 }
 
@@ -71,15 +71,15 @@ const defaultStyles: CSSProperties = {
   zIndex: 50,
 };
 
-const RenderLoadableJupiter = (props: IInit) => {
+const RenderLoadableMarinade = (props: IInit) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
-    loadJupiter();
+    loadMarinade();
 
     let intervalId: NodeJS.Timer;
     if (!loaded) {
       intervalId = setInterval(() => {
-        const instance = (window as any).JupiterRenderer?.RenderJupiter;
+        const instance = (window as any).MarinadeRenderer?.RenderMarinade;
         if (instance) {
           setLoaded(true);
         }
@@ -90,15 +90,15 @@ const RenderLoadableJupiter = (props: IInit) => {
     };
   }, [loaded]);
 
-  const RenderJupiter: (props: any) => JSX.Element = useMemo(() => {
+  const RenderMarinade: (props: any) => JSX.Element = useMemo(() => {
     if (loaded) {
-      return (window as any).JupiterRenderer.RenderJupiter;
+      return (window as any).MarinadeRenderer.RenderMarinade;
     }
 
     return EmptyJSX;
   }, [loaded]);
 
-  return <RenderJupiter {...props} scriptDomain={scriptDomain} />;
+  return <RenderMarinade {...props} scriptDomain={scriptDomain} />;
 };
 
 const EmptyJSX = () => <></>;
@@ -127,8 +127,8 @@ const RenderShell = (props: IInit) => {
   }, [displayMode]);
 
   const onClose = () => {
-    if (window.Jupiter) {
-      window.Jupiter.close();
+    if (window.Marinade) {
+      window.Marinade.close();
     }
   };
 
@@ -141,7 +141,7 @@ const RenderShell = (props: IInit) => {
       ></link>
 
       <div style={{ ...defaultStyles, ...containerStyles }} className={contentClassName}>
-        <RenderLoadableJupiter {...props} />
+        <RenderLoadableMarinade {...props} />
       </div>
 
       {!displayMode || displayMode === 'modal' ? (
@@ -205,7 +205,7 @@ const RenderWidgetShell = (props: IInit) => {
           } flex flex-col w-[90vw] max-w-[384px] max-h-[75vh] rounded-2xl bg-jupiter-bg transition-opacity duration-300 shadow-2xl ${!isOpen ? 'h-0 opacity-0' : 'opacity-100'
           }`}
       >
-        <RenderLoadableJupiter {...props} />
+        <RenderLoadableMarinade {...props} />
       </div>
     </div>
   );
@@ -218,7 +218,7 @@ async function init(props: IInit) {
 
   // Remove previous instance
   if (instanceExist) {
-    window.Jupiter._instance = null;
+    window.Marinade._instance = null;
     instanceExist?.remove();
   }
 
@@ -229,7 +229,7 @@ async function init(props: IInit) {
   if (restProps.displayMode === 'integrated') {
     const target = document.getElementById(integratedTargetId!);
     if (!target) {
-      throw new Error(`Jupiter Terminal: document.getElementById cannot find ${integratedTargetId}`);
+      throw new Error(`Marinade Terminal: document.getElementById cannot find ${integratedTargetId}`);
     }
 
     target?.appendChild(targetDiv);
@@ -245,13 +245,13 @@ async function init(props: IInit) {
   }
   const root = createRoot(targetDiv);
   root.render(element);
-  window.Jupiter.root = root;
-  window.Jupiter._instance = element;
+  window.Marinade.root = root;
+  window.Marinade._instance = element;
 
   // Passthrough & Callbacks
-  window.Jupiter.passThroughWallet = passThroughWallet;
-  window.Jupiter.onSwapError = onSwapError;
-  window.Jupiter.onSuccess = onSuccess;
+  window.Marinade.passThroughWallet = passThroughWallet;
+  window.Marinade.onSwapError = onSwapError;
+  window.Marinade.onSuccess = onSuccess;
 }
 
 const attributes = (document.currentScript as HTMLScriptElement)?.attributes;
@@ -262,10 +262,10 @@ if (typeof window !== 'undefined') {
 
     if (loadComplete && shouldPreload) {
       setTimeout(() => {
-        loadJupiter()
+        loadMarinade()
           .catch((error) => {
-            console.error(`Error pre-loading Jupiter Terminal: ${error}`);
-            throw new Error(`Error pre-loading Jupiter Terminal: ${error}`);
+            console.error(`Error pre-loading Marinade Terminal: ${error}`);
+            throw new Error(`Error pre-loading Marinade Terminal: ${error}`);
           })
       }, 2000);
     }
