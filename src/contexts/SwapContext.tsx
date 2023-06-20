@@ -5,6 +5,7 @@ import {
   RouteInfo,
   SwapMode,
   SwapResult,
+  useJupiter,
 } from '@jup-ag/react-hook';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
@@ -71,8 +72,8 @@ export interface ISwapContext {
     }>;
   };
   reset: (props?: { resetValues: boolean }) => void;
-  jupiter: Omit<ReturnType<typeof useMarinade>, 'exchange'> & {
-    exchange: ReturnType<typeof useMarinade>['exchange'] | undefined;
+  jupiter: Omit<ReturnType<typeof useJupiter>, 'exchange'> & {
+    exchange: ReturnType<typeof useJupiter>['exchange'] | undefined;
     asLegacyTransaction: boolean;
     setAsLegacyTransaction: Dispatch<SetStateAction<boolean>>;
     priorityFeeInSOL: number;
@@ -220,7 +221,7 @@ export const SwapContextProvider: FC<{
     refresh,
     lastRefreshTimestamp,
     error,
-  } = useMarinade({
+  } = useJupiter({
     amount,
     inputMint: useMemo(() => form.fromMint ? new PublicKey(form.fromMint) : PublicKey.default, [form.fromMint]),
     outputMint: useMemo(() => form.toMint ? new PublicKey(form.toMint) : PublicKey.default, [form.toMint]),

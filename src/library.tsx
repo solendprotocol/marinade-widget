@@ -3,7 +3,7 @@ import { IInit } from './types';
 
 import 'tailwindcss/tailwind.css';
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
-import JupiterLogo from './icons/JupiterLogo';
+import MarinadeCircle from './icons/MarinadeCircle';
 
 const containerId = 'jupiter-terminal';
 const packageJson = require('../package.json');
@@ -193,10 +193,10 @@ const RenderWidgetShell = (props: IInit) => {
   return (
     <div className={`fixed ${classes.containerClassName}`}>
       <div
-        className={`${classes.widgetContainerClassName} rounded-full bg-black flex items-center justify-center cursor-pointer`}
+        className={`${classes.widgetContainerClassName} rounded-full bg-white/75 flex items-center justify-center cursor-pointer`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <JupiterLogo width={classes.widgetLogoSize} height={classes.widgetLogoSize} />
+        <MarinadeCircle width={classes.widgetLogoSize} height={classes.widgetLogoSize} />
       </div>
 
       <div

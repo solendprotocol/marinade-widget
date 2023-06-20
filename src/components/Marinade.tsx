@@ -43,7 +43,7 @@ const Content = () => {
         </>
       ) : <SwappingScreen />}
     </>
-  );
+);
 };
 
 const queryClient = new QueryClient();
