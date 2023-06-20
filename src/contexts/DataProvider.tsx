@@ -139,8 +139,8 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   const { publicKey, wallet } = useWalletPassThrough();
   const { connection } = useConnection();
   const { setScreen, setContext } = useScreenState();
-  const [ stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([])
-  const allowDirectStake = Boolean(formProps?.allowDirectStake);
+  const [ stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([]);
+  const allowDirectStake = formProps?.allowDirectStake ? Boolean(formProps.allowDirectStake) : true;
   const [directedValidatorAddress, setDirectedValidatorAddress] = useState<string | null>(allowDirectStake ? (formProps?.initialValidator ?? defaultContextValues.delegationStrategy) : null);
   const delegationStrategy = validators.find(v => v.address === directedValidatorAddress) ?? null;
 
