@@ -8,7 +8,6 @@ import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { useSwapContext } from './SwapContext';
 import { IInit, PaletteType } from 'src/types';
 import { formatAddress } from 'src/components/ValidatorRow';
-import { AnchorProvider, Wallet } from '@coral-xyz/anchor';
 import { useScreenState } from './ScreenProvider';
 import { useMediaQuery } from "react-responsive";
 import { INITIAL_FORM_CONFIG } from 'src/constants';
