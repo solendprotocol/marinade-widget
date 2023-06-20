@@ -50,7 +50,7 @@ const FormConfigurator = ({
   const [isPaletteDropdownOpen, setIsPaletteDropdownOpen] = React.useState(false);
 
   return (
-    <div className="w-full max-w-full border border-white/10 md:border-none md:mx-0 md:max-w-[300px] max-h-[700px] overflow-y-scroll overflow-x-hidden webkit-scrollbar bg-white/5 rounded-xl p-4">
+    <div className="w-full max-w-full border border-white/10 md:border-none md:mx-0 md:max-w-[450px] max-h-[700px] overflow-y-scroll overflow-x-visible webkit-scrollbar bg-white/5 rounded-xl p-4">
       <p className="text-[#4A5568] mt-8 text-sm font-semibold">Things you can configure</p>
 
       {/* Referral code */}
@@ -150,6 +150,7 @@ const FormConfigurator = ({
               <p className="text-xs text-[#4A5568]/30">Primary</p>
             </div>
             <InputColor
+            placement='left'
             initialValue={palette.primaryLight}
             onChange={(color) => setValue('palette.primaryLight', color.hex)}
             />
@@ -165,7 +166,7 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Primary</p>
+              <p className="text-xs text-[#4A5568]/30">Primary BG</p>
             </div>
             <InputColor
             initialValue={palette.primaryBgLight}
@@ -174,7 +175,7 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Primary BG</p>
+              <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
             </div>
             <InputColor
             initialValue={palette.secondaryBgLight}
@@ -183,7 +184,7 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
+              <p className="text-xs text-[#4A5568]/30">Text</p>
             </div>
             <InputColor
             initialValue={palette.textLight}
@@ -192,20 +193,11 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Text</p>
+              <p className="text-xs text-[#4A5568]/30">Disabled</p>
             </div>
             <InputColor
             initialValue={palette.disabledTextLight}
             onChange={(color) => setValue('palette.disabledTextLight', color.hex)}
-            />
-          </div>
-            <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Disabled text</p>
-            </div>
-            <InputColor
-            initialValue={palette.primaryLight}
-            onChange={(color) => setValue('palette.primaryLight', color.hex)}
             />
           </div>
           <p className="text-sm text-[#4A5568]/75">Dark</p>
@@ -229,7 +221,7 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Primary</p>
+              <p className="text-xs text-[#4A5568]/30">Primary BG</p>
             </div>
             <InputColor
             initialValue={palette.primaryBgDark}
@@ -238,7 +230,7 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Primary BG</p>
+              <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
             </div>
             <InputColor
             initialValue={palette.secondaryBgDark}
@@ -247,7 +239,7 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
+              <p className="text-xs text-[#4A5568]/30">Text</p>
             </div>
             <InputColor
             initialValue={palette.textDark}
@@ -256,20 +248,11 @@ const FormConfigurator = ({
           </div>
             <div className="flex justify-between mt-5">
             <div>
-              <p className="text-xs text-[#4A5568]/30">Text</p>
+              <p className="text-xs text-[#4A5568]/30">Disabled</p>
             </div>
             <InputColor
             initialValue={palette.disabledTextDark}
             onChange={(color) => setValue('palette.disabledTextDark', color.hex)}
-            />
-          </div>
-            <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Disabled text</p>
-            </div>
-            <InputColor
-            initialValue={palette.primaryDark}
-            onChange={(color) => setValue('palette.primaryDark', color.hex)}
             />
           </div>
           </div>}

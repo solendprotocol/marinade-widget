@@ -148,7 +148,7 @@ const RenderShell = (props: IInit) => {
       ></link>
 
       <div style={{ ...defaultStyles, ...containerStyles,
-      background: (systemPrefersDark && props.theme !== 'light') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
+      background: ((systemPrefersDark && props.theme !== 'light') || props.theme === 'dark') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
        }} className={contentClassName}>
         <RenderLoadableMarinade {...props} />
       </div>
@@ -219,7 +219,7 @@ const RenderWidgetShell = (props: IInit) => {
           } flex flex-col w-[90vw] max-w-[384px] max-h-[75vh] rounded-2xl bg-jupiter-bg transition-opacity duration-300 shadow-2xl ${!isOpen ? 'h-0 opacity-0' : 'opacity-100'
           }`}
           style={{
-            background: (systemPrefersDark && props.theme !== 'light') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
+            background: ((systemPrefersDark && props.theme !== 'light') || props.theme === 'dark') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
           }}
       >
         <RenderLoadableMarinade {...props} />
