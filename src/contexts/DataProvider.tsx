@@ -334,6 +334,11 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         fetchStakeAccounts();
     }
 
+    const usedPalette = {
+        ...INITIAL_FORM_CONFIG.palette,
+        palette
+    }
+
   return <DataContext.Provider value={{ 
         allowDirectStake,
         validators, 
@@ -343,15 +348,15 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         deposit,
         delegationStrategy,
         palette: {       
-            primary: systemPrefersDark ? palette.primaryDark : palette.primaryLight,
-            secondary: systemPrefersDark ? palette.secondaryDark : palette.secondaryLight,
-            primaryBg: systemPrefersDark ? palette.primaryBgDark : palette.primaryBgLight,
-            secondaryBg: systemPrefersDark ? palette.secondaryBgDark : palette.secondaryBgLight,
-            text: systemPrefersDark ? palette.textDark : palette.textLight,
-            disabledText: systemPrefersDark ? palette.disabledTextDark : palette.disabledTextLight,
+            primary: systemPrefersDark ? usedPalette.primaryDark : usedPalette.primaryLight,
+            secondary: systemPrefersDark ? usedPalette.secondaryDark : usedPalette.secondaryLight,
+            primaryBg: systemPrefersDark ? usedPalette.primaryBgDark : usedPalette.primaryBgLight,
+            secondaryBg: systemPrefersDark ? usedPalette.secondaryBgDark : usedPalette.secondaryBgLight,
+            text: systemPrefersDark ? usedPalette.textDark : usedPalette.textLight,
+            disabledText: systemPrefersDark ? usedPalette.disabledTextDark : usedPalette.disabledTextLight,
         },
-        // full pallete
-        colors: palette,
+        // full palette
+        colors: usedPalette,
         refresh,
         setDelegationStrategy,
         target,

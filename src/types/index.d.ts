@@ -41,12 +41,31 @@ export type PaletteType = {
     textDark: string,
     disabledTextDark: string,
 }
+
+export type PaletteInputType = {
+  // Light
+  primaryLight?: string,
+  secondaryLight?: string,
+  primaryBgLight?: string,
+  secondaryBgLight?: string,
+  textLight?: string,
+  disabledTextLight?: string,
+
+  // Dark
+  primaryDark?: string,
+  secondaryDark?: string,
+  primaryBgDark?: string,
+  secondaryBgDark?: string,
+  textDark?: string,
+  disabledTextDark?: string,
+}
+
 export interface IInit {
   endpoint: string;
   formProps?: FormProps;
   defaultExplorer?: DEFAULT_EXPLORER;
   theme?: ThemeType,
-  palette: PaletteType,
+  palette?: PaletteInputType,
   
   // Display & Styling
   displayMode?: 'modal' | 'integrated' | 'widget';
