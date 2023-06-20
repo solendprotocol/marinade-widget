@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import JupButton from 'src/components/JupButton';
 import LeftArrowIcon from 'src/icons/LeftArrowIcon';
 import { useDebouncedEffect } from 'src/misc/utils';
-import { DEFAULT_EXPLORER, FormProps, PaletteType, WidgetPosition, WidgetSize } from 'src/types';
+import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType, WidgetPosition, WidgetSize } from 'src/types';
 
-const WidgetTerminal = (props: { palette: PaletteType, rpcUrl: string, formProps: FormProps, fakeWallet: Wallet | null, defaultExplorer: DEFAULT_EXPLORER }) => {
-  const { palette, rpcUrl, fakeWallet, formProps, defaultExplorer } = props;
+const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl: string, formProps: FormProps, fakeWallet: Wallet | null, defaultExplorer: DEFAULT_EXPLORER }) => {
+  const { palette, theme, rpcUrl, fakeWallet, formProps, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
   const [position, setPosition] = useState<WidgetPosition>('bottom-right');
   const [size, setSize] = useState<WidgetSize>('default');
@@ -21,6 +21,7 @@ const WidgetTerminal = (props: { palette: PaletteType, rpcUrl: string, formProps
       },
       formProps,
       palette,
+      theme,
       passThroughWallet: fakeWallet,
       endpoint: rpcUrl,
       defaultExplorer

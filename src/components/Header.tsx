@@ -15,25 +15,34 @@ const Header: React.FC<{
   setShowStakeModeSettings(arg: boolean): void;
   setShowDelegationStrategy(arg: boolean): void;
 }> = ({ setIsWalletModalOpen, setShowDelegationStrategy }) => {
-  const { allowDirectStake, delegationStrategy, refresh } = useData();
+  const { allowDirectStake, delegationStrategy, refresh, palette } = useData();
 
   return (
-    <div className="mt-2 h-7 px-2 mb-4">
+    <div className="h-7 mb-4">
       <div className="w-full flex items-center justify-between ">
         <div className="flex space-x-1 items-center">
           {allowDirectStake && <button
             type="button"
-            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 border-[#C8ECE1] text-[#4A5568]/30 fill-current"
+            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 fill-current"
+            style={{
+              borderColor: palette.secondary,
+              color: palette.text
+            }}
             onClick={() => setShowDelegationStrategy(true)}
           >
-            <span suppressHydrationWarning className="text-xs text-[#4A5568]">
+            <span suppressHydrationWarning className="text-xs">
               <TbSettingsAutomation className='inline'/> {delegationStrategy ? delegationStrategy.name : 'Automatic'}
             </span>
           </button>}
           <button
             type="button"
             onClick={() => refresh()}
-            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 border-[#C8ECE1] fill-current text-[#4A5568]">
+            className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 fill-current"
+            style={{
+              borderColor: palette.secondary,
+              color: palette.text
+            }}
+            >
             <RefreshSVG />
           </button>
         </div>

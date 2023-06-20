@@ -1,16 +1,17 @@
 import { Wallet } from '@solana/wallet-adapter-react';
 import React, { useEffect, useState } from 'react';
-import { DEFAULT_EXPLORER, FormProps, PaletteType } from 'src/types';
+import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
 import { useDebouncedEffect } from 'src/misc/utils';
 
 const IntegratedTerminal = (props: {
   rpcUrl: string;
   formProps: FormProps;
+  theme: ThemeType,
   palette: PaletteType;
   fakeWallet: Wallet | null;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
-  const { rpcUrl, palette, formProps, fakeWallet, defaultExplorer } = props;
+  const { rpcUrl, theme, palette, formProps, fakeWallet, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
   const launchTerminal = async () => {
     window.Marinade.init({
@@ -19,6 +20,7 @@ const IntegratedTerminal = (props: {
       endpoint: rpcUrl,
       palette,
       formProps,
+      theme,
       passThroughWallet: fakeWallet,
       defaultExplorer,
     });

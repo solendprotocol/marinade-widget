@@ -36,20 +36,26 @@ const FormPairSelector = ({
   onClose: () => void;
   tokenInfos: TokenInfo[];
 }) => {
-  const { stakeAccounts, setTarget } = useData();
+  const { stakeAccounts, setTarget, palette } = useData();
   const inputRef = createRef<HTMLInputElement>();
   useEffect(() => inputRef.current?.focus(), [inputRef]);
 
   const solAccount = tokenInfos.find(r => r.symbol === 'SOL');
 
   return (
-    <div className="flex flex-col h-full w-full p-4">
+    <div className="flex flex-col h-full w-full p-4" style={{
+      background: palette.primaryBg
+    }}>
       <div className="flex w-full justify-between">
-        <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={onClose}>
+        <div className="fill-current w-6 h-6 cursor-pointer" style={{
+              color: palette.text
+            }} onClick={onClose}>
           <LeftArrowIcon width={24} height={24} />
         </div>
 
-        <div className="text-[#4A5568] font-bold">Select token or stake account</div>
+        <div className="font-bold" style={{
+              color: palette.text
+            }}>Select token or stake account</div>
 
         <div className=" w-6 h-6" />
       </div>
@@ -65,7 +71,9 @@ const FormPairSelector = ({
         
           onClose();}
           } />}
-        <span className='pl-2 text-xs text-[#4A5568] font-semibold mb-1'>
+        <span className='pl-2 text-xs font-semibold mb-1' style={{
+              color: palette.text
+            }}>
           Stake accounts
         </span>
         {stakeAccounts.filter(s => s.status !== 'minBalance').map(r => 
@@ -77,7 +85,9 @@ const FormPairSelector = ({
           })
           onClose();}} /> )}
       </div>
-      <span className='pl-2 text-xs text-[#4A5568] mb-1'>
+      <span className='pl-2 text-xs mb-1' style={{
+              color: palette.disabledText
+            }}>
           Amount must be &gt; 1 SOL
         </span>
         {stakeAccounts.filter(s => s.status === 'minBalance').map(r => 

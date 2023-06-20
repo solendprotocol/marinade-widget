@@ -3,7 +3,7 @@ import React, { CSSProperties, useMemo } from 'react';
 import CoinBalance from './Coinbalance';
 import { PAIR_ROW_HEIGHT } from './FormPairSelector';
 import TokenIcon from './TokenIcon';
-import { StakeAccountType } from 'src/contexts/DataProvider';
+import { StakeAccountType, useData } from 'src/contexts/DataProvider';
 import { formatAddress } from './ValidatorRow';
 import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
 import Decimal from 'decimal.js';
@@ -14,6 +14,7 @@ const FormAccountRow: React.FC<{
   style: CSSProperties;
   onSubmit(item: StakeAccountType): void;
 }> = ({ item, style, onSubmit }) => {
+  const { palette } = useData();
   const { tokenPriceMap } = useUSDValueProvider();
   const totalUsdValue = useMemo(() => {
     const tokenPrice = tokenPriceMap[NATIVE_MINT.toString()]?.usd;
@@ -41,25 +42,33 @@ const FormAccountRow: React.FC<{
 
         <div className="flex-1 min-w-0">
           <div className='flex flex-row space-x-2'>
-            <p className="text-sm font-bold text-[#4A5568] truncate">
+            <p className="text-sm font-bold truncate" style={{
+              color: palette.text
+            }}>
               {formatAddress(item.address)}
             </p>
           </div>
 
-          <div className="mt-1 text-xs text-gray-500 truncate flex space-x-1">
-            {item.status === 'active' ? `Stake account: ${formatAddress(item.address)}` : <span>Inactive... Wait {item.waitEpoch} epoch{item.waitEpoch === 1 ? '' : 's'}</span>}
+          <div className="mt-1 text-xs truncate flex space-x-1" style={{
+              color: palette.text
+            }}>
+            {item.status === 'active' ? `Stake account: ${formatAddress(item.address)}` : <span >Inactive... Wait {item.waitEpoch} epoch{item.waitEpoch === 1 ? '' : 's'}</span>}
           </div>
         </div>
         <div className="flex-shrink-0 text-right">
           <div className='flex flex-row space-x-2'>
-            <p className="text-sm font-bold text-[#4A5568] truncate">
+            <p className="text-sm font-bold truncate" style={{
+              color: palette.text
+            }}>
               {item.balance} SOL
             </p>
           </div>
 
-          <div className="mt-1 text-xs text-gray-500 truncate space-x-1">
+          <div className="mt-1 text-xs truncate space-x-1">
           {totalUsdValue && totalUsdValue.gt(0.01) ? (
-            <span className='ml-1'>
+            <span className='ml-1' style={{
+              color: palette.disabledText
+            }}>
               ${totalUsdValue.toFixed(2)}
             </span>
           ) : null}

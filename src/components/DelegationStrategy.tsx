@@ -15,10 +15,22 @@ const ModeRadio = ({label, selected, children, onClick}: {
   children: React.ReactNode,
   onClick?: () => void,
 }) => {
-  return <div onClick={onClick} className={selected ? "cursor-pointer w-full justify-between p-4 border rounded-lg border-[#98D7C3] bg-[#ECFAF5]" : "cursor-pointer w-full justify-between p-4 border rounded-lg border-[#EDF2F7] bg-[#F7FAFC]"}>
+  const { palette } = useData();
+  return <div onClick={onClick} className={selected ? "cursor-pointer w-full justify-between p-4 border rounded-lg" : "cursor-pointer w-full justify-between p-4 border rounded-lg"}
+  style={{
+    color: palette.text,
+    background: selected ? palette.secondaryBg : palette.secondaryBg,
+    borderColor: selected ? palette.primary : palette.secondary
+  }}>
   <div className="flex w-full justify-between">
-    <span className='text-xs text-[#4A5568] font-semibold mb-1'>{label}</span>
-    {selected ? <span  className='mb-4 text-[#308D8A]'><FaCheckCircle/></span> : <span  className='mb-4 text-[#E2E8F0]'><FaRegCircle /></span>}
+    <span className='text-xsfont-semibold mb-1' style={{
+      color: palette.disabledText
+    }}>{label}</span>
+    {selected ? <span  className='mb-4' style={{
+      color: palette.primary
+    }}><FaCheckCircle/></span> : <span  className='mb-4' style={{
+      color: palette.secondary
+    }}><FaRegCircle /></span>}
     </div>
     {children}
   </div>
@@ -37,6 +49,7 @@ const DelegationStrategy = ({
   const [showValidatorSelector, setShowValidatorSelector] = useState<boolean>();
   const { validators, setDelegationStrategy, delegationStrategy } = useData();
   const [selectedValidator, setSelectedValidator] = useState<ValidatorType | null>(delegationStrategy);
+  const { palette } = useData();
 
   const inputRef = createRef<HTMLInputElement>();
   useEffect(() => inputRef.current?.focus(), [inputRef]);
@@ -55,13 +68,23 @@ const DelegationStrategy = ({
 
 
   return (
-    <div className="flex flex-col h-full w-full p-4 gap-4">
+    <div className="flex flex-col h-full w-full p-4 gap-4" 
+    style={{
+      color: palette.text,
+      background: palette.primaryBg
+    }}>
     <div className="flex w-full justify-between">
-      <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={onClose}>
+      <div className="fill-current w-6 h-6 cursor-pointer" onClick={onClose} 
+    style={{
+      color: palette.text,
+    }}>
         <LeftArrowIcon width={24} height={24} />
       </div>
 
-      <div className="text-[#4A5568] font-bold">Delegation strategy settings</div>
+      <div className="font-bold"
+    style={{
+      color: palette.text,
+    }}>Delegation strategy settings</div>
 
       <div className=" w-6 h-6" />
     </div>
@@ -70,7 +93,7 @@ const DelegationStrategy = ({
       onClick={() => setDelegationStrategy(null)}
       label={`Automatic (${validators.length} validators)`}
     >
-      <span className='text-xs text-gray-500'>Automatically rebalance the stake on the most performing validators.</span>
+      <span className='text-xs'>Automatically rebalance the stake on the most performing validators.</span>
     </ModeRadio>
     <ModeRadio
       selected={Boolean(delegationStrategy)}
@@ -86,15 +109,18 @@ const DelegationStrategy = ({
       
       <button
                       type="button"
-                      className="py-2 pr-3 pl-3 mb-2 w-full border-[#98D7C3]/50 border rounded-lg flex items-center hover:border-[#98D7C3]/75 justify-between"
+                      className="py-2 pr-3 pl-3 mb-2 w-full border rounded-lg flex items-center hover:opacity-50 justify-between"
+                      style={{
+                        borderColor: palette.secondary
+                      }}
                       onClick={() => setShowValidatorSelector(true)}
                     > 
-                        {selectedValidator ? <span className='flex gap-4 items-center'><ValidatorIcon tokenInfo={selectedValidator} width={24} height={24} />{' '}<span className='text-xs text-gray-500'>{selectedValidator.name}</span></span> : <span className="text-xs text-gray-500">Select a validator</span>}
+                        {selectedValidator ? <span className='flex gap-4 items-center'><ValidatorIcon tokenInfo={selectedValidator} width={24} height={24} />{' '}<span className='text-xs'>{selectedValidator.name}</span></span> : <span className="text-xs">Select a validator</span>}
                         <span className="fill-current mx-2">
                           <ChevronDownIcon />
                         </span>
                     </button>
-        <span className='text-xs text-gray-500'>Direct stake to a specific validator.  <a>See how it works</a></span>
+        <span className='text-xs'>Direct stake to a specific validator.  <a>See how it works</a></span>
     </ModeRadio>
     </div>
   );

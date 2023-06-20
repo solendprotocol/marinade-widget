@@ -1,14 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Rive, { Alignment, Fit, Layout } from '@rive-app/react-canvas';
-
 import { useScreenState } from 'src/contexts/ScreenProvider';
 import { useSwapContext } from 'src/contexts/SwapContext';
 import JupButton from '../JupButton';
 import SexyChameleonText from '../SexyChameleonText/SexyChameleonText';
-import Spinner from '../Spinner';
 import SuccessIcon from 'src/icons/SuccessIcon';
-import PriceInfo from '../PriceInfo/index';
-import { fromLamports } from 'src/misc/utils';
 import { usePreferredExplorer } from 'src/contexts/preferredExplorer';
 import { useData } from 'src/contexts/DataProvider';
 
@@ -48,20 +43,16 @@ const SwappingScreen = () => {
     jupiter: { routes, refresh },
   } = useSwapContext();
   const { context, screen, setScreen } = useScreenState();
-  const { target } = useData();
-
-  const [errorMessage, setErrorMessage] = useState('');
+  const { target, palette } = useData();
 
   const onSwapMore = () => {
     reset();
-    setErrorMessage('');
     setScreen('Initial');
     refresh();
   };
 
   const onGoBack = () => {
     reset({ resetValues: false });
-    setErrorMessage('');
     setScreen('Initial');
     refresh();
   };
@@ -70,7 +61,6 @@ const SwappingScreen = () => {
     if (screen !== 'Swapping') return;
 
     if (lastSwapResult && 'error' in lastSwapResult) {
-      setErrorMessage(lastSwapResult.error?.message || '');
 
       if (window.Marinade.onSwapError) {
         window.Marinade.onSwapError({ error: lastSwapResult.error });
@@ -95,7 +85,7 @@ const SwappingScreen = () => {
 
   const swapState: 'success' | 'error' | 'loading' = useMemo(() => {
     const hasErrors = txStatus.find((item) => item.status === 'fail');
-    if (hasErrors || errorMessage) {
+    if (hasErrors) {
       return 'error';
     }
 
@@ -113,22 +103,26 @@ const SwappingScreen = () => {
     return (
       <>
         <div className="flex w-full justify-center">
-          <div className="text-[#4A5568]">{swapState === 'loading' ? 'Staking...' : ''}</div>
+          <div style={{
+            color: palette.text
+          }}>{swapState === 'loading' ? 'Staking...' : ''}</div>
         </div>
 
         <div className="flex w-full justify-center items-center mt-9">
           <div
   className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-  role="status">
+  role="status"
+  >
   <span
     className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-    >Loading...</span
-  >
+    >Loading...</span>
 </div>
         </div>
 
         {totalTxs === 0 ? (
-          <span className="text-[#4A5568] text-center mt-8 text-sm px-4">{text}</span>
+          <span className="text-center mt-8 text-sm px-4" style={{
+            color: palette.disabledText
+          }}>{text}</span>
         ) : null}
       </>
     );
@@ -148,11 +142,17 @@ const SwappingScreen = () => {
         </div>
 
         <div className="flex flex-col justify-center items-center">
-          <p className="mt-5 text-[#4A5568] text-xl font-semibold">Staking successful</p>
+          <p className="mt-5 text-xl font-semibold" style={{
+            color: palette.text
+          }}>Staking successful</p>
 
-          <div className="mt-4 bg-[#F7FAFC] rounded-xl overflow-y-auto w-full webkit-scrollbar py-4 max-h-[260px]">
-            <div className="mt-2 flex flex-col items-center justify-center text-center px-4">
-              <p className="text-xs font-semibold text-[#4A5568]/75">
+          <div className="mt-4 rounded-xl overflow-y-auto w-full webkit-scrollbar py-4 max-h-[260px]" style={{
+            background: palette.secondaryBg
+          }}>
+            <div className="flex flex-col items-center justify-center text-center px-4">
+              <p className="text-xs font-semibold" style={{
+                color: palette.invertedPrimaryBg
+              }}>
                 Successfully staked {target?.amount} SOL!
               </p>
             </div>
@@ -165,14 +165,17 @@ const SwappingScreen = () => {
             href={explorerLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="cursor-pointer text-[#4A5568]/50 mt-2 ml-2 text-xs hover:underline"
+            className="cursor-pointer mt-2 ml-2 text-xs hover:underline"
+            style={{
+              color: palette.primary
+            }}
           >
             View on {explorer}
           </a>
         ) : null}
 </div>
         <div className="mt-auto px-5 pb-4 flex space-x-2">
-          <JupButton size="lg" className="w-full mt-4 bg-[#308D8A]" type="button" onClick={() => {
+          <JupButton size="lg" className="w-full mt-4" type="button" onClick={() => {
             if (context.callback) {
               context.callback();
             }
@@ -187,17 +190,20 @@ const SwappingScreen = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full py-4 px-2">
-      {screen === 'Error' ? (
+    <div className="flex flex-col h-full w-full p-4">
+      {screen === 'Initial' ? (
         <div className="flex justify-center">
-          <div className="flex flex-col items-center justify-center text-center mt-12">
+          <div className="flex flex-col items-center justify-center text-center">
             <ErrorIcon />
 
-            <p className="text-[#4A5568] mt-2">Transaction failed</p>
-            <p className="text-[#4A5568]/50 text-xs mt-2">{context.message}</p>
-            {errorMessage ? <p className="text-[#4A5568]/50 text-xs mt-2">{errorMessage}</p> : ''}
+            <p className=" mt-2" style={{
+              color: palette.text
+            }}>Transaction failed</p>
+            <p className="text-xs mt-2" style={{
+              color: palette.disabledText
+            }}>{context.message}</p>
 
-            <JupButton size="lg" className="w-full mt-6 disabled:opacity-50 bg-[#308D8A]" type="button" onClick={onGoBack}>
+            <JupButton size="lg" className="w-full mt-6 disabled:opacity-50" type="button" onClick={onGoBack}>
               <SexyChameleonText>Back</SexyChameleonText>
             </JupButton>
           </div>
@@ -207,7 +213,6 @@ const SwappingScreen = () => {
       {screen === 'Signing' ? <Content text="Awaiting approval from your wallet..." /> : null}
       {screen === 'Confirming' ? <Content text="Transaction sent. Awaiting confirmation..." /> : null}
       {screen === 'Success' ? <SuccessContent /> : null}
-      {!errorMessage && swapState === 'success' ? <SuccessContent /> : null}
     </div>
   );
 };

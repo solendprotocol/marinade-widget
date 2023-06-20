@@ -195,6 +195,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
                         palette={watchAllFields.palette}
+                        theme={watchAllFields.theme}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
@@ -204,6 +205,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
                         palette={watchAllFields.palette}
+                        theme={watchAllFields.theme}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
@@ -213,6 +215,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         rpcUrl={rpcUrl}
                         formProps={watchAllFields.formProps}
                         palette={watchAllFields.palette}
+                        theme={watchAllFields.theme}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />

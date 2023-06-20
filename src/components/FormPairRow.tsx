@@ -8,6 +8,7 @@ import TokenLink from './TokenLink';
 import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
 import Decimal from 'decimal.js';
 import { useAccounts } from 'src/contexts/accounts';
+import { useData } from 'src/contexts/DataProvider';
 
 const FormPairRow: React.FC<{
   item: TokenInfo;
@@ -16,6 +17,7 @@ const FormPairRow: React.FC<{
 }> = ({ item, style, onSubmit }) => {
   const { accounts } = useAccounts();
   const { tokenPriceMap } = useUSDValueProvider();
+  const { palette } = useData();
 
   const totalUsdValue = useMemo(() => {
     const totalAValue = new Decimal(1);
@@ -40,23 +42,31 @@ const FormPairRow: React.FC<{
 
         <div className="flex-1 min-w-0">
           <div className='flex flex-row space-x-2'>
-            <p className="text-sm font-bold text-[#4A5568] truncate">
+            <p className="text-sm font-bold truncate" style={{
+              color: palette.text
+            }}>
               {item.symbol}
             </p>
           </div>
 
-          <div className="mt-1 text-xs text-gray-500 truncate flex space-x-1">
+          <div className="mt-1 text-xs truncate flex space-x-1" style={{
+              color: palette.text
+            }}>
             {item.name}
           </div>
         </div>
         <div className="flex-shrink-0 text-right">
           <div className='flex flex-row space-x-2'>
-            <p className="text-sm font-bold text-[#4A5568] truncate">
+            <p className="text-sm font-bold truncate" style={{
+              color: palette.text
+            }}>
               <CoinBalance mintAddress={item.address} />
             </p>
           </div>
 
-          <div className="mt-1 text-xs text-gray-500 truncate space-x-1">
+          <div className="mt-1 text-xs truncate space-x-1" style={{
+              color: palette.disabledText
+            }}>
             ${item.decimals}.00
           </div>
         </div>

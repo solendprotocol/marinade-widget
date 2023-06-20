@@ -2,8 +2,10 @@ import { createRoot } from 'react-dom/client';
 import { IInit } from './types';
 
 import 'tailwindcss/tailwind.css';
+import { useMediaQuery } from "react-responsive";
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
 import MarinadeCircle from './icons/MarinadeCircle';
+import { INITIAL_FORM_CONFIG } from './constants';
 
 const containerId = 'jupiter-terminal';
 const packageJson = require('../package.json');
@@ -106,6 +108,11 @@ const RenderShell = (props: IInit) => {
   const displayMode = props.displayMode;
   const containerStyles = props.containerStyles;
   const containerClassName = props.containerClassName;
+  const systemPrefersDark = useMediaQuery(
+    {
+      query: "(prefers-color-scheme: dark)"
+    },
+  );
 
   const displayClassName = useMemo(() => {
     // Default Modal
@@ -119,7 +126,7 @@ const RenderShell = (props: IInit) => {
   const contentClassName = useMemo(() => {
     // Default Modal
     if (!displayMode || displayMode === 'modal') {
-      return `flex flex-col h-screen w-screen max-h-[90vh] md:max-h-[600px] max-w-[360px] overflow-auto text-black relative bg-jupiter-bg rounded-lg webkit-scrollbar ${containerClassName || ''
+      return `flex flex-col h-screen w-screen max-h-[90vh] md:max-h-[600px] max-w-[360px] overflow-auto text-black relative rounded-lg webkit-scrollbar ${containerClassName || ''
         } p-4 h-fit`;
     } else if (displayMode === 'integrated' || displayMode === 'widget') {
       return 'flex flex-col h-full w-full overflow-auto text-black relative webkit-scrollbar p-4';
@@ -140,7 +147,9 @@ const RenderShell = (props: IInit) => {
         rel="stylesheet"
       ></link>
 
-      <div style={{ ...defaultStyles, ...containerStyles }} className={contentClassName}>
+      <div style={{ ...defaultStyles, ...containerStyles,
+      background: (systemPrefersDark && props.theme !== 'light') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
+       }} className={contentClassName}>
         <RenderLoadableMarinade {...props} />
       </div>
 
@@ -154,6 +163,11 @@ const RenderShell = (props: IInit) => {
 const RenderWidgetShell = (props: IInit) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const systemPrefersDark = useMediaQuery(
+    {
+      query: "(prefers-color-scheme: dark)"
+    },
+  );
   const classes = useMemo(() => {
     const size = props.widgetStyle?.size || 'default';
 
@@ -204,6 +218,9 @@ const RenderWidgetShell = (props: IInit) => {
         className={`p-4 absolute overflow-hidden ${classes.contentClassName
           } flex flex-col w-[90vw] max-w-[384px] max-h-[75vh] rounded-2xl bg-jupiter-bg transition-opacity duration-300 shadow-2xl ${!isOpen ? 'h-0 opacity-0' : 'opacity-100'
           }`}
+          style={{
+            background: (systemPrefersDark && props.theme !== 'light') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
+          }}
       >
         <RenderLoadableMarinade {...props} />
       </div>

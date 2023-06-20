@@ -4,8 +4,6 @@ import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useAccounts } from '../contexts/accounts';
 
 import { MAX_INPUT_LIMIT, MINIMUM_SOL_BALANCE, MSOL_MINT } from '../misc/constants';
-
-import CoinBalance from './Coinbalance';
 import FormError from './FormError';
 import JupButton from './JupButton';
 
@@ -99,7 +97,7 @@ const Form: React.FC<{
 
   return (
     <div className="h-full flex flex-col items-center justify-center pb-1">
-      <div className="w-full mt-2 rounded-xl flex flex-col px-2">
+      <div className="w-full mt-2 rounded-xl flex flex-col">
         <div className="flex-col">
         <div className="flex justify-between items-center">
         <span 
@@ -113,7 +111,7 @@ const Form: React.FC<{
             style={{
               color: colors.disabledTextDark
             }}
-              className={`text-xs text-thin`}
+              className={`text-xs text-thin flex items-center gap-1`}
             >
               <FaWallet className='inline text-[#CBD5E0]' /> {solAccount?.balance ?? 0} SOL{" "}
               <button 
@@ -140,25 +138,37 @@ const Form: React.FC<{
             className={classNames(`border-b border-transparent rounded-xl transition-all`)}>
             <div className={`px-x border-transparent rounded-xl `}>
               <div>
-                <div className={`p-4 flex flex-col dark:text-[#4A5568]`}>
+                <div className={`p-4 flex flex-col`}>
                   <div className="flex justify-between items-center">
                     <button
                       type="button"
-                      className={`py-2 px-2 rounded-lg flex items-center ${target ? '' : 'bg-[#308D8A]'} hover:bg-[#308D8A]/${target ? '25' : '75'} text-[#4A5568]`}
+                      className={`py-2 rounded-lg flex items-center hover:opacity-75 disabled:opacity-50`}
+                      style={{
+                        background: target ? undefined : palette.primary,
+                      }}
+                      disabled={!wallet}
                       onClick={onClickSelectFromMint}
                     > 
 
                       {target && <div className="h-5 w-5">
-                        {(target?.type === 'native' ? <TokenIcon tokenInfo={solTokenInfo} width={20} height={20} /> : null) ?? (target?.type === 'stakeAccount' ? <div className="h-5 w-5 rounded-full" style={{
-            background: target.stakeAccount.background
-          }} /> : null)}
+                        {(target?.type === 'native' ? <TokenIcon 
+                          tokenInfo={solTokenInfo} width={20} height={20} /> : null) ?? (target?.type === 'stakeAccount' ? <div className="h-5 w-5 rounded-full" 
+                          style={{
+                            background: target.stakeAccount.background
+                          }} /> : null)}
                       </div>}
                       <div className="ml-2 font-semibold" translate="no">
-                        {target && <span className="text-[#4A5568]">{' '}SOL</span>}
-                        {!target && <span className={`${target ? 'text-[#4A5568]' : 'text-white'} fill-current mx-2`}>Select</span>}
+                        {target && <span style={{
+                            color: palette.text
+                          }}>{' '}SOL</span>}
+                        {!target && <span style={{
+                          color: wallet ? palette.primaryBg : palette.disabledText
+                        }} className='fill-current mx-2'>Select</span>}
                       </div>
 
-                      <span className={`${target ? 'text-[#4A5568]' : 'text-white'} fill-current mx-2`}>
+                      <span style={{
+                          color: wallet ? palette.primaryBg : palette.disabledText
+                      }}className='fill-current mx-2'>
                           <ChevronDownIcon />
                         </span>
                     </button>
@@ -173,24 +183,27 @@ const Form: React.FC<{
                         valueIsNumericString
                         onValueChange={({ value }) => setTargetAmount(Number(value))}
                         placeholder={'0.00'}
-                        className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 text-lg")}
+                        className={classNames("h-full w-full bg-transparent text-right font-semibold text-lg")}
+                        style={{
+                          color: target?.amount ? palette.text : palette.disabledText,
+                        }}
                         decimalSeparator={detectedSeparator}
                         isAllowed={withValueLimit}
                       />
-                      {solTokenInfo?.address ? (
+                    </div>
+                  </div>
+                  <div className='flex justify-between'>
+                  <span className='text-xs' style={{ color: palette.text}}>
+          {target?.type === 'stakeAccount' ? <><span className='font-semibold'>Stake account</span> {formatAddress(target.stakeAccount.address)}</> : <div className='h-4' />}
+          </span>{solTokenInfo?.address ? (
                         <div className='flex justify-end items-center'>
                           {target ? (
-                            <span className='text-xs text-[#4A5568]'>
+                            <span className='text-xs' style={{ color: palette.text}}>
                               {' '}<CoinBalanceUSD tokenInfo={solTokenInfo} amount={target.amount.toString()} />
                             </span>
                           ) : null}
                         </div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <span className='text-xs text-[#4A5568] mb-[-12px] mt-[-4px]'>
-          {target?.type === 'stakeAccount' ? <><span className='font-semibold'>Stake account</span> {formatAddress(target.stakeAccount.address)}</> : <div className='h-4' />}
-          </span>
+                      ) : null}</div>
                 </div>
               </div>
             </div>
@@ -200,47 +213,58 @@ const Form: React.FC<{
             <span className={`text-xs text-[${colors.disabledTextDark}] font-semibold`}>
             To receive
             </span>
-            <span className={`text-xs text-[${colors.disabledTextDark}] text-thin`}>
+            <span className={`text-xs text-thin flex items-center gap-1`}
+            style={{
+              color: colors.disabledTextDark
+            }}>
             <FaWallet className='inline text-[#CBD5E0]' /> {mSolAccount?.balance ?? 0} mSOL{" "}
             </span>
           </div>
-          <div className="border-b border-transparent bg-[#F7FAFC] rounded-xl">
+          <div className="border-b border-transparent rounded-xl"
+          style={{
+            background: palette.secondaryBg
+          }}>
             <div className="px-x border-transparent rounded-xl">
               <div>
-                <div className={classNames("p-4 flex flex-col dark:text-[#4A5568]")}>
+                <div className={classNames("p-4 flex flex-col")}>
                   <div className="flex justify-between items-center">
                     <button
                       type="button"
-                      className="py-2 px-2 rounded-lg flex items-center text-[#4A5568]"
+                      className="py-2 rounded-lg flex items-center"
                       disabled={true}
                     >
                       <div className="h-5 w-5"><TokenIcon tokenInfo={msolTokenInfo} width={20} height={20} /></div>
                       <div className="mx-2 font-semibold" translate="no">
-                        <span className="text-[#4A5568]">mSOL</span>
+                        <span style={{
+                          color: palette.text
+                        }}>mSOL</span>
                       </div>
                     </button>
 
-                    {(msolTokenInfo && marinadeStats && target) ? (<div className="text-right">
+                    {(marinadeStats && target) ? (<div className="text-right">
                       <NumericFormat
                         disabled={true}
                         value={((target?.amount ?? 0) / marinadeStats.msolSolPrice).toString()}
-                        decimalScale={mSolAccount.decimals}
+                        decimalScale={mSolAccount?.decimals ?? 9}
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
                         onValueChange={({ value }) => onChangeToValue(value)}
-                        className={classNames("h-full w-full bg-transparent text-[#4A5568] text-right font-semibold dark:placeholder:text-[#4A5568]/25 placeholder:text-sm placeholder:font-normal text-lg")}
+                        className={classNames("h-full w-full bg-transparent text-right font-semibold text-lg")}
+                        style={{
+                          color: target?.amount ? palette.text : palette.disabledText,
+                        }}
                         decimalSeparator={detectedSeparator}
                         isAllowed={withValueLimit}
                       />
-                      <div className='flex justify-end items-center'>
-                        <span className='text-xs text-[#4A5568]'>
-                          {' '}<CoinBalanceUSD tokenInfo={msolTokenInfo} amount={(target.amount / marinadeStats.msolSolPrice).toString()} />
-                        </span>
-                        </div>
                     </div>
                       ) : null}
                   </div>
+                  {(msolTokenInfo && marinadeStats && target?.amount) ? <div className='flex justify-end items-center'>
+                        <span className='text-xs' style={{ color: palette.text}}>
+                          {' '}<CoinBalanceUSD tokenInfo={msolTokenInfo} amount={(target.amount / marinadeStats.msolSolPrice).toString()} />
+                        </span>
+                        </div> : <div className='h-4' />}
                 </div>
               </div>
             </div>
@@ -251,22 +275,19 @@ const Form: React.FC<{
       </div>
 
 <div className="flex justify-between w-full p-2">
-<span className='font-normal text-xs text-[#4A5568]'>
+<span className='font-normal text-xs' style={{ color: palette.text}}>
   Deposit fee: {((target?.type === 'native' ? marinadeStats?.rewardDepositFee : marinadeStats?.rewardDepositStakeFee) ?? 0) / 100}%
 </span>
-<span className='font-normal text-xs text-[#4A5568] '>
-  
-</span>
 </div>
-      <div className="w-full px-2">
+      <div className="w-full">
         {!walletPublicKey ? (
           <JupButton size="lg" className="w-full" type="button" onClick={onConnectWallet}>
             Connect Wallet
           </JupButton>
         ) : (
           <JupButton
-            size="md"
-            className="w-full disabled:opacity-50 bg-[#308D8A]"
+            size="lg"
+            className="w-full disabled:opacity-50"
             type="button"
             onClick={deposit}
             disabled={!target || !target.amount}
@@ -276,19 +297,23 @@ const Form: React.FC<{
         )}
       </div>
       <div className='flex flex-col gap-1 w-full'>
-      {target && marinadeStats && <div className="flex justify-between w-full px-2 mt-2">
-      <span className='font-normal text-xs text-[#4A5568]'>
+      {target && marinadeStats && <div className="flex justify-between w-full mt-2">
+      <span className='font-normal text-xs' style={{ color: palette.text}}>
         1 mSOL ≈ {marinadeStats.msolSolPrice.toFixed(6)} SOL
       </span>
-      <span className='flex items-center gap-1 font-normal text-xs text-[#4A5568] cursor-pointer' onClick={() => setShowTransactionInfo(!showTransactionInfo)}>
+      <span className='flex items-center gap-1 font-normal text-xs cursor-pointer' style={{ color: palette.text}} onClick={() => setShowTransactionInfo(!showTransactionInfo)}>
       {showTransactionInfo ? <><ChevronDownIcon/> Hide</> : <><ChevronUpIcon/> Show</>} transaction info
       </span>
       </div>}
-      {target && marinadeStats && <div className="flex justify-between w-full px-2">
-      <span className='font-normal text-xs text-[#4A5568]'>
+      {target && marinadeStats && <div className="flex justify-between w-full">
+      <span className='font-normal text-xs' style={{
+        color: palette.text
+      }}>
         Staking reward fee
       </span>
-      <span className='font-normal text-xs text-[#4A5568] '>
+      <span className='font-normal text-xs' style={{
+        color: palette.text
+      }}>
         {marinadeStats.stakingRewardFee}%
       </span>
       </div>}

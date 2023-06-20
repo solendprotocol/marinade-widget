@@ -150,49 +150,63 @@ const FormConfigurator = ({
               <p className="text-xs text-[#4A5568]/30">Primary</p>
             </div>
             <InputColor
-            initialValue={palette.primaryLight}/>
+            initialValue={palette.primaryLight}
+            onChange={(color) => setValue('palette.primaryLight', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Secondary</p>
             </div>
             <InputColor
-            initialValue={palette.secondaryLight}/>
+            initialValue={palette.secondaryLight}
+            onChange={(color) => setValue('palette.secondaryLight', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Primary</p>
             </div>
             <InputColor
-            initialValue={palette.primaryBgLight}/>
+            initialValue={palette.primaryBgLight}
+            onChange={(color) => setValue('palette.primaryBgLight', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Primary BG</p>
             </div>
             <InputColor
-            initialValue={palette.secondaryBgLight}/>
+            initialValue={palette.secondaryBgLight}
+            onChange={(color) => setValue('palette.secondaryBgLight', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
             </div>
             <InputColor
-            initialValue={palette.textLight}/>
+            initialValue={palette.textLight}
+            onChange={(color) => setValue('palette.textLight', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Text</p>
             </div>
             <InputColor
-            initialValue={palette.disabledTextLight}/>
+            initialValue={palette.disabledTextLight}
+            onChange={(color) => setValue('palette.disabledTextLight', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Disabled text</p>
             </div>
             <InputColor
-            initialValue={palette.primaryLight}/>
+            initialValue={palette.primaryLight}
+            onChange={(color) => setValue('palette.primaryLight', color.hex)}
+            />
           </div>
           <p className="text-sm text-[#4A5568]/75">Dark</p>
             <div className="flex justify-between mt-5">
@@ -200,49 +214,63 @@ const FormConfigurator = ({
               <p className="text-xs text-[#4A5568]/30">Primary</p>
             </div>
             <InputColor
-            initialValue={palette.primaryDark}/>
+            initialValue={palette.primaryDark}
+            onChange={(color) => setValue('palette.primaryDark', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Secondary</p>
             </div>
             <InputColor
-            initialValue={palette.secondaryDark}/>
+            initialValue={palette.secondaryDark}
+            onChange={(color) => setValue('palette.secondaryDark', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Primary</p>
             </div>
             <InputColor
-            initialValue={palette.primaryBgDark}/>
+            initialValue={palette.primaryBgDark}
+            onChange={(color) => setValue('palette.primaryBgDark', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Primary BG</p>
             </div>
             <InputColor
-            initialValue={palette.secondaryBgDark}/>
+            initialValue={palette.secondaryBgDark}
+            onChange={(color) => setValue('palette.secondaryBgDark', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
             </div>
             <InputColor
-            initialValue={palette.textDark}/>
+            initialValue={palette.textDark}
+            onChange={(color) => setValue('palette.textDark', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Text</p>
             </div>
             <InputColor
-            initialValue={palette.disabledTextDark}/>
+            initialValue={palette.disabledTextDark}
+            onChange={(color) => setValue('palette.disabledTextDark', color.hex)}
+            />
           </div>
             <div className="flex justify-between mt-5">
             <div>
               <p className="text-xs text-[#4A5568]/30">Disabled text</p>
             </div>
             <InputColor
-            initialValue={palette.primaryDark}/>
+            initialValue={palette.primaryDark}
+            onChange={(color) => setValue('palette.primaryDark', color.hex)}
+            />
           </div>
           </div>}
       </div>

@@ -2,6 +2,7 @@ import { Adapter } from '@solana/wallet-adapter-base';
 import React, { DetailedHTMLProps, FC, ImgHTMLAttributes, MouseEventHandler, useCallback, useRef } from 'react';
 
 import { isMobile } from '../../../misc/utils';
+import { useData } from 'src/contexts/DataProvider';
 
 const UnknownImage = ({ width = 24, height = 24 }: { width: number; height: number }) => {
   return (
@@ -63,10 +64,16 @@ export interface WalletListItemProps {
 
 export const WalletListItem = React.forwardRef(
   ({ handleClick, wallet }: WalletListItemProps, ref: React.ForwardedRef<HTMLLIElement>) => {
+    const { palette } = useData();
+
     return (
       <li
         ref={ref}
-        className={`relative list-none h-full flex justify-between p-4 cursor-pointer text-[#4A5568] bg-[#EDF2F7] rounded-xl hover:bg-[#EDF2F7]/10`}
+        className={`relative list-none h-full flex justify-between p-4 cursor-pointer rounded-xl hover:opacity-50`}
+        style={{
+          color: palette.text,
+          background: palette.secondaryBg
+        }}
         onClick={handleClick}
       >
         <div className={`absolute top-0 left-0  w-full h-full`}>

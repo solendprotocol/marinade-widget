@@ -37,6 +37,8 @@ type AppPaletteType = {
     secondaryBg: string,
     text: string,
     disabledText: string,
+    invertedText: string,
+    invertedPrimaryBg: string,
 }
 
 type StakeModeType = 'liquid' | 'native';
@@ -74,6 +76,8 @@ const defaultContextValues ={
         secondaryBg: INITIAL_FORM_CONFIG.palette.secondaryBgLight,
         text: INITIAL_FORM_CONFIG.palette.textLight,
         disabledText: INITIAL_FORM_CONFIG.palette.disabledTextLight,
+        invertedText: INITIAL_FORM_CONFIG.palette.textDark,
+        invertedPrimaryBg: INITIAL_FORM_CONFIG.palette.primaryBgDark,
     },
     colors: INITIAL_FORM_CONFIG.palette,
     deposit: () => Promise.resolve(''),
@@ -131,7 +135,7 @@ function getRandomHEXColor(seed: string) {
     return output;
   }
 
-export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children, palette }) => {
+export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children, palette, theme }) => {
   const [validators, setValidators] = useState<DataType['validators']>(defaultContextValues.validators);
   const [stakeMode, setStakeMode] = useState<StakeModeType>(defaultContextValues.stakeMode);
   const [target, setTarget] = useState<TargetType | null>(defaultContextValues.target);
@@ -336,9 +340,40 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
 
     const usedPalette = {
         ...INITIAL_FORM_CONFIG.palette,
-        palette
+        ...palette
     }
 
+    const darkSet = {
+        primary: usedPalette.primaryDark,
+        secondary: usedPalette.secondaryDark,
+        primaryBg: usedPalette.primaryBgDark,
+        secondaryBg: usedPalette.secondaryBgDark,
+        text: usedPalette.textDark,
+        disabledText: usedPalette.disabledTextDark,
+        invertedText: usedPalette.textLight,
+        invertedPrimaryBg: usedPalette.primaryBgLight,
+    }
+
+    const lightSet = {
+        primary: usedPalette.primaryLight,
+        secondary: usedPalette.secondaryLight,
+        primaryBg: usedPalette.primaryBgLight,
+        secondaryBg: usedPalette.secondaryBgLight,
+        text: usedPalette.textLight,
+        disabledText: usedPalette.disabledTextLight,
+        invertedText: usedPalette.textDark,
+        invertedPrimaryBg: usedPalette.primaryBgDark,
+    }
+
+    let appPalette = systemPrefersDark ? darkSet : lightSet;
+
+    if (theme === 'light') {
+        appPalette = lightSet
+    } else if (theme === 'dark') {
+        appPalette = darkSet
+    }
+
+    console.log(theme, appPalette)
   return <DataContext.Provider value={{ 
         allowDirectStake,
         validators, 
@@ -347,14 +382,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         stakeAccounts,
         deposit,
         delegationStrategy,
-        palette: {       
-            primary: systemPrefersDark ? usedPalette.primaryDark : usedPalette.primaryLight,
-            secondary: systemPrefersDark ? usedPalette.secondaryDark : usedPalette.secondaryLight,
-            primaryBg: systemPrefersDark ? usedPalette.primaryBgDark : usedPalette.primaryBgLight,
-            secondaryBg: systemPrefersDark ? usedPalette.secondaryBgDark : usedPalette.secondaryBgLight,
-            text: systemPrefersDark ? usedPalette.textDark : usedPalette.textLight,
-            disabledText: systemPrefersDark ? usedPalette.disabledTextDark : usedPalette.disabledTextLight,
-        },
+        palette: appPalette,
         // full palette
         colors: usedPalette,
         refresh,
