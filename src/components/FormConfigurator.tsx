@@ -123,6 +123,7 @@ const FormConfigurator = ({
             >
               {THEME_MODES.map(m => 
                 <button
+                  key={m.value}
                   onClick={() => {
                     setValue('theme', m.value)
                     setIsThemeDropdownOpen(false);
