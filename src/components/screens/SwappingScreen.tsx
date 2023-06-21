@@ -191,7 +191,7 @@ const SwappingScreen = () => {
 
   return (
     <div className="flex flex-col h-full w-full p-4">
-      {screen === 'Initial' ? (
+      {screen === 'Error' ? (
         <div className="flex justify-center">
           <div className="flex flex-col items-center justify-center text-center">
             <ErrorIcon />
