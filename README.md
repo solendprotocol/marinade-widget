@@ -2,7 +2,7 @@
 
 Marinade Terminal is an open-sourced, lite version of Marinade that provides end-to-end swap flow by linking it in your HTML.
 
-Visit our Demo / Playground over at [https://marinade-widget.vercel.app/](https://marinade-widget.vercel.app/)
+Visit our Demo / Playground over at https://marinade-widget-delta.vercel.app
 
 With several templates to get you started, and auto generated code snippets.
 
