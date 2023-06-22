@@ -202,7 +202,6 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   }
 
   function calcVotePower(directStake?: number): number {
-    debugger;
     // how much % the DS control
     const voteControlPoolSize = 0.2;
     // how much SOL the votes control

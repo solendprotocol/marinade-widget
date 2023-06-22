@@ -1,111 +1,85 @@
-#jupiter-terminal *,
-#jupiter-terminal ::before,
-#jupiter-terminal ::after {
+#marinade-terminal *,
+#marinade-terminal ::before,
+#marinade-terminal ::after {
   box-sizing: border-box; /* 1 */
   border-width: 0; /* 2 */
   border-style: solid; /* 2 */
   border-color: theme('borderColor.DEFAULT', currentColor); /* 2 */
 }
-#jupiter-terminal ::before,
-#jupiter-terminal ::after {
+#marinade-terminal ::before,
+#marinade-terminal ::after {
   --tw-content: '';
 }
-#jupiter-terminal html {
+#marinade-terminal html {
   line-height: 1.5; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
   -moz-tab-size: 4; /* 3 */
   tab-size: 4; /* 3 */
-  font-family: theme(
-    'fontFamily.sans',
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    'Noto Sans',
-    sans-serif,
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    'Noto Color Emoji'
-  ); /* 4 */
+  font-family: theme('fontFamily.sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"); /* 4 */
   font-feature-settings: theme('fontFamily.sans[1].fontFeatureSettings', normal); /* 5 */
 }
-#jupiter-terminal body {
+#marinade-terminal body {
   margin: 0; /* 1 */
   line-height: inherit; /* 2 */
 }
-#jupiter-terminal hr {
+#marinade-terminal hr {
   height: 0; /* 1 */
   color: inherit; /* 2 */
   border-top-width: 1px; /* 3 */
 }
-#jupiter-terminal abbr:where([title]) {
+#marinade-terminal abbr:where([title]) {
   text-decoration: underline dotted;
 }
-#jupiter-terminal h1,
-#jupiter-terminal h2,
-#jupiter-terminal h3,
-#jupiter-terminal h4,
-#jupiter-terminal h5,
-#jupiter-terminal h6 {
+#marinade-terminal h1,
+#marinade-terminal h2,
+#marinade-terminal h3,
+#marinade-terminal h4,
+#marinade-terminal h5,
+#marinade-terminal h6 {
   font-size: inherit;
   font-weight: inherit;
 }
-#jupiter-terminal a {
+#marinade-terminal a {
   color: inherit;
   text-decoration: inherit;
 }
-#jupiter-terminal b,
-#jupiter-terminal strong {
+#marinade-terminal b,
+#marinade-terminal strong {
   font-weight: bolder;
 }
-#jupiter-terminal code,
-#jupiter-terminal kbd,
-#jupiter-terminal samp,
-#jupiter-terminal pre {
-  font-family: theme(
-    'fontFamily.mono',
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    'Liberation Mono',
-    'Courier New',
-    monospace
-  ); /* 1 */
+#marinade-terminal code,
+#marinade-terminal kbd,
+#marinade-terminal samp,
+#marinade-terminal pre {
+  font-family: theme('fontFamily.mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace); /* 1 */
   font-size: 1em; /* 2 */
 }
-#jupiter-terminal small {
+#marinade-terminal small {
   font-size: 80%;
 }
-#jupiter-terminal sub,
-#jupiter-terminal sup {
+#marinade-terminal sub,
+#marinade-terminal sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline;
 }
-#jupiter-terminal sub {
+#marinade-terminal sub {
   bottom: -0.25em;
 }
-#jupiter-terminal sup {
+#marinade-terminal sup {
   top: -0.5em;
 }
-#jupiter-terminal table {
+#marinade-terminal table {
   text-indent: 0; /* 1 */
   border-color: inherit; /* 2 */
   border-collapse: collapse; /* 3 */
 }
-#jupiter-terminal button,
-#jupiter-terminal input,
-#jupiter-terminal optgroup,
-#jupiter-terminal select,
-#jupiter-terminal textarea {
+#marinade-terminal button,
+#marinade-terminal input,
+#marinade-terminal optgroup,
+#marinade-terminal select,
+#marinade-terminal textarea {
   font-family: inherit; /* 1 */
   font-size: 100%; /* 1 */
   font-weight: inherit; /* 1 */
@@ -114,105 +88,105 @@
   margin: 0; /* 2 */
   padding: 0; /* 3 */
 }
-#jupiter-terminal button,
-#jupiter-terminal select {
+#marinade-terminal button,
+#marinade-terminal select {
   text-transform: none;
 }
-#jupiter-terminal button,
-#jupiter-terminal [type='button'],
-#jupiter-terminal [type='reset'],
-#jupiter-terminal [type='submit'] {
+#marinade-terminal button,
+#marinade-terminal [type='button'],
+#marinade-terminal [type='reset'],
+#marinade-terminal [type='submit'] {
   -webkit-appearance: button; /* 1 */
   background-color: transparent; /* 2 */
   background-image: none; /* 2 */
 }
-#jupiter-terminal :-moz-focusring {
+#marinade-terminal :-moz-focusring {
   outline: auto;
 }
-#jupiter-terminal :-moz-ui-invalid {
+#marinade-terminal :-moz-ui-invalid {
   box-shadow: none;
 }
-#jupiter-terminal progress {
+#marinade-terminal progress {
   vertical-align: baseline;
 }
-#jupiter-terminal ::-webkit-inner-spin-button,
-#jupiter-terminal ::-webkit-outer-spin-button {
+#marinade-terminal ::-webkit-inner-spin-button,
+#marinade-terminal ::-webkit-outer-spin-button {
   height: auto;
 }
-#jupiter-terminal [type='search'] {
+#marinade-terminal [type='search'] {
   -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
 }
-#jupiter-terminal ::-webkit-search-decoration {
+#marinade-terminal ::-webkit-search-decoration {
   -webkit-appearance: none;
 }
-#jupiter-terminal ::-webkit-file-upload-button {
+#marinade-terminal ::-webkit-file-upload-button {
   -webkit-appearance: button; /* 1 */
   font: inherit; /* 2 */
 }
-#jupiter-terminal summary {
+#marinade-terminal summary {
   display: list-item;
 }
-#jupiter-terminal blockquote,
-#jupiter-terminal dl,
-#jupiter-terminal dd,
-#jupiter-terminal h1,
-#jupiter-terminal h2,
-#jupiter-terminal h3,
-#jupiter-terminal h4,
-#jupiter-terminal h5,
-#jupiter-terminal h6,
-#jupiter-terminal hr,
-#jupiter-terminal figure,
-#jupiter-terminal p,
-#jupiter-terminal pre {
+#marinade-terminal blockquote,
+#marinade-terminal dl,
+#marinade-terminal dd,
+#marinade-terminal h1,
+#marinade-terminal h2,
+#marinade-terminal h3,
+#marinade-terminal h4,
+#marinade-terminal h5,
+#marinade-terminal h6,
+#marinade-terminal hr,
+#marinade-terminal figure,
+#marinade-terminal p,
+#marinade-terminal pre {
   margin: 0;
 }
-#jupiter-terminal fieldset {
+#marinade-terminal fieldset {
   margin: 0;
   padding: 0;
 }
-#jupiter-terminal legend {
+#marinade-terminal legend {
   padding: 0;
 }
-#jupiter-terminal ol,
-#jupiter-terminal ul,
-#jupiter-terminal menu {
+#marinade-terminal ol,
+#marinade-terminal ul,
+#marinade-terminal menu {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#jupiter-terminal textarea {
+#marinade-terminal textarea {
   resize: vertical;
 }
-#jupiter-terminal input::placeholder,
-#jupiter-terminal textarea::placeholder {
+#marinade-terminal input::placeholder,
+#marinade-terminal textarea::placeholder {
   opacity: 1; /* 1 */
   color: theme('colors.gray.400', #9ca3af); /* 2 */
 }
-#jupiter-terminal button,
-#jupiter-terminal [role='button'] {
+#marinade-terminal button,
+#marinade-terminal [role="button"] {
   cursor: pointer;
 }
-#jupiter-terminal :disabled {
+#marinade-terminal :disabled {
   cursor: default;
 }
-#jupiter-terminal img,
-#jupiter-terminal svg,
-#jupiter-terminal video,
-#jupiter-terminal canvas,
-#jupiter-terminal audio,
-#jupiter-terminal iframe,
-#jupiter-terminal embed,
-#jupiter-terminal object {
+#marinade-terminal img,
+#marinade-terminal svg,
+#marinade-terminal video,
+#marinade-terminal canvas,
+#marinade-terminal audio,
+#marinade-terminal iframe,
+#marinade-terminal embed,
+#marinade-terminal object {
   display: block; /* 1 */
   vertical-align: middle; /* 2 */
 }
-#jupiter-terminal img,
-#jupiter-terminal video {
+#marinade-terminal img,
+#marinade-terminal video {
   max-width: 100%;
   height: auto;
 }
-#jupiter-terminal [hidden] {
+#marinade-terminal [hidden] {
   display: none;
 }
