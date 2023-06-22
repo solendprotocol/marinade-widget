@@ -38,18 +38,13 @@ const InitialScreen = ({
 
       {showDelegationStrategy ? (
         <div className="absolute top-0 right-0 h-full w-full rounded-lg overflow-hidden">
-          <DelegationStrategy
-            tokenInfos={[...tokenMap.values()]}
-            onClose={() => setShowDelegationStrategy(false)}
-          />
+          <DelegationStrategy tokenInfos={[...tokenMap.values()]} onClose={() => setShowDelegationStrategy(false)} />
         </div>
       ) : null}
 
       {showStakeModeSettings ? (
         <div className="absolute top-0 right-0 h-full w-full rounded-lg overflow-hidden">
-          <StakeModeSettings
-            onClose={() => setShowStakeModeSettings(false)}
-          />
+          <StakeModeSettings onClose={() => setShowStakeModeSettings(false)} />
         </div>
       ) : null}
 

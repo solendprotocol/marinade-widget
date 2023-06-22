@@ -13,6 +13,7 @@ const IntegratedTerminal = (props: {
 }) => {
   const { rpcUrl, theme, palette, formProps, fakeWallet, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
+
   const launchTerminal = async () => {
     window.Marinade.init({
       displayMode: 'integrated',

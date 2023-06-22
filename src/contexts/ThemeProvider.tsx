@@ -77,7 +77,6 @@ export const ThemeProvider: FC<IInit & { children: ReactNode }> = ({ formProps, 
   } else if (theme === 'dark') {
     appPalette = darkSet;
   }
-
   return (
     <ThemeContext.Provider
       value={{

@@ -3619,13 +3619,11 @@
           static compile(e) {
             const t = wr.compile(e.instructions, e.payerKey),
               [n, r] = t.getMessageComponents(),
-              o = new fr(r)
-                .compileInstructions(e.instructions)
-                .map((e) => ({
-                  programIdIndex: e.programIdIndex,
-                  accounts: e.accountKeyIndexes,
-                  data: We().encode(e.data),
-                }));
+              o = new fr(r).compileInstructions(e.instructions).map((e) => ({
+                programIdIndex: e.programIdIndex,
+                accounts: e.accountKeyIndexes,
+                data: We().encode(e.data),
+              }));
             return new vr({ header: n, accountKeys: r, recentBlockhash: e.recentBlockhash, instructions: o });
           }
           isAccountSigner(e) {

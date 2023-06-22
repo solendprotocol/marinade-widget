@@ -7,6 +7,7 @@ import { DataProvider } from './contexts/DataProvider';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import { TokenContextProvider } from './contexts/TokenContextProvider';
 import WalletPassthroughProvider from './contexts/WalletPassthroughProvider';
+import { AccountsProvider } from './contexts/accounts';
 import { IInit } from './types';
 
 const RenderMarinade = (props: IInit) => {
@@ -16,9 +17,11 @@ const RenderMarinade = (props: IInit) => {
         <TokenContextProvider {...props}>
           <ScreenProvider>
             <ThemeProvider {...props}>
-              <DataProvider {...props}>
-                <MarinadeApp />
-              </DataProvider>
+              <AccountsProvider>
+                <DataProvider {...props}>
+                  <MarinadeApp />
+                </DataProvider>
+              </AccountsProvider>
             </ThemeProvider>
           </ScreenProvider>
         </TokenContextProvider>

@@ -70,13 +70,7 @@ const ModeRadio = ({
   );
 };
 
-const DelegationStrategy = ({
-  tokenInfos,
-  onClose,
-}: {
-  onClose: () => void;
-  tokenInfos: TokenInfo[];
-}) => {
+const DelegationStrategy = ({ tokenInfos, onClose }: { onClose: () => void; tokenInfos: TokenInfo[] }) => {
   const [showValidatorSelector, setShowValidatorSelector] = useState<boolean>();
   const { validators, setDelegationStrategy, delegationStrategy } = useData();
   const [selectedValidator, setSelectedValidator] = useState<ValidatorType | null>(delegationStrategy);

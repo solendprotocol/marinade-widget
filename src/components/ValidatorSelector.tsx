@@ -17,7 +17,6 @@ const SEARCH_BOX_HEIGHT = 56;
 // eslint-disable-next-line react/display-name
 const rowRenderer = memo((props: ListChildComponentProps) => {
   const { data, index, style } = props;
-  console.log(data);
   const item = data.searchResult[index];
 
   return <ValidatorRow key={item.address} item={item} style={style} onSubmit={data.onSubmit} />;

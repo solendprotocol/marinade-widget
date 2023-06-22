@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-
 import { useScreenState } from 'src/contexts/ScreenProvider';
-import { IInit } from 'src/types';
 import { USDValueProvider } from 'src/contexts/USDValueProvider';
-
 import Header from './Header';
-import { AccountsProvider } from '../contexts/accounts';
 import InitialScreen from './screens/InitialScreen';
 import ActionScreen from './screens/ActionScreen';
 
@@ -46,11 +42,9 @@ const queryClient = new QueryClient();
 const MarinadeApp = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AccountsProvider>
         <USDValueProvider>
           <Content />
         </USDValueProvider>
-      </AccountsProvider>
     </QueryClientProvider>
   );
 };

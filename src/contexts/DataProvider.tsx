@@ -8,6 +8,7 @@ import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { IInit } from 'src/types';
 import { formatAddress } from 'src/components/ValidatorRow';
 import { useScreenState } from './ScreenProvider';
+import { useAccounts } from './accounts';
 
 type ValidatorsResponseType = {
   validators: Array<{
@@ -133,7 +134,9 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   const { connection } = useConnection();
   const { setScreen, setContext } = useScreenState();
   const [stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([]);
-  const allowDirectStake = formProps?.allowDirectStake ? Boolean(formProps.allowDirectStake) : true;
+  const { refresh: refreshAccounts } = useAccounts();
+  const allowDirectStake =
+    typeof formProps?.allowDirectStake === undefined ? true : Boolean(formProps?.allowDirectStake);
   const [directedValidatorAddress, setDirectedValidatorAddress] = useState<string | null>(
     allowDirectStake ? formProps?.initialValidator ?? defaultContextValues.delegationStrategy : null,
   );
@@ -160,7 +163,6 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         publicKey,
       });
     } catch (e) {
-      console.error('Invalid referral code');
       return defaultConfig;
     }
   }, [formProps?.referralCode, publicKey]);
@@ -219,7 +221,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
     const marinade = new Marinade(marinadeConfig);
     const response = (await axios.get(MSOLSOLPRICE_API)).data as number;
     const state = await marinade.getMarinadeState();
-    console.log(state);
+
     const partnerState = marinadeConfig.referralCode ? await marinade.getReferralPartnerState() : null;
 
     setMarinadeStats({
@@ -242,7 +244,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   }
 
   async function deposit() {
-    if (!wallet || !target) return;
+    if (!wallet || !target?.amount) return;
 
     try {
       const marinade = new Marinade(marinadeConfig);
@@ -282,6 +284,8 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
           setTargetAmount(0);
         },
       });
+
+      refresh();
       return signature;
     } catch (e: any) {
       setScreen('Error');
@@ -355,9 +359,11 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   }, [publicKey]);
 
   function refresh() {
+    refreshAccounts();
     fetchValidators();
     fetchMarinadeStats();
     fetchStakeAccounts();
+    fetchVoteInfo();
   }
 
   return (

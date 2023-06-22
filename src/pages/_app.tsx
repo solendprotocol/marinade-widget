@@ -37,7 +37,7 @@ if ((isDeveloping || isPreview) && typeof window !== 'undefined') {
   });
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App() {
   const [tab, setTab] = useState<IInit['displayMode']>('integrated');
 
   // Cleanup on tab change
@@ -49,7 +49,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const rpcUrl = JUPITER_DEFAULT_RPC;
 
-  const { watch, reset, setValue, formState } = useForm<IFormConfigurator>({
+  const { watch, setValue } = useForm<IFormConfigurator>({
     defaultValues: INITIAL_FORM_CONFIG,
   });
 
@@ -219,7 +219,7 @@ export default function App({ Component, pageProps }: AppProps) {
             </div>
             {/* Mobile configurator */}
             <div className="flex md:hidden">
-              <FormConfigurator {...watchAllFields} reset={reset} setValue={setValue} formState={formState} />
+              <FormConfigurator {...watchAllFields} setValue={setValue} />
             </div>
           </div>
         </div>

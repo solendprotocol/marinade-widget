@@ -8,7 +8,7 @@ import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
 import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import { FaWallet } from 'react-icons/fa';
-import SexyChameleonText from './BigText/BigText';
+import BigText from './BigText/BigText';
 import classNames from 'classnames';
 import { detectedSeparator } from 'src/misc/utils';
 import CoinBalanceUSD from './CoinBalanceUSD';
@@ -28,8 +28,7 @@ const Form: React.FC<{
   const { connect, wallet } = useWalletPassThrough();
   const { accounts } = useAccounts();
   const [showTransactionInfo, setShowTransactionInfo] = useState<boolean>(false);
-  const { target, setTargetAmount, marinadeStats, deposit, delegationStrategy, calcVotePower } =
-    useData();
+  const { target, setTargetAmount, marinadeStats, deposit, delegationStrategy, calcVotePower } = useData();
   const { palette, colors } = useTheme();
   const { tokenMap } = useTokenContext();
 
@@ -153,10 +152,10 @@ const Form: React.FC<{
                         )}
                         {!target && (
                           <span
-                            style={{
-                              color: wallet ? palette.primaryBg : palette.disabledText,
-                            }}
                             className="fill-current mx-2"
+                            style={{
+                              color: palette.primaryBg,
+                            }}
                           >
                             Select
                           </span>
@@ -165,7 +164,7 @@ const Form: React.FC<{
 
                       <span
                         style={{
-                          color: wallet ? palette.primaryBg : palette.disabledText,
+                          color: palette.primaryBg,
                         }}
                         className="fill-current mx-2"
                       >
@@ -315,7 +314,7 @@ const Form: React.FC<{
             onClick={deposit}
             disabled={!target || !target.amount}
           >
-            <SexyChameleonText>Stake</SexyChameleonText>
+            <BigText>Stake</BigText>
           </ActionButton>
         )}
       </div>
