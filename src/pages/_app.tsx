@@ -226,7 +226,7 @@ export default function App() {
 
         <CodeBlocks formConfigurator={watchAllFields} displayMode={tab} />
 
-        <div className="w-full bg-jupiter-bg mt-12">
+        <div className="w-full mt-12">
           <Footer />
         </div>
       </div>

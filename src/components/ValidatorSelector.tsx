@@ -10,6 +10,7 @@ import { useAccounts } from '../contexts/accounts';
 
 import ValidatorRow from './ValidatorRow';
 import { ValidatorType, useData } from 'src/contexts/DataProvider';
+import { useTheme } from 'src/contexts/ThemeProvider';
 
 export const PAIR_ROW_HEIGHT = 72;
 const SEARCH_BOX_HEIGHT = 56;
@@ -33,6 +34,7 @@ const ValidatorSelector = ({
 }) => {
   const { accounts } = useAccounts();
   const { validators } = useData();
+  const { palette } = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResult, setSearchResult] = useState<ValidatorType[]>(validators);
   useEffect(() => {
@@ -56,7 +58,9 @@ const ValidatorSelector = ({
   useEffect(() => inputRef.current?.focus(), [inputRef]);
 
   return (
-    <div className="flex flex-col h-full w-full p-4">
+    <div className="flex flex-col h-full w-full p-4" style={{
+        background: palette.primaryBg
+    }}>
       <div className="flex w-full justify-between">
         <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={onClose}>
           <LeftArrowIcon width={24} height={24} />
