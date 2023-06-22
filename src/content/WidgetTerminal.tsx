@@ -1,7 +1,7 @@
 import { Wallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import JupButton from 'src/components/JupButton';
+import ActionButton from 'src/components/ActionButton';
 import LeftArrowIcon from 'src/icons/LeftArrowIcon';
 import { useDebouncedEffect } from 'src/misc/utils';
 import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType, WidgetPosition, WidgetSize } from 'src/types';
@@ -113,7 +113,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
             <span className="text-sm font-semibold">Set Size</span>
 
             <div className="space-x-2 p-1.5 mt-2 bg-black/30 rounded-xl">
-              <JupButton
+              <ActionButton
                 size="sm"
                 onClick={() => {
                   setSize('sm');
@@ -124,8 +124,8 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
                 <div className="flex items-center space-x-2 text-xs">
                   <div>Small</div>
                 </div>
-              </JupButton>
-              <JupButton
+              </ActionButton>
+              <ActionButton
                 size="sm"
                 onClick={() => {
                   setSize('default');
@@ -136,7 +136,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
                 <div className="flex items-center space-x-2 text-xs">
                   <div>Default</div>
                 </div>
-              </JupButton>
+              </ActionButton>
             </div>
           </div>
         </div>

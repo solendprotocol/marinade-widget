@@ -1,6 +1,6 @@
 import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useState } from 'react';
 
-type Screens = 'Initial' | 'Confirmation' | 'Swapping' | 'Success' | 'Error' | 'Staking' | 'Confirming' | 'Signing';
+type Screens = 'Initial' | 'Success' | 'Error' | 'Staking' | 'Confirming' | 'Signing';
 
 type Context = {
   message?: string;

@@ -7,7 +7,7 @@ import { CSSProperties, useEffect, useMemo, useState } from 'react';
 import MarinadeCircle from './icons/MarinadeCircle';
 import { INITIAL_FORM_CONFIG } from './constants';
 
-const containerId = 'jupiter-terminal';
+const containerId = 'marinade-terminal';
 const packageJson = require('../package.json');
 const bundleName = `main-${packageJson.version}`;
 

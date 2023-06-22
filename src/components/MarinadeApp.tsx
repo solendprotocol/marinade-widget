@@ -1,21 +1,14 @@
-import { JupiterProvider } from '@jup-ag/react-hook';
-import { useConnection } from '@solana/wallet-adapter-react';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import { useScreenState } from 'src/contexts/ScreenProvider';
-import { SwapContextProvider } from 'src/contexts/SwapContext';
-import { ROUTE_CACHE_DURATION } from 'src/misc/constants';
-import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
 import { IInit } from 'src/types';
-import { SlippageConfigProvider } from 'src/contexts/SlippageConfigProvider';
 import { USDValueProvider } from 'src/contexts/USDValueProvider';
 
 import Header from './Header';
 import { AccountsProvider } from '../contexts/accounts';
 import InitialScreen from './screens/InitialScreen';
-import ReviewOrderScreen from './screens/ReviewOrderScreen';
-import SwappingScreen from './screens/SwappingScreen';
+import ActionScreen from './screens/ActionScreen';
 
 const Content = () => {
   const { screen } = useScreenState();
@@ -41,40 +34,22 @@ const Content = () => {
              setIsWalletModalOpen={setIsWalletModalOpen} 
           />
         </>
-      ) : <SwappingScreen />}
+      ) : <ActionScreen />}
     </>
 );
 };
 
 const queryClient = new QueryClient();
 
-const JupiterApp = (props: IInit) => {
-  const {
-    displayMode,
-    formProps,
-  } = props;
-  const { connection } = useConnection();
-  const { wallet } = useWalletPassThrough();
-  const walletPublicKey = useMemo(() => wallet?.adapter.publicKey, [wallet?.adapter.publicKey]);
-
-  const [asLegacyTransaction, setAsLegacyTransaction] = useState(true);
-  // Auto detech if wallet supports it, and enable it if it does
-  useEffect(() => {
-    if (wallet?.adapter?.supportedTransactionVersions?.has(0)) {
-      setAsLegacyTransaction(false)
-      return;
-    }
-    setAsLegacyTransaction(true)
-  }, [wallet?.adapter]);
-
+const MarinadeApp = () => {
   return (    <QueryClientProvider client={queryClient}>
-    <AccountsProvider>
-      <USDValueProvider>
-      <Content />
-      </USDValueProvider>
-      </AccountsProvider>
+        <AccountsProvider>
+          <USDValueProvider>
+          <Content />
+          </USDValueProvider>
+          </AccountsProvider>
       </QueryClientProvider>
   );
 };
 
-export default JupiterApp;
+export default MarinadeApp;

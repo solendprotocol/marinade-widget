@@ -2,12 +2,12 @@ import classNames from 'classnames';
 import React, { ButtonHTMLAttributes, ReactNode } from 'react';
 import { useData } from 'src/contexts/DataProvider';
 
-interface IJupButton {
+interface IActionButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   children: ReactNode;
   className?: string;
-  // JupButton border gradient, globals.css
+  // ActionButton border gradient, globals.css
   highlighted?: boolean;
   size?: 'sm' | 'md' | 'lg';
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
@@ -15,9 +15,9 @@ interface IJupButton {
   rounded?: string;
 }
 
-const JupButton = React.forwardRef(
+const ActionButton = React.forwardRef(
   (
-    { onClick, disabled, children, highlighted, className = '', size = 'md', type, bgClass, rounded }: IJupButton,
+    { onClick, disabled, children, highlighted, className = '', size = 'md', type, bgClass, rounded }: IActionButton,
     ref: React.ForwardedRef<any>,
   ) => {
     const { palette } = useData();
@@ -56,6 +56,6 @@ const JupButton = React.forwardRef(
   },
 );
 
-JupButton.displayName = 'JupButton';
+ActionButton.displayName = 'ActionButton';
 
-export default JupButton;
+export default ActionButton;

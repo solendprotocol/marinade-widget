@@ -13,7 +13,8 @@ const FormAccountRow: React.FC<{
   item: StakeAccountType;
   style: CSSProperties;
   onSubmit(item: StakeAccountType): void;
-}> = ({ item, style, onSubmit }) => {
+  disabled?: boolean,
+}> = ({ item, style, onSubmit, disabled }) => {
   const { palette } = useData();
   const { tokenPriceMap } = useUSDValueProvider();
   const totalUsdValue = useMemo(() => {
@@ -26,13 +27,13 @@ const FormAccountRow: React.FC<{
 
   return (
     <li
-      className={`cursor-pointer list-none `}
+      className={`${disabled ? '' : 'cursor-pointer'} list-none `}
       style={{ maxHeight: PAIR_ROW_HEIGHT, height: PAIR_ROW_HEIGHT, ...style, right: 0 }}
       translate="no"
     >
       <div
         className="flex items-center rounded-lg space-x-4 my-2 p-3 justify-between hover:bg-black/10"
-        onClick={() => onSubmit(item)}
+        onClick={disabled ? undefined :   () => onSubmit(item)}
       >
         <div className="flex-shrink-0">
           <div className="h-6 w-6 rounded-full" style={{

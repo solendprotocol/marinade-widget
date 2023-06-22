@@ -1,23 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { useAccounts } from '../contexts/accounts';
 
-import { MAX_INPUT_LIMIT, MINIMUM_SOL_BALANCE, MSOL_MINT } from '../misc/constants';
-import FormError from './FormError';
-import JupButton from './JupButton';
+import { MAX_INPUT_LIMIT, MSOL_MINT } from '../misc/constants';
+import ActionButton from './ActionButton';
 
 import TokenIcon from './TokenIcon';
 
-import { WRAPPED_SOL_MINT } from '../constants';
-import { useSwapContext } from 'src/contexts/SwapContext';
-import useTimeDiff from './useTimeDiff/useTimeDiff';
+import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
-import WalletIcon from 'src/icons/WalletIcon';
 import ChevronDownIcon from 'src/icons/ChevronDownIcon';
-import PriceInfo from './PriceInfo/index';
 import { FaWallet } from 'react-icons/fa'
-import SexyChameleonText from './SexyChameleonText/SexyChameleonText';
+import SexyChameleonText from './BigText/BigText';
 import classNames from 'classnames';
 import { detectedSeparator } from 'src/misc/utils';
 import CoinBalanceUSD from './CoinBalanceUSD';
@@ -27,34 +22,17 @@ import { useData } from 'src/contexts/DataProvider';
 import { NATIVE_MINT } from '@solana/spl-token';
 import { formatAddress } from './ValidatorRow';
 import ChevronUpIcon from 'src/icons/ChevronUpIcon';
+import Tooltip from './Tooltip';
 
 const Form: React.FC<{
-  onSubmit: () => void;
-  isDisabled: boolean;
   setSelectPairSelector: React.Dispatch<React.SetStateAction<'fromMint' | 'toMint' | null>>;
   setIsWalletModalOpen(toggle: boolean): void;
-  setShowRouteSelector(toggle: boolean): void;
-}> = ({ onSubmit, isDisabled, setSelectPairSelector, setIsWalletModalOpen, setShowRouteSelector }) => {
+}> = ({ setSelectPairSelector, setIsWalletModalOpen }) => {
   const { connect, wallet } = useWalletPassThrough();
   const { accounts } = useAccounts();
   const [showTransactionInfo, setShowTransactionInfo] = useState<boolean>(false);
-  const { target, setTargetAmount, marinadeStats, deposit, palette, colors } = useData();
+  const { target, setTargetAmount, marinadeStats, deposit, palette, colors, delegationStrategy, calcVotePower } = useData();
   const { tokenMap } = useTokenContext();
-  const {
-    form,
-    setForm,
-    errors,
-    fromTokenInfo,
-    toTokenInfo,
-    selectedSwapRoute,
-    jupiter: { routes, loading, refresh },
-  } = useSwapContext();
-  const [hasExpired, timeDiff] = useTimeDiff();
-  useEffect(() => {
-    if (hasExpired) {
-      refresh();
-    }
-  }, [hasExpired]);
 
   const onConnectWallet = () => {
     if (wallet) connect();
@@ -64,18 +42,6 @@ const Form: React.FC<{
   };
 
   const walletPublicKey = useMemo(() => wallet?.adapter.publicKey?.toString(), [wallet?.adapter.publicKey]);
-
-  const onChangeToValue = (value: string) => {
-    if (value === '') {
-      setForm((form) => ({ ...form, fromValue: '', toValue: '' }));
-      return;
-    }
-
-    const isInvalid = Number.isNaN(value);
-    if (isInvalid) return;
-
-    setForm((form) => ({ ...form, toValue: value }));
-  };
 
   const msolTokenInfo = tokenMap.get(MSOL_MINT.toBase58());
   const solTokenInfo = tokenMap.get(NATIVE_MINT.toBase58());
@@ -94,6 +60,9 @@ const Form: React.FC<{
     
     const solAccount = accounts[NATIVE_MINT.toString()];
     const mSolAccount = accounts[MSOL_MINT.toString()];
+
+    const stakeFromTransaction = target?.amount ? calcVotePower(target.amount) : 0;
+    const stakeFromSnapshot = calcVotePower();
 
   return (
     <div className="h-full flex flex-col items-center justify-center pb-1">
@@ -176,12 +145,12 @@ const Form: React.FC<{
                     <div className="text-right">
                       <NumericFormat
                         disabled={!(target?.type === 'native')}
-                        value={target?.amount}
-                        decimalScale={fromTokenInfo?.decimals}
+                        value={target?.amount ?? ''}
+                        decimalScale={solTokenInfo?.decimals}
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
-                        onValueChange={({ value }) => setTargetAmount(Number(value))}
+                        onValueChange={({ value }) => setTargetAmount(value ? Number(value) : undefined)}
                         placeholder={'0.00'}
                         className={classNames("h-full w-full bg-transparent text-right font-semibold text-lg")}
                         style={{
@@ -197,7 +166,7 @@ const Form: React.FC<{
           {target?.type === 'stakeAccount' ? <><span className='font-semibold'>Stake account</span> {formatAddress(target.stakeAccount.address)}</> : <div className='h-4' />}
           </span>{solTokenInfo?.address ? (
                         <div className='flex justify-end items-center'>
-                          {target ? (
+                          {target?.amount ? (
                             <span className='text-xs' style={{ color: palette.text}}>
                               {' '}<CoinBalanceUSD tokenInfo={solTokenInfo} amount={target.amount.toString()} />
                             </span>
@@ -249,7 +218,6 @@ const Form: React.FC<{
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
-                        onValueChange={({ value }) => onChangeToValue(value)}
                         className={classNames("h-full w-full bg-transparent text-right font-semibold text-lg")}
                         style={{
                           color: target?.amount ? palette.text : palette.disabledText,
@@ -270,8 +238,6 @@ const Form: React.FC<{
             </div>
           </div>
         </div>
-
-        {walletPublicKey ? <FormError errors={errors} /> : null}
       </div>
 
 <div className="flex justify-between w-full p-2">
@@ -281,19 +247,19 @@ const Form: React.FC<{
 </div>
       <div className="w-full">
         {!walletPublicKey ? (
-          <JupButton size="lg" className="w-full" type="button" onClick={onConnectWallet}>
+          <ActionButton size="lg" className="w-full" type="button" onClick={onConnectWallet}>
             Connect Wallet
-          </JupButton>
+          </ActionButton>
         ) : (
-          <JupButton
+          <ActionButton
             size="lg"
             className="w-full disabled:opacity-50"
             type="button"
             onClick={deposit}
             disabled={!target || !target.amount}
           >
-            {loading ? <span className="text-sm">Loading...</span> : <SexyChameleonText>Stake</SexyChameleonText>}
-          </JupButton>
+            <SexyChameleonText>Stake</SexyChameleonText>
+          </ActionButton>
         )}
       </div>
       <div className='flex flex-col gap-1 w-full'>
@@ -305,11 +271,59 @@ const Form: React.FC<{
       {showTransactionInfo ? <><ChevronDownIcon/> Hide</> : <><ChevronUpIcon/> Show</>} transaction info
       </span>
       </div>}
-      {target && marinadeStats && <div className="flex justify-between w-full">
+      {delegationStrategy && target?.amount && <>
+      <div className="flex justify-between w-full">
+      <span className='font-normal text-xs flex gap-1 items-center' style={{
+        color: palette.text
+      }}>
+        Directed stake <Tooltip content={<>
+          Estimated SOL amount that the validator will receive at the end of next epoch, based on your mSOL holdings.
+<br/>
+<br/>
+          <a href='https://docs.marinade.finance/marinade-products/directed-stake' rel="noreferrer" target={'_blank'} className='cursor-pointer'>How directed stake works</a>
+          </>
+        }>
+          <AiOutlineInfoCircle/>
+        </Tooltip>
+      </span>
       <span className='font-normal text-xs' style={{
         color: palette.text
       }}>
-        Staking reward fee
+        {(stakeFromTransaction + stakeFromSnapshot).toFixed(6)} SOL
+      </span>
+      </div>
+      <div className="flex justify-between w-full">
+      <span className='font-normal text-xs flex gap-1 items-center ml-4' style={{
+        color: palette.text
+      }}>
+        Current transaction
+      </span>
+      <span className='font-normal text-xs' style={{
+        color: palette.text
+      }}>
+        {stakeFromTransaction.toFixed(6)} SOL
+      </span>
+      </div>
+      <div className="flex justify-between w-full">
+      <span className='font-normal text-xs flex gap-1 items-center ml-4' style={{
+        color: palette.text
+      }}>
+        Existing mSOL
+      </span>
+      <span className='font-normal text-xs' style={{
+        color: palette.text
+      }}>
+        {stakeFromSnapshot.toFixed(6)} SOL
+      </span>
+      </div>
+      </>}
+      {target && marinadeStats && <div className="flex justify-between w-full">
+      <span className='font-normal text-xs flex gap-1 items-center' style={{
+        color: palette.text
+      }}>
+        Staking reward fee <Tooltip content="The staking rewards fee is the fee that is charged on the rewards earned by staking your SOL. The base deposit is not charged.">
+          <AiOutlineInfoCircle/>
+        </Tooltip>
       </span>
       <span className='font-normal text-xs' style={{
         color: palette.text

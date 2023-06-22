@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MarinadeApp from './components/Marinade';
+import MarinadeApp from './components/MarinadeApp';
 import { ContextProvider } from './contexts/ContextProvider';
 import { ScreenProvider } from './contexts/ScreenProvider';
 import { DataProvider } from './contexts/DataProvider';
@@ -15,7 +15,7 @@ const RenderMarinade = (props: IInit) => {
         <TokenContextProvider {...props}>
           <ScreenProvider>
             <DataProvider {...props}>
-              <MarinadeApp {...props} />
+              <MarinadeApp />
             </DataProvider>
           </ScreenProvider>
         </TokenContextProvider>

@@ -9,8 +9,6 @@ import SearchIcon from 'src/icons/SearchIcon';
 import { useAccounts } from '../contexts/accounts';
 
 import ValidatorRow from './ValidatorRow';
-import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
-import Decimal from 'decimal.js';
 import { ValidatorType, useData } from 'src/contexts/DataProvider';
 
 export const PAIR_ROW_HEIGHT = 72;

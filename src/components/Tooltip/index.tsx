@@ -13,7 +13,6 @@ const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({
   className,
   content,
   disabled = false,
-  variant = 'light',
   onClick,
   children,
 }) => {
@@ -21,11 +20,9 @@ const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({
     <div className="group cursor-pointer" onClick={onClick}>
       <div
         className={classNames(
-          'invisible absolute rounded shadow-lg py-1 px-2 right-0 w-full -mt-8 flex justify-center items-center text-center',
+          'invisible absolute rounded shadow-lg p-2 bottom-20 right-0 w-full -mt-8 bg-[#C8ECE1]',
           className,
           {
-            'bg-white text-black': variant === 'light',
-            'bg-black text-[#4A5568]': variant === 'dark',
             'group-hover:visible group-hover:z-50': !disabled,
           },
         )}

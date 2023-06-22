@@ -1,4 +1,3 @@
-import { TokenInfo } from '@solana/spl-token-registry';
 import React, { useState } from 'react';
 import { ValidatorType } from 'src/contexts/DataProvider';
 

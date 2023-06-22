@@ -1,38 +1,16 @@
 import { TokenInfo } from '@solana/spl-token-registry';
-import classNames from 'classnames';
-import React, { createRef, memo, useEffect, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { areEqual, FixedSizeList, ListChildComponentProps } from 'react-window';
+import React, { createRef, memo, useEffect } from 'react';
 import LeftArrowIcon from 'src/icons/LeftArrowIcon';
-import SearchIcon from 'src/icons/SearchIcon';
-import { PAIR_SELECTOR_TOP_TOKENS } from 'src/misc/constants';
-
-import { useAccounts } from '../contexts/accounts';
-
 import FormPairRow from './FormPairRow';
-import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
-import Decimal from 'decimal.js';
 import { useData } from 'src/contexts/DataProvider';
 import FormAccountRow from './FormAccountRow';
-import { useSwapContext } from 'src/contexts/SwapContext';
 
 export const PAIR_ROW_HEIGHT = 72;
-const SEARCH_BOX_HEIGHT = 56;
-
-// eslint-disable-next-line react/display-name
-const rowRenderer = memo((props: ListChildComponentProps) => {
-  const { data, index, style } = props;
-  const item = data.searchResult[index];
-
-  return <FormPairRow key={item.address} item={item} style={style} onSubmit={data.onSubmit} />;
-}, areEqual);
 
 const FormPairSelector = ({
-  onSubmit,
   tokenInfos,
   onClose,
 }: {
-  onSubmit: (value: TokenInfo) => void;
   onClose: () => void;
   tokenInfos: TokenInfo[];
 }) => {
@@ -66,7 +44,6 @@ const FormPairSelector = ({
           }} style={{}} onSubmit={() => {
             setTarget({
             type: 'native',
-            amount: 0
           })
         
           onClose();}
@@ -91,7 +68,7 @@ const FormPairSelector = ({
           Amount must be &gt; 1 SOL
         </span>
         {stakeAccounts.filter(s => s.status === 'minBalance').map(r => 
-          <FormAccountRow key={r.address} item={r} style={{}} onSubmit={() => {
+          <FormAccountRow disabled key={r.address} item={r} style={{}} onSubmit={() => {
             setTarget({
             type: 'stakeAccount',
             stakeAccount: r,

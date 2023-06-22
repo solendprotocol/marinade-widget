@@ -1,13 +1,8 @@
-import React, { useMemo, useState } from 'react';
-import { useSlippageConfig } from 'src/contexts/SlippageConfigProvider';
-import { useSwapContext } from 'src/contexts/SwapContext';
-import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
+import React from 'react';
 import RefreshSVG from 'src/icons/RefreshSVG';
-import { TbDroplet, TbSettingsAutomation } from 'react-icons/tb';
+import { TbSettingsAutomation } from 'react-icons/tb';
 
 import { WalletButton } from './WalletComponents';
-import SwapSettingsModal from './SwapSettingsModal/SwapSettingsModal';
-import FormPairSelector from './FormPairSelector';
 import { useData } from 'src/contexts/DataProvider';
 
 const Header: React.FC<{ 

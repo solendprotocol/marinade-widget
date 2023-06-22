@@ -2,7 +2,7 @@
 
 const isWidgetOnly = process.env.MODE === "widget";
 module.exports = {
-  important: isWidgetOnly ? '#jupiter-terminal' : false,
+  important: isWidgetOnly ? '#marinade-terminal' : false,
   corePlugins: {
     preflight: isWidgetOnly ? false : true,
   },

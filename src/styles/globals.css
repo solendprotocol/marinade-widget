@@ -10,16 +10,16 @@ html {
   font-family: 'Maven Pro', sans-serif;
 }
 
-#jupiter-terminal * {
+#marinade-terminal * {
   box-sizing: border-box;
 }
 
-#jupiter-terminal *:focus {
+#marinade-terminal *:focus {
   outline: none;
 }
 
-/* JupButton border gradient */
-#jupiter-terminal .jup-gradient::before {
+/* ActionButton border gradient */
+#marinade-terminal .jup-gradient::before {
   content: '';
   position: absolute;
   top: 0;
@@ -46,7 +46,7 @@ html {
   background: #979797;
 }
 
-#jupiter-terminal .jup-gradient::before {
+#marinade-terminal .jup-gradient::before {
   content: '';
   position: absolute;
   top: 0;
@@ -62,8 +62,8 @@ html {
 }
 
 
-/* JupButton border gradient */
-#jupiter-terminal .v2-border-gradient::before {
+/* ActionButton border gradient */
+#marinade-terminal .v2-border-gradient::before {
   content: '';
   position: absolute;
   top: 0;
@@ -79,14 +79,14 @@ html {
   pointer-events: none;
 }
 
-#jupiter-terminal .v2-border-gradient-left.v2-border-gradient::before {
+#marinade-terminal .v2-border-gradient-left.v2-border-gradient::before {
   border-top-left-radius: 0.75rem;
   border-bottom-left-radius: 0.75rem;
 }
-#jupiter-terminal .v2-border-gradient-center.v2-border-gradient::before {
+#marinade-terminal .v2-border-gradient-center.v2-border-gradient::before {
   border-radius: 0.75rem;
 }
-#jupiter-terminal .v2-border-gradient-right.v2-border-gradient::before {
+#marinade-terminal .v2-border-gradient-right.v2-border-gradient::before {
   border-top-right-radius: 0.75rem;
   border-bottom-right-radius: 0.75rem;
 }

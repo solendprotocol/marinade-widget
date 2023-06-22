@@ -1,54 +1,14 @@
-import { TokenInfo } from '@solana/spl-token-registry';
-import classNames from 'classnames';
-import React, { createRef, memo, useEffect, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { areEqual, FixedSizeList, ListChildComponentProps } from 'react-window';
+import React, { createRef, useEffect } from 'react';
 import LeftArrowIcon from 'src/icons/LeftArrowIcon';
-import SearchIcon from 'src/icons/SearchIcon';
-import { PAIR_SELECTOR_TOP_TOKENS } from 'src/misc/constants';
 import { FaCheckCircle, FaRegCircle } from 'react-icons/fa'
 
-import { useAccounts } from '../contexts/accounts';
-
-import FormPairRow from './FormPairRow';
-import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
-import Decimal from 'decimal.js';
-import { useData } from 'src/contexts/DataProvider';
-
 export const PAIR_ROW_HEIGHT = 72;
-const SEARCH_BOX_HEIGHT = 56;
-
-// eslint-disable-next-line react/display-name
-const rowRenderer = memo((props: ListChildComponentProps) => {
-  const { data, index, style } = props;
-  const item = data.searchResult[index];
-
-  return <FormPairRow key={item.address} item={item} style={style} onSubmit={data.onSubmit} />;
-}, areEqual);
-
-const ModeRadio = ({selected, children}: {
-  selected: Boolean,
-  children: React.ReactNode
-}) => {
-  return <div className={selected ? "w-full justify-between p-4 border rounded-lg border-[#98D7C3] bg-[#ECFAF5]" : "w-full justify-between p-4 border rounded-lg border-[#EDF2F7] bg-[#F7FAFC]"}>
-  <div className="flex w-full justify-between">
-    <span className='text-xs text-[#4A5568] font-semibold mb-1'>Liquid staking</span>
-    <span  className='mb-4 text-[#308D8A]'><FaCheckCircle/></span>
-    </div>
-    <span className='text-xs text-gray-500'>Stake your SOL without locking them up and earn staking rewards while staying completely liquid. Use mSOL (staked SOL) in DeFi.</span>
-  </div>
-}
 
 const StakeModeSettings = ({
-  onSubmit,
-  tokenInfos,
   onClose,
 }: {
-  onSubmit: (value: TokenInfo) => void;
   onClose: () => void;
-  tokenInfos: TokenInfo[];
 }) => {
-  const { stakeMode, setStakeMode } = useData();
   const inputRef = createRef<HTMLInputElement>();
   useEffect(() => inputRef.current?.focus(), [inputRef]);
 

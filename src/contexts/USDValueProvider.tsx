@@ -1,15 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useDebounce, useLocalStorage } from 'react-use';
+import { useLocalStorage } from 'react-use';
 import { splitIntoChunks } from 'src/misc/utils';
-import { useAccounts } from './accounts';
-import { useTokenContext } from './TokenContextProvider';
-import { useSwapContext } from './SwapContext';
 import { PRICE_MINTS } from 'src/misc/constants';
 
 const MAXIMUM_PARAM_SUPPORT = 100;
 const CACHE_EXPIRE_TIME = 1000 * 60 * 1; // 1 min
-const STORAGE_KEY = 'jupiter-terminal-cached-token-prices';
+const STORAGE_KEY = 'marinade-terminal-cached-token-prices';
 
 interface CacheUSDValue {
   usd: number;
@@ -141,7 +138,7 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     setCachedPrices((prevState) =>
       Object.entries(prevState || {})
-        .filter(([mint, usdCacheValue]) => !hasExpired(usdCacheValue?.timestamp ?? 0))
+        .filter(([_mint, usdCacheValue]) => !hasExpired(usdCacheValue?.timestamp ?? 0))
         .reduce(
           (accValue, [mint, usdCacheValue]) => ({
             ...accValue,

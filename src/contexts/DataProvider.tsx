@@ -4,8 +4,7 @@ import axios from 'axios';
 import { BN, Marinade, MarinadeConfig } from '@marinade.finance/marinade-ts-sdk';
 import { solToLamports, STAKE_PROGRAM_ID } from '@marinade.finance/marinade-ts-sdk/dist/src/util';
 import { useWalletPassThrough } from './WalletPassthroughProvider';
-import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { useSwapContext } from './SwapContext';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { IInit, PaletteType } from 'src/types';
 import { formatAddress } from 'src/components/ValidatorRow';
 import { useScreenState } from './ScreenProvider';
@@ -55,9 +54,10 @@ type DataType = {
     deposit: () => Promise<string | undefined>;
     refresh: () => void;
     setStakeMode: (mode: StakeModeType ) => void;
+    calcVotePower: (stakeAmount?: number) => number;
     setTarget: (mode: TargetType | null ) => void;
     allowDirectStake: boolean;
-    setTargetAmount: (amount: number) => void;
+    setTargetAmount: (amount?: number) => void;
     setDelegationStrategy: (validator: ValidatorType | null) => void;
 }
 
@@ -84,12 +84,16 @@ const defaultContextValues ={
     refresh: () => undefined,
     setTarget: () => undefined,
     setStakeMode: () => undefined,
+    calcVotePower: () => 1,
     setTargetAmount: () => undefined,
     setDelegationStrategy: () => undefined,
 }
 
 const VALIDATORS_API = 'https://validators-api.marinade.finance/validators?limit=9999&epochs=0';
 const MSOLSOLPRICE_API = 'https://api.marinade.finance/msol/price_sol';
+const VOTES_API = 'https://snapshots-api.marinade.finance/v1/votes/msol/latest';
+const SNAPSHOT_API = 'https://snapshots-api.marinade.finance/v1/snapshot/latest/msol/';
+const TVL_API = 'https://api.marinade.finance/tlv';
 
 export const DataContext = createContext<DataType>(defaultContextValues);
 
@@ -113,10 +117,10 @@ export type StakeAccountType = {
 export type TargetType = {
     type: 'stakeAccount',
     stakeAccount: StakeAccountType,
-    amount: number,
+    amount?: number,
 } | {
     type: 'native',
-    amount: number,
+    amount?: number,
 }
 
 type MarinadeStatsType = {
@@ -138,6 +142,15 @@ function getRandomHEXColor(seed: string) {
 export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children, palette, theme }) => {
   const [validators, setValidators] = useState<DataType['validators']>(defaultContextValues.validators);
   const [stakeMode, setStakeMode] = useState<StakeModeType>(defaultContextValues.stakeMode);
+  const [voteData, setVoteData] = useState<{
+    snapshotAmount: number,
+    totalDirectStake: number,
+    poolSize: number,
+  }>({
+    snapshotAmount: 0,
+    totalDirectStake: 0,
+    poolSize: 0,
+  });
   const [target, setTarget] = useState<TargetType | null>(defaultContextValues.target);
   const [marinadeStats, setMarinadeStats] = useState<MarinadeStatsType | null>(null);
   const { publicKey, wallet } = useWalletPassThrough();
@@ -197,13 +210,50 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         })));
     };
 
+    async function fetchVoteInfo() {
+        if (!publicKey) return;
+        const snapshotPromise = axios.get(
+            `${SNAPSHOT_API}${publicKey}`
+        );
+        const votePromise = axios.get(
+            VOTES_API
+        );
+
+        const tvlPromise = axios.get(
+            TVL_API
+        )
+        const [snapshot, vote, tvl] = (await Promise.all([snapshotPromise, votePromise, tvlPromise])).map(r => r.data);
+
+        const totalDirectStake = vote.records.reduce((acc: number, r: {amount: string}) => acc + Number(r.amount ?? 0), 0)
+    
+        setVoteData({
+            snapshotAmount: Number(snapshot.amount),
+            totalDirectStake,
+            poolSize: tvl.staked_sol,
+        })
+    }
+
+    function calcVotePower(directStake?: number): number {
+        debugger;
+        // how much % the DS control
+        const voteControlPoolSize = 0.2;
+        // how much SOL the votes control
+        const totalControl = voteData.poolSize * voteControlPoolSize;
+        // how much % each stake control out of the total ds
+        const singleStakeControlInPercentage = (directStake ? directStake/(marinadeStats?.msolSolPrice ?? 1) : voteData.snapshotAmount) / voteData.totalDirectStake
+        // how much total SOL the validator will recive 
+        const totalSOLForTheValidator = singleStakeControlInPercentage * totalControl;
+
+        return totalSOLForTheValidator
+      }
+
     async function fetchMarinadeStats() {
         const marinade = new Marinade(marinadeConfig);
         const response = (await axios.get(
             MSOLSOLPRICE_API
         )).data as number;
         const state = await marinade.getMarinadeState();
-        console.log(marinadeConfig.referralCode);
+        console.log(state);
         const partnerState = marinadeConfig.referralCode ?  await marinade.getReferralPartnerState() : null;
 
         setMarinadeStats({
@@ -214,7 +264,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         });
     }
 
-    function setTargetAmount(amount: number) {
+    function setTargetAmount(amount?: number) {
         setTarget(target ? {
             ...target,
             amount,
@@ -330,6 +380,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
 
     useEffect(() => {
         fetchStakeAccounts();
+        fetchVoteInfo();
     }, [publicKey]);
 
     function refresh() {
@@ -373,7 +424,6 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         appPalette = darkSet
     }
 
-    console.log(theme, appPalette)
   return <DataContext.Provider value={{ 
         allowDirectStake,
         validators, 
@@ -391,5 +441,6 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         marinadeStats,
         setTarget,
         setTargetAmount,
+        calcVotePower,
     }}>{children}</DataContext.Provider>;
 };

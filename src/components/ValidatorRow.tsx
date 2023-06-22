@@ -1,13 +1,6 @@
-import { TokenInfo } from '@solana/spl-token-registry';
-import React, { CSSProperties, useMemo } from 'react';
-
-import CoinBalance from './Coinbalance';
+import React, { CSSProperties } from 'react';
 import { PAIR_ROW_HEIGHT } from './FormPairSelector';
 import ValidatorIcon from './ValidatorIcon';
-import TokenLink from './TokenLink';
-import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
-import Decimal from 'decimal.js';
-import { useAccounts } from 'src/contexts/accounts';
 import { ValidatorType } from 'src/contexts/DataProvider';
 
 export const formatAddress = (address: string, length?: number) => {

@@ -6,7 +6,7 @@ import 'tailwindcss/tailwind.css';
 import '../styles/globals.css';
 
 import AppHeader from 'src/components/AppHeader/AppHeader';
-import SexyChameleonText from 'src/components/SexyChameleonText/SexyChameleonText';
+import SexyChameleonText from 'src/components/BigText/BigText';
 import Footer from 'src/components/Footer/Footer';
 
 import ModalTerminal from 'src/content/ModalTerminal';

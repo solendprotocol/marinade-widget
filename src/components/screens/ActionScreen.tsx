@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useScreenState } from 'src/contexts/ScreenProvider';
-import { useSwapContext } from 'src/contexts/SwapContext';
-import JupButton from '../JupButton';
-import SexyChameleonText from '../SexyChameleonText/SexyChameleonText';
+import ActionButton from '../ActionButton';
+import SexyChameleonText from '../BigText/BigText';
 import SuccessIcon from 'src/icons/SuccessIcon';
 import { usePreferredExplorer } from 'src/contexts/preferredExplorer';
 import { useData } from 'src/contexts/DataProvider';
@@ -30,72 +29,9 @@ const ErrorIcon = () => {
   );
 };
 
-const SwappingScreen = () => {
-  const {
-    displayMode,
-    lastSwapResult,
-    reset,
-    scriptDomain,
-    swapping: { totalTxs, txStatus },
-    selectedSwapRoute,
-    fromTokenInfo,
-    toTokenInfo,
-    jupiter: { routes, refresh },
-  } = useSwapContext();
+const ActionScreen = () => {
   const { context, screen, setScreen } = useScreenState();
   const { target, palette } = useData();
-
-  const onSwapMore = () => {
-    reset();
-    setScreen('Initial');
-    refresh();
-  };
-
-  const onGoBack = () => {
-    reset({ resetValues: false });
-    setScreen('Initial');
-    refresh();
-  };
-
-  useEffect(() => {
-    if (screen !== 'Swapping') return;
-
-    if (lastSwapResult && 'error' in lastSwapResult) {
-
-      if (window.Marinade.onSwapError) {
-        window.Marinade.onSwapError({ error: lastSwapResult.error });
-      }
-      return;
-    } else if (lastSwapResult && 'txid' in lastSwapResult) {
-      if (window.Marinade.onSuccess) {
-        window.Marinade.onSuccess({ txid: lastSwapResult.txid, swapResult: lastSwapResult });
-      }
-      return;
-    }
-  }, [lastSwapResult]);
-
-  const onClose = () => {
-    if (!displayMode || displayMode === 'modal') {
-      window.Marinade.close();
-    }
-
-    reset();
-    setScreen('Initial');
-  };
-
-  const swapState: 'success' | 'error' | 'loading' = useMemo(() => {
-    const hasErrors = txStatus.find((item) => item.status === 'fail');
-    if (hasErrors) {
-      return 'error';
-    }
-
-    const allSuccess = txStatus.every((item) => item.status !== 'loading');
-    if (txStatus.length > 0 && allSuccess) {
-      return 'success';
-    }
-
-    return 'loading';
-  }, [txStatus]);
 
   const { explorer, getExplorer } = usePreferredExplorer();
 
@@ -105,7 +41,7 @@ const SwappingScreen = () => {
         <div className="flex w-full justify-center">
           <div style={{
             color: palette.text
-          }}>{swapState === 'loading' ? 'Staking...' : ''}</div>
+          }}>Staking...</div>
         </div>
 
         <div className="flex w-full justify-center items-center mt-9">
@@ -118,12 +54,9 @@ const SwappingScreen = () => {
     >Loading...</span>
 </div>
         </div>
-
-        {totalTxs === 0 ? (
           <span className="text-center mt-8 text-sm px-4" style={{
             color: palette.disabledText
           }}>{text}</span>
-        ) : null}
       </>
     );
   };
@@ -175,7 +108,7 @@ const SwappingScreen = () => {
         ) : null}
 </div>
         <div className="mt-auto px-5 pb-4 flex space-x-2">
-          <JupButton size="lg" className="w-full mt-4" type="button" onClick={() => {
+          <ActionButton size="lg" className="w-full mt-4" type="button" onClick={() => {
             if (context.callback) {
               context.callback();
             }
@@ -183,7 +116,7 @@ const SwappingScreen = () => {
             <SexyChameleonText >
               <span className="text-sm">Stake more</span>
             </SexyChameleonText>
-          </JupButton>
+          </ActionButton>
         </div>
       </>
     );
@@ -203,9 +136,13 @@ const SwappingScreen = () => {
               color: palette.disabledText
             }}>{context.message}</p>
 
-            <JupButton size="lg" className="w-full mt-6 disabled:opacity-50" type="button" onClick={onGoBack}>
+            <ActionButton size="lg" className="w-full mt-6 disabled:opacity-50" type="button" onClick={() => {
+              if (context.callback) {
+                context.callback();
+              }
+            }}>
               <SexyChameleonText>Back</SexyChameleonText>
-            </JupButton>
+            </ActionButton>
           </div>
         </div>
       ) : null}
@@ -217,4 +154,4 @@ const SwappingScreen = () => {
   );
 };
 
-export default SwappingScreen;
+export default ActionScreen;
