@@ -13,7 +13,12 @@ export interface ScreenProvider {
   setScreen: Dispatch<SetStateAction<Screens>>;
 }
 
-export const ScreenStateContext = createContext<ScreenProvider>({ screen: 'Initial', setScreen() {}, setContext() {}, context: {} });
+export const ScreenStateContext = createContext<ScreenProvider>({
+  screen: 'Initial',
+  setScreen() {},
+  setContext() {},
+  context: {},
+});
 
 export function useScreenState(): ScreenProvider {
   return useContext(ScreenStateContext);
@@ -23,5 +28,9 @@ export const ScreenProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [screen, setScreen] = useState<Screens>('Initial');
   const [context, setContext] = useState<Context>({});
 
-  return <ScreenStateContext.Provider value={{ screen, setScreen, context, setContext }}>{children}</ScreenStateContext.Provider>;
+  return (
+    <ScreenStateContext.Provider value={{ screen, setScreen, context, setContext }}>
+      {children}
+    </ScreenStateContext.Provider>
+  );
 };

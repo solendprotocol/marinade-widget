@@ -157,5 +157,7 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
     };
   }, [tokenPriceMap, cachedPrices]);
 
-  return <USDValueProviderContext.Provider value={{ tokenPriceMap: priceMap }}>{children}</USDValueProviderContext.Provider>;
+  return (
+    <USDValueProviderContext.Provider value={{ tokenPriceMap: priceMap }}>{children}</USDValueProviderContext.Provider>
+  );
 };

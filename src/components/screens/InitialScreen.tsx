@@ -16,12 +16,13 @@ interface Props {
   showDelegationStrategy: boolean;
 }
 
-const InitialScreen = ({ setShowStakeModeSettings, 
-  setIsWalletModalOpen, 
-  isWalletModalOpen, 
+const InitialScreen = ({
+  setShowStakeModeSettings,
+  setIsWalletModalOpen,
+  isWalletModalOpen,
   showStakeModeSettings,
   setShowDelegationStrategy,
-  showDelegationStrategy
+  showDelegationStrategy,
 }: Props) => {
   const { tokenMap } = useTokenContext();
   const [selectPairSelector, setSelectPairSelector] = useState<'fromMint' | 'toMint' | null>(null);
@@ -33,15 +34,11 @@ const InitialScreen = ({ setShowStakeModeSettings,
   return (
     <>
       {/* Body */}
-        <Form
-          setSelectPairSelector={setSelectPairSelector}
-          setIsWalletModalOpen={setIsWalletModalOpen}
-        />
+      <Form setSelectPairSelector={setSelectPairSelector} setIsWalletModalOpen={setIsWalletModalOpen} />
 
       {showDelegationStrategy ? (
-        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+        <div className="absolute top-0 right-0 h-full w-full rounded-lg overflow-hidden">
           <DelegationStrategy
-            onSubmit={() => {}}
             tokenInfos={[...tokenMap.values()]}
             onClose={() => setShowDelegationStrategy(false)}
           />
@@ -49,26 +46,21 @@ const InitialScreen = ({ setShowStakeModeSettings,
       ) : null}
 
       {showStakeModeSettings ? (
-        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+        <div className="absolute top-0 right-0 h-full w-full rounded-lg overflow-hidden">
           <StakeModeSettings
-            onSubmit={() => {}}
-            tokenInfos={[...tokenMap.values()]}
             onClose={() => setShowStakeModeSettings(false)}
           />
         </div>
       ) : null}
 
       {selectPairSelector !== null ? (
-        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
-          <FormPairSelector
-            tokenInfos={availableMints}
-            onClose={() => setSelectPairSelector(null)}
-          />
+        <div className="absolute top-0 right-0 h-full w-full rounded-lg overflow-hidden">
+          <FormPairSelector tokenInfos={availableMints} onClose={() => setSelectPairSelector(null)} />
         </div>
       ) : null}
 
       {isWalletModalOpen ? (
-        <div className="absolute top-0 right-0 h-full w-full bg-jupiter-bg rounded-lg overflow-hidden">
+        <div className="absolute top-0 right-0 h-full w-full rounded-lg overflow-hidden">
           <WalletModal setIsWalletModalOpen={setIsWalletModalOpen} />
         </div>
       ) : null}

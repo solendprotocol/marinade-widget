@@ -6,7 +6,7 @@ import { useDebouncedEffect } from 'src/misc/utils';
 const IntegratedTerminal = (props: {
   rpcUrl: string;
   formProps: FormProps;
-  theme: ThemeType,
+  theme: ThemeType;
   palette: PaletteType;
   fakeWallet: Wallet | null;
   defaultExplorer: DEFAULT_EXPLORER;

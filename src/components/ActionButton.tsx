@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { ButtonHTMLAttributes, ReactNode } from 'react';
-import { useData } from 'src/contexts/DataProvider';
+import { useTheme } from 'src/contexts/ThemeProvider';
 
 interface IActionButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -17,10 +17,10 @@ interface IActionButton {
 
 const ActionButton = React.forwardRef(
   (
-    { onClick, disabled, children, highlighted, className = '', size = 'md', type, bgClass, rounded }: IActionButton,
+    { onClick, disabled, children, className = '', size = 'md', type, rounded }: IActionButton,
     ref: React.ForwardedRef<any>,
   ) => {
-    const { palette } = useData();
+    const { palette } = useTheme();
     const contentClass = (() => {
       if (size === 'sm') {
         return 'px-4 py-2.5 text-xs';
@@ -38,14 +38,13 @@ const ActionButton = React.forwardRef(
         ref={ref}
         className={classNames({
           relative: true,
-          'jup-gradient': highlighted,
           'opacity-50 cursor-not-allowed': disabled,
           [className]: true,
           [rounded || 'rounded-lg']: true,
         })}
         style={{
           background: palette.primary,
-          color: disabled ? palette.disabledText : palette.primaryBg
+          color: palette.primaryBg,
         }}
         disabled={disabled}
         onClick={onClick}

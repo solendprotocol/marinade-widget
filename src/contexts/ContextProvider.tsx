@@ -58,9 +58,7 @@ export const ContextProvider: React.FC<PropsWithChildren<IInit>> = ({ endpoint, 
       <NetworkConfigurationProvider>
         <AutoConnectProvider>
           <WalletContextProvider endpoint={endpoint}>
-            <PreferredExplorerProvider defaultExplorer={defaultExplorer}>
-              {children}
-            </PreferredExplorerProvider>
+            <PreferredExplorerProvider defaultExplorer={defaultExplorer}>{children}</PreferredExplorerProvider>
           </WalletContextProvider>
         </AutoConnectProvider>
       </NetworkConfigurationProvider>

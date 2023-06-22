@@ -4,10 +4,7 @@ import ValidatorIcon from './ValidatorIcon';
 import { ValidatorType } from 'src/contexts/DataProvider';
 
 export const formatAddress = (address: string, length?: number) => {
-  return `${address.slice(
-    0,
-    length ?? 5
-  )}...${address.slice(-(length ?? 5))}`;
+  return `${address.slice(0, length ?? 5)}...${address.slice(-(length ?? 5))}`;
 };
 
 const ValidatorRow: React.FC<{
@@ -32,15 +29,11 @@ const ValidatorRow: React.FC<{
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className='flex flex-row space-x-2'>
-            <p className="text-sm text-[#4A5568] truncate">
-              {item.name}
-            </p>
+          <div className="flex flex-row space-x-2">
+            <p className="text-sm text-[#4A5568] truncate">{item.name}</p>
           </div>
 
-          <div className="mt-1 text-xs text-gray-500 truncate flex space-x-1">
-            {formatAddress(item.address)}
-          </div>
+          <div className="mt-1 text-xs text-gray-500 truncate flex space-x-1">{formatAddress(item.address)}</div>
         </div>
       </div>
     </li>

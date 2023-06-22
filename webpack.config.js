@@ -1,11 +1,11 @@
-const path = require("path");
+const path = require('path');
 // Polyfill all the node stuff
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const packageJson = require("./package.json");
+const packageJson = require('./package.json');
 
 const analyseBundle = process.env.ANALYSE === 'true';
 const bundleName = `main-${packageJson.version}`;
@@ -15,31 +15,31 @@ if (!bundleName) {
 }
 
 module.exports = {
-  devtool: "source-map",
-  mode: "production",
+  devtool: 'source-map',
+  mode: 'production',
   entry: {
-    "Marinade": {
-      import: "./src/library.tsx",
+    Marinade: {
+      import: './src/library.tsx',
       filename: `${bundleName}.js`,
     },
-    "Tailwind": {
-      import: "./src/styles/globals.css",
+    Tailwind: {
+      import: './src/styles/globals.css',
     },
-    "MarinadeRenderer": {
-      dependOn: "Marinade",
-      import: "./src/index.tsx",
+    MarinadeRenderer: {
+      dependOn: 'Marinade',
+      import: './src/index.tsx',
       filename: `${bundleName}-app.js`,
     },
   },
   cache: {
-    type: "filesystem",
+    type: 'filesystem',
   },
   module: {
     rules: [
       // Tailwind support
       {
         test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.tsx?$/,
@@ -49,16 +49,16 @@ module.exports = {
             options: {
               // To compile for client
               compilerOptions: {
-                "jsx": "react-jsx",
+                jsx: 'react-jsx',
               },
-            }
-          }
+            },
+          },
         ],
         exclude: /node_modules/,
       },
       {
         test: /\.svg$/,
-        loader: "svg-inline-loader",
+        loader: 'svg-inline-loader',
       },
       // Some libs are module based
       {
@@ -78,28 +78,28 @@ module.exports = {
     ];
 
     if (analyseBundle) {
-      plugins.push(new BundleAnalyzerPlugin())
+      plugins.push(new BundleAnalyzerPlugin());
     }
 
     return plugins;
   })(),
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: ['.tsx', '.ts', '.js'],
     fallback: {
       fs: false,
     },
     alias: {
-      src: path.resolve(__dirname, "src"),
-      public: path.resolve(__dirname, "public"),
-      './../tokens/solana.tokenlist.json': false
+      src: path.resolve(__dirname, 'src'),
+      public: path.resolve(__dirname, 'public'),
+      './../tokens/solana.tokenlist.json': false,
     },
   },
-  target: "web",
+  target: 'web',
   output: {
-    library: "[name]",
-    libraryTarget: "window",
-    path: path.resolve(__dirname, "public"),
-    publicPath: "/public/",
+    library: '[name]',
+    libraryTarget: 'window',
+    path: path.resolve(__dirname, 'public'),
+    publicPath: '/public/',
   },
   optimization: {
     minimizer: [
@@ -107,5 +107,5 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
     minimize: true,
-  }
+  },
 };

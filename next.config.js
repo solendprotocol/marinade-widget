@@ -7,20 +7,20 @@ const nextConfig = withTM({
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
-    })
-    if (!isServer) config.resolve.fallback.fs = false
-    return config
+    });
+    if (!isServer) config.resolve.fallback.fs = false;
+    return config;
   },
   reactStrictMode: true,
   swcMinify: true,
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "**",
+        protocol: 'https',
+        hostname: '**',
       },
     ],
   },
 });
 
-module.exports = nextConfig
+module.exports = nextConfig;

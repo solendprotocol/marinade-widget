@@ -1,9 +1,7 @@
-import { TokenInfo } from '@solana/spl-token-registry';
 import React, { CSSProperties, useMemo } from 'react';
-import CoinBalance from './Coinbalance';
 import { PAIR_ROW_HEIGHT } from './FormPairSelector';
-import TokenIcon from './TokenIcon';
-import { StakeAccountType, useData } from 'src/contexts/DataProvider';
+import { StakeAccountType } from 'src/contexts/DataProvider';
+import { useTheme } from 'src/contexts/ThemeProvider';
 import { formatAddress } from './ValidatorRow';
 import { useUSDValueProvider } from 'src/contexts/USDValueProvider';
 import Decimal from 'decimal.js';
@@ -13,9 +11,9 @@ const FormAccountRow: React.FC<{
   item: StakeAccountType;
   style: CSSProperties;
   onSubmit(item: StakeAccountType): void;
-  disabled?: boolean,
+  disabled?: boolean;
 }> = ({ item, style, onSubmit, disabled }) => {
-  const { palette } = useData();
+  const { palette } = useTheme();
   const { tokenPriceMap } = useUSDValueProvider();
   const totalUsdValue = useMemo(() => {
     const tokenPrice = tokenPriceMap[NATIVE_MINT.toString()]?.usd;
@@ -33,46 +31,67 @@ const FormAccountRow: React.FC<{
     >
       <div
         className="flex items-center rounded-lg space-x-4 my-2 p-3 justify-between hover:bg-black/10"
-        onClick={disabled ? undefined :   () => onSubmit(item)}
+        onClick={disabled ? undefined : () => onSubmit(item)}
       >
         <div className="flex-shrink-0">
-          <div className="h-6 w-6 rounded-full" style={{
-            background: item.background
-          }} />
+          <div
+            className="h-6 w-6 rounded-full"
+            style={{
+              background: item.background,
+            }}
+          />
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className='flex flex-row space-x-2'>
-            <p className="text-sm font-bold truncate" style={{
-              color: palette.text
-            }}>
+          <div className="flex flex-row space-x-2">
+            <p
+              className="text-sm font-bold truncate"
+              style={{
+                color: palette.text,
+              }}
+            >
               {formatAddress(item.address)}
             </p>
           </div>
 
-          <div className="mt-1 text-xs truncate flex space-x-1" style={{
-              color: palette.text
-            }}>
-            {item.status === 'active' ? `Stake account: ${formatAddress(item.address)}` : <span >Inactive... Wait {item.waitEpoch} epoch{item.waitEpoch === 1 ? '' : 's'}</span>}
+          <div
+            className="mt-1 text-xs truncate flex space-x-1"
+            style={{
+              color: palette.text,
+            }}
+          >
+            {item.status === 'active' ? (
+              `Stake account: ${formatAddress(item.address)}`
+            ) : (
+              <span>
+                Inactive... Wait {item.waitEpoch} epoch{item.waitEpoch === 1 ? '' : 's'}
+              </span>
+            )}
           </div>
         </div>
         <div className="flex-shrink-0 text-right">
-          <div className='flex flex-row space-x-2'>
-            <p className="text-sm font-bold truncate" style={{
-              color: palette.text
-            }}>
+          <div className="flex flex-row space-x-2">
+            <p
+              className="text-sm font-bold truncate"
+              style={{
+                color: palette.text,
+              }}
+            >
               {item.balance} SOL
             </p>
           </div>
 
           <div className="mt-1 text-xs truncate space-x-1">
-          {totalUsdValue && totalUsdValue.gt(0.01) ? (
-            <span className='ml-1' style={{
-              color: palette.disabledText
-            }}>
-              ${totalUsdValue.toFixed(2)}
-            </span>
-          ) : null}
+            {totalUsdValue && totalUsdValue.gt(0.01) ? (
+              <span
+                className="ml-1"
+                style={{
+                  color: palette.disabledText,
+                }}
+              >
+                ${totalUsdValue.toFixed(2)}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>

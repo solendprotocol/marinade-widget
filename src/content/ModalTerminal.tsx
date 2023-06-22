@@ -14,15 +14,8 @@ const ModalTerminal = (props: {
   fakeWallet: Wallet | null;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
-  const {
-    rpcUrl,
-    formProps,
-    fakeWallet,
-    theme,
-    palette,
-    defaultExplorer
-  } = props;
-  
+  const { rpcUrl, formProps, fakeWallet, theme, palette, defaultExplorer } = props;
+
   const launchTerminal = () => {
     window.Marinade.init({
       endpoint: rpcUrl,
@@ -30,7 +23,7 @@ const ModalTerminal = (props: {
       palette,
       passThroughWallet: fakeWallet,
       defaultExplorer,
-      theme
+      theme,
     });
   };
 

@@ -5,6 +5,7 @@ import SexyChameleonText from '../BigText/BigText';
 import SuccessIcon from 'src/icons/SuccessIcon';
 import { usePreferredExplorer } from 'src/contexts/preferredExplorer';
 import { useData } from 'src/contexts/DataProvider';
+import { useTheme } from 'src/contexts/ThemeProvider';
 
 const ErrorIcon = () => {
   return (
@@ -30,33 +31,43 @@ const ErrorIcon = () => {
 };
 
 const ActionScreen = () => {
-  const { context, screen, setScreen } = useScreenState();
-  const { target, palette } = useData();
+  const { context, screen } = useScreenState();
+  const { target } = useData();
+  const { palette } = useTheme();
 
   const { explorer, getExplorer } = usePreferredExplorer();
 
-  const Content = ({text}: {text: string}) => {
+  const Content = ({ text }: { text: string }) => {
     return (
       <>
         <div className="flex w-full justify-center">
-          <div style={{
-            color: palette.text
-          }}>Staking...</div>
+          <div
+            style={{
+              color: palette.text,
+            }}
+          >
+            Staking...
+          </div>
         </div>
 
         <div className="flex w-full justify-center items-center mt-9">
           <div
-  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-  role="status"
-  >
-  <span
-    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-    >Loading...</span>
-</div>
+            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
+          </div>
         </div>
-          <span className="text-center mt-8 text-sm px-4" style={{
-            color: palette.disabledText
-          }}>{text}</span>
+        <span
+          className="text-center mt-8 text-sm px-4"
+          style={{
+            color: palette.disabledText,
+          }}
+        >
+          {text}
+        </span>
       </>
     );
   };
@@ -75,17 +86,28 @@ const ActionScreen = () => {
         </div>
 
         <div className="flex flex-col justify-center items-center">
-          <p className="mt-5 text-xl font-semibold" style={{
-            color: palette.text
-          }}>Staking successful</p>
+          <p
+            className="mt-5 text-xl font-semibold"
+            style={{
+              color: palette.text,
+            }}
+          >
+            Staking successful
+          </p>
 
-          <div className="mt-4 rounded-xl overflow-y-auto w-full webkit-scrollbar py-4 max-h-[260px]" style={{
-            background: palette.secondaryBg
-          }}>
+          <div
+            className="mt-4 rounded-xl overflow-y-auto w-full webkit-scrollbar py-4 max-h-[260px]"
+            style={{
+              background: palette.secondaryBg,
+            }}
+          >
             <div className="flex flex-col items-center justify-center text-center px-4">
-              <p className="text-xs font-semibold" style={{
-                color: palette.invertedPrimaryBg
-              }}>
+              <p
+                className="text-xs font-semibold"
+                style={{
+                  color: palette.invertedPrimaryBg,
+                }}
+              >
                 Successfully staked {target?.amount} SOL!
               </p>
             </div>
@@ -93,27 +115,32 @@ const ActionScreen = () => {
         </div>
 
         <div className="flex flex-col justify-center items-center">
-        {explorerLink ? (
-          <a
-            href={explorerLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cursor-pointer mt-2 ml-2 text-xs hover:underline"
-            style={{
-              color: palette.primary
+          {explorerLink ? (
+            <a
+              href={explorerLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer mt-2 ml-2 text-xs hover:underline"
+              style={{
+                color: palette.primary,
+              }}
+            >
+              View on {explorer}
+            </a>
+          ) : null}
+        </div>
+        <div className="mt-auto px-5 pb-4 flex space-x-2">
+          <ActionButton
+            size="lg"
+            className="w-full mt-4"
+            type="button"
+            onClick={() => {
+              if (context.callback) {
+                context.callback();
+              }
             }}
           >
-            View on {explorer}
-          </a>
-        ) : null}
-</div>
-        <div className="mt-auto px-5 pb-4 flex space-x-2">
-          <ActionButton size="lg" className="w-full mt-4" type="button" onClick={() => {
-            if (context.callback) {
-              context.callback();
-            }
-          }}>
-            <SexyChameleonText >
+            <SexyChameleonText>
               <span className="text-sm">Stake more</span>
             </SexyChameleonText>
           </ActionButton>
@@ -129,18 +156,33 @@ const ActionScreen = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <ErrorIcon />
 
-            <p className=" mt-2" style={{
-              color: palette.text
-            }}>Transaction failed</p>
-            <p className="text-xs mt-2" style={{
-              color: palette.disabledText
-            }}>{context.message}</p>
+            <p
+              className=" mt-2"
+              style={{
+                color: palette.text,
+              }}
+            >
+              Transaction failed
+            </p>
+            <p
+              className="text-xs mt-2"
+              style={{
+                color: palette.disabledText,
+              }}
+            >
+              {context.message}
+            </p>
 
-            <ActionButton size="lg" className="w-full mt-6 disabled:opacity-50" type="button" onClick={() => {
-              if (context.callback) {
-                context.callback();
-              }
-            }}>
+            <ActionButton
+              size="lg"
+              className="w-full mt-6 disabled:opacity-50"
+              type="button"
+              onClick={() => {
+                if (context.callback) {
+                  context.callback();
+                }
+              }}
+            >
               <SexyChameleonText>Back</SexyChameleonText>
             </ActionButton>
           </div>

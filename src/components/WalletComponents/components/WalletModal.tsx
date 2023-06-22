@@ -4,7 +4,7 @@ import { Adapter, WalletReadyState } from '@solana/wallet-adapter-base';
 
 import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 import LeftArrowIcon from 'src/icons/LeftArrowIcon';
-import { useData } from 'src/contexts/DataProvider';
+import { useTheme } from 'src/contexts/ThemeProvider';
 
 const PRIORITISE: {
   [value in WalletReadyState]: number;
@@ -20,7 +20,7 @@ export interface WalletModalProps {
 
 export const WalletModal: FC<WalletModalProps> = ({ setIsWalletModalOpen }) => {
   const { wallets, select } = useWallet();
-  const { palette } = useData();
+  const { palette } = useTheme();
 
   const handleWalletClick = async (event: MouseEvent, wallet: Adapter) => {
     event.preventDefault();
@@ -51,19 +51,30 @@ export const WalletModal: FC<WalletModalProps> = ({ setIsWalletModalOpen }) => {
   );
 
   return (
-    <div className="flex flex-col h-full w-full p-4 font-bold" style={{
-      background: palette.primaryBg
-    }}>
+    <div
+      className="flex flex-col h-full w-full p-4 font-bold"
+      style={{
+        background: palette.primaryBg,
+      }}
+    >
       <div className="flex w-full justify-between">
-        <div className="fill-current w-6 h-6 cursor-pointer" onClick={() => setIsWalletModalOpen(false)} style={{
-          color: palette.text
-        }}>
+        <div
+          className="fill-current w-6 h-6 cursor-pointer"
+          onClick={() => setIsWalletModalOpen(false)}
+          style={{
+            color: palette.text,
+          }}
+        >
           <LeftArrowIcon width={24} height={24} />
         </div>
 
-        <div style={{
-          color: palette.text
-        }}>Connect Wallet</div>
+        <div
+          style={{
+            color: palette.text,
+          }}
+        >
+          Connect Wallet
+        </div>
 
         <div className=" w-6 h-6" />
       </div>

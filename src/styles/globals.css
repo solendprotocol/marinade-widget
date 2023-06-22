@@ -18,22 +18,6 @@ html {
   outline: none;
 }
 
-/* ActionButton border gradient */
-#marinade-terminal .jup-gradient::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 0.5rem;
-  padding: 2px;
-  background: #ecfaf5;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: source-out;
-}
-
 /* Custom scroll bar */
 .webkit-scrollbar::-webkit-scrollbar {
   width: 8px;
@@ -45,22 +29,6 @@ html {
   border-radius: 10px;
   background: #979797;
 }
-
-#marinade-terminal .jup-gradient::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 0.5rem;
-  padding: 2px;
-  background: #ecfaf5;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: source-out;
-}
-
 
 /* ActionButton border gradient */
 #marinade-terminal .v2-border-gradient::before {
@@ -91,17 +59,7 @@ html {
   border-bottom-right-radius: 0.75rem;
 }
 
-  /* Add tooltip functionality */
-.jupiter-tooltip {
-  @apply invisible absolute;
-  @apply bg-black text-[#4A5568] p-2 rounded-lg;
-}
-
-.jupiter-has-tooltip:hover .jupiter-tooltip {
-  @apply visible z-50;
-}
-
 a {
-  color: #308D8A;
+  color: #308d8a;
   cursor: pointer;
 }

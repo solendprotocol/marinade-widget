@@ -14,7 +14,6 @@ const Toggle = ({ active, onClick, className, dotClassName }: Props) => {
     <button
       type="button"
       className={classNames('w-10 h-[22px] flex items-center rounded-full p-[1px] cursor-pointer', className, {
-        'bg-jupiter-jungle-green': active,
         'bg-[#010101]': !active,
       })}
       onClick={() => onClick(!active)}

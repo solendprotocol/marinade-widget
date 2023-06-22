@@ -8,57 +8,57 @@ export const AVAILABLE_EXPLORER: {
   get: (txid: string, cluster?: Cluster) => string;
   getToken: (mint: string, cluster?: Cluster) => string;
 }[] = [
-    {
-      name: 'Solana Explorer',
-      url: 'https://explorer.solana.com/',
-      get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster !== 'mainnet-beta') return `https://explorer.solana.com/tx/${txid}?cluster=${cluster}`;
-        return `https://explorer.solana.com/tx/${txid}`;
-      },
-      getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster !== 'mainnet-beta') return `https://explorer.solana.com/address/${mint}?cluster=${cluster}`;
-        return `https://explorer.solana.com/address/${mint}`;
-      },
+  {
+    name: 'Solana Explorer',
+    url: 'https://explorer.solana.com/',
+    get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster !== 'mainnet-beta') return `https://explorer.solana.com/tx/${txid}?cluster=${cluster}`;
+      return `https://explorer.solana.com/tx/${txid}`;
     },
-    {
-      name: 'Solscan',
-      url: 'https://solscan.io/',
-      get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster !== 'mainnet-beta') return `https://solscan.io/tx/${txid}?cluster=${cluster}`;
-        return `https://solscan.io/tx/${txid}`;
-      },
-      getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster !== 'mainnet-beta') return `https://solscan.io/token/${mint}?cluster=${cluster}`;
-        return `https://solscan.io/token/${mint}`;
-      },
+    getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster !== 'mainnet-beta') return `https://explorer.solana.com/address/${mint}?cluster=${cluster}`;
+      return `https://explorer.solana.com/address/${mint}`;
     },
-    {
-      name: 'Solana Beach',
-      url: 'https://solanabeach.io/',
-      get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster !== 'mainnet-beta') return `https://solanabeach.io/transaction/${txid}?cluster=${cluster}`;
-        return `https://solanabeach.io/transaction/${txid}`;
-      },
-      getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster !== 'mainnet-beta') return `https://solanabeach.io/address/${mint}?cluster=${cluster}`;
-        return `https://solanabeach.io/address/${mint}`;
-      },
+  },
+  {
+    name: 'Solscan',
+    url: 'https://solscan.io/',
+    get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster !== 'mainnet-beta') return `https://solscan.io/tx/${txid}?cluster=${cluster}`;
+      return `https://solscan.io/tx/${txid}`;
     },
-    {
-      name: 'SolanaFM',
-      url: 'https://solana.fm/',
-      get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster === 'devnet') return `https://solana.fm/tx/${txid}?cluster=devnet-solana`;
-        if (cluster === 'testnet') return `https://solana.fm/tx/${txid}?cluster=testnet-qn1`;
-        return `https://solana.fm/tx/${txid}`;
-      },
-      getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
-        if (cluster === 'devnet') return `https://solana.fm/address/${mint}?cluster=devnet-solana`;
-        if (cluster === 'testnet') return `https://solana.fm/address/${mint}?cluster=testnet-qn1`;
-        return `https://solana.fm/address/${mint}`;
-      },
+    getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster !== 'mainnet-beta') return `https://solscan.io/token/${mint}?cluster=${cluster}`;
+      return `https://solscan.io/token/${mint}`;
     },
-  ];
+  },
+  {
+    name: 'Solana Beach',
+    url: 'https://solanabeach.io/',
+    get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster !== 'mainnet-beta') return `https://solanabeach.io/transaction/${txid}?cluster=${cluster}`;
+      return `https://solanabeach.io/transaction/${txid}`;
+    },
+    getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster !== 'mainnet-beta') return `https://solanabeach.io/address/${mint}?cluster=${cluster}`;
+      return `https://solanabeach.io/address/${mint}`;
+    },
+  },
+  {
+    name: 'SolanaFM',
+    url: 'https://solana.fm/',
+    get: (txid: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster === 'devnet') return `https://solana.fm/tx/${txid}?cluster=devnet-solana`;
+      if (cluster === 'testnet') return `https://solana.fm/tx/${txid}?cluster=testnet-qn1`;
+      return `https://solana.fm/tx/${txid}`;
+    },
+    getToken: (mint: string, cluster: Cluster = 'mainnet-beta') => {
+      if (cluster === 'devnet') return `https://solana.fm/address/${mint}?cluster=devnet-solana`;
+      if (cluster === 'testnet') return `https://solana.fm/address/${mint}?cluster=testnet-qn1`;
+      return `https://solana.fm/address/${mint}`;
+    },
+  },
+];
 
 export interface PreferredExplorer {
   name: string;
@@ -75,7 +75,7 @@ const PreferredExplorerContext = createContext<{
   explorer: AVAILABLE_EXPLORER[0].name,
   getExplorer: (txid: string, cluster?: Cluster) => '',
   getTokenExplorer: (mint: string, cluster?: Cluster) => '',
-  setExplorer: (explorer: DEFAULT_EXPLORER) => { },
+  setExplorer: (explorer: DEFAULT_EXPLORER) => {},
 });
 
 const PreferredExplorerProvider = ({
@@ -102,7 +102,12 @@ const PreferredExplorerProvider = ({
 
   return (
     <PreferredExplorerContext.Provider
-      value={{ explorer, getExplorer, getTokenExplorer, setExplorer: (explorer: DEFAULT_EXPLORER) => setExplorer(explorer) }}
+      value={{
+        explorer,
+        getExplorer,
+        getTokenExplorer,
+        setExplorer: (explorer: DEFAULT_EXPLORER) => setExplorer(explorer),
+      }}
     >
       {children}
     </PreferredExplorerContext.Provider>

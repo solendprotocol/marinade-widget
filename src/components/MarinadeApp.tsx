@@ -20,35 +20,38 @@ const Content = () => {
     <>
       {screen === 'Initial' ? (
         <>
-          <Header 
-            setIsWalletModalOpen={setIsWalletModalOpen} 
+          <Header
+            setIsWalletModalOpen={setIsWalletModalOpen}
             setShowStakeModeSettings={setShowStakeModeSettings}
             setShowDelegationStrategy={setShowDelegationStrategy}
           />
-          <InitialScreen 
-            showStakeModeSettings={showStakeModeSettings} 
+          <InitialScreen
+            showStakeModeSettings={showStakeModeSettings}
             setShowStakeModeSettings={setShowStakeModeSettings}
             showDelegationStrategy={showDelegationStrategy}
             setShowDelegationStrategy={setShowDelegationStrategy}
             isWalletModalOpen={isWalletModalOpen}
-             setIsWalletModalOpen={setIsWalletModalOpen} 
+            setIsWalletModalOpen={setIsWalletModalOpen}
           />
         </>
-      ) : <ActionScreen />}
+      ) : (
+        <ActionScreen />
+      )}
     </>
-);
+  );
 };
 
 const queryClient = new QueryClient();
 
 const MarinadeApp = () => {
-  return (    <QueryClientProvider client={queryClient}>
-        <AccountsProvider>
-          <USDValueProvider>
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AccountsProvider>
+        <USDValueProvider>
           <Content />
-          </USDValueProvider>
-          </AccountsProvider>
-      </QueryClientProvider>
+        </USDValueProvider>
+      </AccountsProvider>
+    </QueryClientProvider>
   );
 };
 

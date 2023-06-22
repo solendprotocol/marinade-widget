@@ -5,89 +5,63 @@ import { BN, Marinade, MarinadeConfig } from '@marinade.finance/marinade-ts-sdk'
 import { solToLamports, STAKE_PROGRAM_ID } from '@marinade.finance/marinade-ts-sdk/dist/src/util';
 import { useWalletPassThrough } from './WalletPassthroughProvider';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { IInit, PaletteType } from 'src/types';
+import { IInit } from 'src/types';
 import { formatAddress } from 'src/components/ValidatorRow';
 import { useScreenState } from './ScreenProvider';
-import { useMediaQuery } from "react-responsive";
-import { INITIAL_FORM_CONFIG } from 'src/constants';
 
 type ValidatorsResponseType = {
-    validators: Array<{
-        identity: string;
-        info_name: string;
-        vote_account: string;
-        info_keybase: string;
-        score: number;
-    }>;
-}
+  validators: Array<{
+    identity: string;
+    info_name: string;
+    vote_account: string;
+    info_keybase: string;
+    score: number;
+  }>;
+};
 
 export type ValidatorType = {
-    name: string;
-    address: string;
-    voteAddress: string;
-    logo: string;
-    score: number;
-}
-
-type AppPaletteType = {
-    primary: string,
-    secondary: string,
-    primaryBg: string,
-    secondaryBg: string,
-    text: string,
-    disabledText: string,
-    invertedText: string,
-    invertedPrimaryBg: string,
-}
+  name: string;
+  address: string;
+  voteAddress: string;
+  logo: string;
+  score: number;
+};
 
 type StakeModeType = 'liquid' | 'native';
 
 type DataType = {
-    validators: Array<ValidatorType>;
-    stakeMode: StakeModeType;
-    stakeAccounts: Array<StakeAccountType>;
-    delegationStrategy: ValidatorType | null;
-    target: TargetType | null;
-    marinadeStats: MarinadeStatsType | null;
-    palette: AppPaletteType;
-    colors: PaletteType;
-    deposit: () => Promise<string | undefined>;
-    refresh: () => void;
-    setStakeMode: (mode: StakeModeType ) => void;
-    calcVotePower: (stakeAmount?: number) => number;
-    setTarget: (mode: TargetType | null ) => void;
-    allowDirectStake: boolean;
-    setTargetAmount: (amount?: number) => void;
-    setDelegationStrategy: (validator: ValidatorType | null) => void;
-}
+  validators: Array<ValidatorType>;
+  stakeMode: StakeModeType;
+  stakeAccounts: Array<StakeAccountType>;
+  delegationStrategy: ValidatorType | null;
+  target: TargetType | null;
+  marinadeStats: MarinadeStatsType | null;
+  deposit: () => Promise<string | undefined>;
+  refresh: () => void;
+  setStakeMode: (mode: StakeModeType) => void;
+  calcVotePower: (stakeAmount?: number) => number;
+  setTarget: (mode: TargetType | null) => void;
+  allowDirectStake: boolean;
+  setTargetAmount: (amount?: number) => void;
+  setDelegationStrategy: (validator: ValidatorType | null) => void;
+};
 
-const defaultContextValues ={
-    validators: [],
-    stakeMode: 'liquid' as StakeModeType,
-    stakeAccounts: [],
-    target: null,
-    delegationStrategy: null,
-    marinadeStats: null,
-    allowDirectStake: true,
-    palette: {
-        primary: INITIAL_FORM_CONFIG.palette.primaryLight,
-        secondary: INITIAL_FORM_CONFIG.palette.secondaryLight,
-        primaryBg: INITIAL_FORM_CONFIG.palette.primaryBgLight,
-        secondaryBg: INITIAL_FORM_CONFIG.palette.secondaryBgLight,
-        text: INITIAL_FORM_CONFIG.palette.textLight,
-        disabledText: INITIAL_FORM_CONFIG.palette.disabledTextLight,
-        invertedText: INITIAL_FORM_CONFIG.palette.textDark,
-        invertedPrimaryBg: INITIAL_FORM_CONFIG.palette.primaryBgDark,
-    },
-    colors: INITIAL_FORM_CONFIG.palette,
-    deposit: () => Promise.resolve(''),
-    refresh: () => undefined,
-    setTarget: () => undefined,
-    setStakeMode: () => undefined,
-    calcVotePower: () => 1,
-    setTargetAmount: () => undefined,
-    setDelegationStrategy: () => undefined,
-}
+const defaultContextValues = {
+  validators: [],
+  stakeMode: 'liquid' as StakeModeType,
+  stakeAccounts: [],
+  target: null,
+  delegationStrategy: null,
+  marinadeStats: null,
+  allowDirectStake: true,
+  deposit: () => Promise.resolve(''),
+  refresh: () => undefined,
+  setTarget: () => undefined,
+  setStakeMode: () => undefined,
+  calcVotePower: () => 1,
+  setTargetAmount: () => undefined,
+  setDelegationStrategy: () => undefined,
+};
 
 const VALIDATORS_API = 'https://validators-api.marinade.finance/validators?limit=9999&epochs=0';
 const MSOLSOLPRICE_API = 'https://api.marinade.finance/msol/price_sol';
@@ -107,45 +81,47 @@ const DATA_SIZE = 200;
 type StakeAccountStatusType = 'active' | 'inactive' | 'minBalance';
 
 export type StakeAccountType = {
-    balance: string;
-    address: string;
-    status: StakeAccountStatusType;
-    background: string;
-    waitEpoch: number;
+  balance: string;
+  address: string;
+  status: StakeAccountStatusType;
+  background: string;
+  waitEpoch: number;
 };
 
-export type TargetType = {
-    type: 'stakeAccount',
-    stakeAccount: StakeAccountType,
-    amount?: number,
-} | {
-    type: 'native',
-    amount?: number,
-}
+export type TargetType =
+  | {
+      type: 'stakeAccount';
+      stakeAccount: StakeAccountType;
+      amount?: number;
+    }
+  | {
+      type: 'native';
+      amount?: number;
+    };
 
 type MarinadeStatsType = {
-    msolSolPrice: number,
-    stakingRewardFee: number,
-    rewardDepositFee: number,
-    rewardDepositStakeFee: number,
-}
+  msolSolPrice: number;
+  stakingRewardFee: number;
+  rewardDepositFee: number;
+  rewardDepositStakeFee: number;
+};
 
 function getRandomHEXColor(seed: string) {
-    let output = '#';
-    const chars = '0123456789abcdef'
-    while (output.length < 7) {
-      output += chars[seed[output.length].charCodeAt(0) % chars.length];
-    }
-    return output;
+  let output = '#';
+  const chars = '0123456789abcdef';
+  while (output.length < 7) {
+    output += chars[seed[output.length].charCodeAt(0) % chars.length];
   }
+  return output;
+}
 
-export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children, palette, theme }) => {
+export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children }) => {
   const [validators, setValidators] = useState<DataType['validators']>(defaultContextValues.validators);
   const [stakeMode, setStakeMode] = useState<StakeModeType>(defaultContextValues.stakeMode);
   const [voteData, setVoteData] = useState<{
-    snapshotAmount: number,
-    totalDirectStake: number,
-    poolSize: number,
+    snapshotAmount: number;
+    totalDirectStake: number;
+    poolSize: number;
   }>({
     snapshotAmount: 0,
     totalDirectStake: 0,
@@ -156,16 +132,12 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   const { publicKey, wallet } = useWalletPassThrough();
   const { connection } = useConnection();
   const { setScreen, setContext } = useScreenState();
-  const [ stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([]);
+  const [stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([]);
   const allowDirectStake = formProps?.allowDirectStake ? Boolean(formProps.allowDirectStake) : true;
-  const [directedValidatorAddress, setDirectedValidatorAddress] = useState<string | null>(allowDirectStake ? (formProps?.initialValidator ?? defaultContextValues.delegationStrategy) : null);
-  const delegationStrategy = validators.find(v => v.address === directedValidatorAddress) ?? null;
-
-  const systemPrefersDark = useMediaQuery(
-    {
-      query: "(prefers-color-scheme: dark)"
-    },
+  const [directedValidatorAddress, setDirectedValidatorAddress] = useState<string | null>(
+    allowDirectStake ? formProps?.initialValidator ?? defaultContextValues.delegationStrategy : null,
   );
+  const delegationStrategy = validators.find((v) => v.address === directedValidatorAddress) ?? null;
 
   function setDelegationStrategy(validator: ValidatorType | null) {
     setDirectedValidatorAddress(validator?.address ?? null);
@@ -173,268 +145,231 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
 
   useEffect(() => {
     setDirectedValidatorAddress(formProps?.initialValidator ?? null);
-  }, [formProps?.initialValidator])
-  
+  }, [formProps?.initialValidator]);
+
   const marinadeConfig = useMemo(() => {
     const defaultConfig = new MarinadeConfig({
-        connection,
-        publicKey,
+      connection,
+      publicKey,
     });
     try {
-        if (!formProps?.referralCode) return defaultConfig;
-            return new MarinadeConfig({
-                referralCode: new PublicKey(
-                    formProps.referralCode,
-                    ),
-                connection,
-                publicKey,
-            });
+      if (!formProps?.referralCode) return defaultConfig;
+      return new MarinadeConfig({
+        referralCode: new PublicKey(formProps.referralCode),
+        connection,
+        publicKey,
+      });
     } catch (e) {
-        console.error('Invalid referral code');
-        return defaultConfig;
+      console.error('Invalid referral code');
+      return defaultConfig;
     }
+  }, [formProps?.referralCode, publicKey]);
 
-    }, [formProps?.referralCode, publicKey])
+  async function fetchValidators() {
+    const response = (await axios.get(VALIDATORS_API)).data as ValidatorsResponseType;
 
-    async function fetchValidators() {
-        const response = (await axios.get(
-            VALIDATORS_API
-        )).data as ValidatorsResponseType;
+    setValidators(
+      response.validators.map((v) => ({
+        address: v.identity,
+        name: v.info_name ?? formatAddress(v.identity),
+        voteAddress: v.vote_account,
+        score: v.score,
+        logo: `https://keybase.io/${v.info_keybase}/picture?format=square_360`,
+      })),
+    );
+  }
 
-        setValidators(response.validators.map(v => ({
-            address: v.identity,
-            name: v.info_name ?? formatAddress(v.identity),
-            voteAddress: v.vote_account,
-            score: v.score,
-            logo: `https://keybase.io/${v.info_keybase}/picture?format=square_360`,
-        })));
-    };
+  async function fetchVoteInfo() {
+    if (!publicKey) return;
+    const snapshotPromise = axios.get(`${SNAPSHOT_API}${publicKey}`);
+    const votePromise = axios.get(VOTES_API);
 
-    async function fetchVoteInfo() {
-        if (!publicKey) return;
-        const snapshotPromise = axios.get(
-            `${SNAPSHOT_API}${publicKey}`
-        );
-        const votePromise = axios.get(
-            VOTES_API
-        );
+    const tvlPromise = axios.get(TVL_API);
+    const [snapshot, vote, tvl] = (await Promise.all([snapshotPromise, votePromise, tvlPromise])).map((r) => r.data);
 
-        const tvlPromise = axios.get(
-            TVL_API
-        )
-        const [snapshot, vote, tvl] = (await Promise.all([snapshotPromise, votePromise, tvlPromise])).map(r => r.data);
+    const totalDirectStake = vote.records.reduce(
+      (acc: number, r: { amount: string }) => acc + Number(r.amount ?? 0),
+      0,
+    );
 
-        const totalDirectStake = vote.records.reduce((acc: number, r: {amount: string}) => acc + Number(r.amount ?? 0), 0)
-    
-        setVoteData({
-            snapshotAmount: Number(snapshot.amount),
-            totalDirectStake,
-            poolSize: tvl.staked_sol,
-        })
-    }
+    setVoteData({
+      snapshotAmount: Number(snapshot.amount),
+      totalDirectStake,
+      poolSize: tvl.staked_sol,
+    });
+  }
 
-    function calcVotePower(directStake?: number): number {
-        debugger;
-        // how much % the DS control
-        const voteControlPoolSize = 0.2;
-        // how much SOL the votes control
-        const totalControl = voteData.poolSize * voteControlPoolSize;
-        // how much % each stake control out of the total ds
-        const singleStakeControlInPercentage = (directStake ? directStake/(marinadeStats?.msolSolPrice ?? 1) : voteData.snapshotAmount) / voteData.totalDirectStake
-        // how much total SOL the validator will recive 
-        const totalSOLForTheValidator = singleStakeControlInPercentage * totalControl;
+  function calcVotePower(directStake?: number): number {
+    debugger;
+    // how much % the DS control
+    const voteControlPoolSize = 0.2;
+    // how much SOL the votes control
+    const totalControl = voteData.poolSize * voteControlPoolSize;
+    // how much % each stake control out of the total ds
+    const singleStakeControlInPercentage =
+      (directStake ? directStake / (marinadeStats?.msolSolPrice ?? 1) : voteData.snapshotAmount) /
+      voteData.totalDirectStake;
+    // how much total SOL the validator will recive
+    const totalSOLForTheValidator = singleStakeControlInPercentage * totalControl;
 
-        return totalSOLForTheValidator
-      }
+    return totalSOLForTheValidator;
+  }
 
-    async function fetchMarinadeStats() {
-        const marinade = new Marinade(marinadeConfig);
-        const response = (await axios.get(
-            MSOLSOLPRICE_API
-        )).data as number;
-        const state = await marinade.getMarinadeState();
-        console.log(state);
-        const partnerState = marinadeConfig.referralCode ?  await marinade.getReferralPartnerState() : null;
+  async function fetchMarinadeStats() {
+    const marinade = new Marinade(marinadeConfig);
+    const response = (await axios.get(MSOLSOLPRICE_API)).data as number;
+    const state = await marinade.getMarinadeState();
+    console.log(state);
+    const partnerState = marinadeConfig.referralCode ? await marinade.getReferralPartnerState() : null;
 
-        setMarinadeStats({
-            msolSolPrice: response,
-            stakingRewardFee: state.rewardsCommissionPercent,
-            rewardDepositFee: partnerState?.state.operationDepositSolFee ?? 0,
-            rewardDepositStakeFee: partnerState?.state.operationDepositStakeAccountFee ?? 0,
-        });
-    }
+    setMarinadeStats({
+      msolSolPrice: response,
+      stakingRewardFee: state.rewardsCommissionPercent,
+      rewardDepositFee: partnerState?.state.operationDepositSolFee ?? 0,
+      rewardDepositStakeFee: partnerState?.state.operationDepositStakeAccountFee ?? 0,
+    });
+  }
 
-    function setTargetAmount(amount?: number) {
-        setTarget(target ? {
+  function setTargetAmount(amount?: number) {
+    setTarget(
+      target
+        ? {
             ...target,
             amount,
-        } : null)
-    }
+          }
+        : null,
+    );
+  }
 
-    async function deposit() {
-        if (!wallet || !target) return;
+  async function deposit() {
+    if (!wallet || !target) return;
 
-        try {
-            const marinade = new Marinade(marinadeConfig);
-    
-            const bnAmount = new BN(solToLamports(target.amount));
-            
-            const { transaction } = target.type === 'native' ? await marinade.deposit(
-                bnAmount,
-                {
-                    directToValidatorVoteAddress: delegationStrategy ? new PublicKey(delegationStrategy.voteAddress) : undefined
-                }
-            ) : await marinade.depositStakeAccount(
-              new PublicKey(target.stakeAccount.address),
-              {
-                directToValidatorVoteAddress: delegationStrategy ? new PublicKey(delegationStrategy.voteAddress) : undefined
-              },
-            );
-    
-            setScreen('Signing')
-            const signature = await wallet.adapter.sendTransaction(transaction, connection);
-            const latestBlockhash = await connection.getLatestBlockhash();
-            setScreen('Confirming')
-            await connection.confirmTransaction({
-                signature,
-                ...latestBlockhash
-            }, 'confirmed');
-    
-            setScreen('Success')
-            setContext({
-                message: signature,
-                callback: () => {
-                    setScreen('Initial');
-                    setTargetAmount(0);
-                }
+    try {
+      const marinade = new Marinade(marinadeConfig);
+
+      const bnAmount = new BN(solToLamports(target.amount));
+
+      const { transaction } =
+        target.type === 'native'
+          ? await marinade.deposit(bnAmount, {
+              directToValidatorVoteAddress: delegationStrategy
+                ? new PublicKey(delegationStrategy.voteAddress)
+                : undefined,
             })
-            return signature;
-        } catch (e: any) {
-            setScreen('Error')
-            setContext({
-                message: String(e.message ?? e),
-                callback: () => {
-                    setScreen('Initial');
-                }
-            })
-        }
-    }
+          : await marinade.depositStakeAccount(new PublicKey(target.stakeAccount.address), {
+              directToValidatorVoteAddress: delegationStrategy
+                ? new PublicKey(delegationStrategy.voteAddress)
+                : undefined,
+            });
 
-    async function fetchStakeAccounts() {
-        if (!publicKey) return;
-        const stakeAccounts = await connection.getParsedProgramAccounts(
-          STAKE_PROGRAM_ID,
-          {
-            filters: [
-              {
-                dataSize: DATA_SIZE, // number of bytes
-              },
-              {
-                memcmp: {
-                  offset: WALLET_OFFSET, // number of bytes
-                  bytes: publicKey.toString(), // base58 encoded string
-                },
-              },
-            ],
+      setScreen('Signing');
+      const signature = await wallet.adapter.sendTransaction(transaction, connection);
+      const latestBlockhash = await connection.getLatestBlockhash();
+      setScreen('Confirming');
+      await connection.confirmTransaction(
+        {
+          signature,
+          ...latestBlockhash,
+        },
+        'confirmed',
+      );
+
+      setScreen('Success');
+      setContext({
+        message: signature,
+        callback: () => {
+          setScreen('Initial');
+          setTargetAmount(0);
+        },
+      });
+      return signature;
+    } catch (e: any) {
+      setScreen('Error');
+      setContext({
+        message: String(e.message ?? e),
+        callback: () => {
+          setScreen('Initial');
+        },
+      });
+    }
+  }
+
+  async function fetchStakeAccounts() {
+    if (!publicKey) return;
+    const stakeAccounts = await connection.getParsedProgramAccounts(STAKE_PROGRAM_ID, {
+      filters: [
+        {
+          dataSize: DATA_SIZE, // number of bytes
+        },
+        {
+          memcmp: {
+            offset: WALLET_OFFSET, // number of bytes
+            bytes: publicKey.toString(), // base58 encoded string
           },
-        );
-    
-        const currentEpoch = await (await connection.getEpochInfo()).epoch;
+        },
+      ],
+    });
 
-        setStakeAccounts(
-          stakeAccounts
-            .map((s) => {
-              const activationEpoch =
-                (s?.account?.data as any)?.parsed?.info?.stake?.delegation
-                  ?.activationEpoch ?? null;
-    
-              const waitEpochs = 2;
-              const earliestDepositEpoch = Number(activationEpoch) + waitEpochs;
-              let status = 'active' as StakeAccountStatusType;
-              const balance = s.account.lamports / LAMPORTS_PER_SOL;
-    
-              if (earliestDepositEpoch > currentEpoch) {
-                status = 'inactive' as StakeAccountStatusType;
-              }
-              if (balance < 1) {
-                status = 'minBalance' as StakeAccountStatusType;
-              }
-    
-              return {
-                balance: balance.toString(),
-                address: s.pubkey.toString(),
-                background: `linear-gradient(to top,${getRandomHEXColor(s.pubkey.toString())}, ${getRandomHEXColor(s.pubkey.toString().slice(7, 17))})`,
-                status,
-                waitEpoch: Math.max(0, earliestDepositEpoch - currentEpoch),
-                data: s.account,
-              };
-            })
-            .sort((s) => (s.status === 'active' ? -1 : 1)),
-        );
-      }
+    const currentEpoch = await (await connection.getEpochInfo()).epoch;
 
-    useEffect(() => {
-        fetchValidators();
-        fetchMarinadeStats();
-    }, [formProps]);
+    setStakeAccounts(
+      stakeAccounts
+        .map((s) => {
+          const activationEpoch = (s?.account?.data as any)?.parsed?.info?.stake?.delegation?.activationEpoch ?? null;
 
-    useEffect(() => {
-        fetchStakeAccounts();
-        fetchVoteInfo();
-    }, [publicKey]);
+          const waitEpochs = 2;
+          const earliestDepositEpoch = Number(activationEpoch) + waitEpochs;
+          let status = 'active' as StakeAccountStatusType;
+          const balance = s.account.lamports / LAMPORTS_PER_SOL;
 
-    function refresh() {
-        fetchValidators();
-        fetchMarinadeStats();
-        fetchStakeAccounts();
-    }
+          if (earliestDepositEpoch > currentEpoch) {
+            status = 'inactive' as StakeAccountStatusType;
+          }
+          if (balance < 1) {
+            status = 'minBalance' as StakeAccountStatusType;
+          }
 
-    const usedPalette = {
-        ...INITIAL_FORM_CONFIG.palette,
-        ...palette
-    }
+          return {
+            balance: balance.toString(),
+            address: s.pubkey.toString(),
+            background: `linear-gradient(to top,${getRandomHEXColor(s.pubkey.toString())}, ${getRandomHEXColor(
+              s.pubkey.toString().slice(7, 17),
+            )})`,
+            status,
+            waitEpoch: Math.max(0, earliestDepositEpoch - currentEpoch),
+            data: s.account,
+          };
+        })
+        .sort((s) => (s.status === 'active' ? -1 : 1)),
+    );
+  }
 
-    const darkSet = {
-        primary: usedPalette.primaryDark,
-        secondary: usedPalette.secondaryDark,
-        primaryBg: usedPalette.primaryBgDark,
-        secondaryBg: usedPalette.secondaryBgDark,
-        text: usedPalette.textDark,
-        disabledText: usedPalette.disabledTextDark,
-        invertedText: usedPalette.textLight,
-        invertedPrimaryBg: usedPalette.primaryBgLight,
-    }
+  useEffect(() => {
+    fetchValidators();
+    fetchMarinadeStats();
+  }, [formProps]);
 
-    const lightSet = {
-        primary: usedPalette.primaryLight,
-        secondary: usedPalette.secondaryLight,
-        primaryBg: usedPalette.primaryBgLight,
-        secondaryBg: usedPalette.secondaryBgLight,
-        text: usedPalette.textLight,
-        disabledText: usedPalette.disabledTextLight,
-        invertedText: usedPalette.textDark,
-        invertedPrimaryBg: usedPalette.primaryBgDark,
-    }
+  useEffect(() => {
+    fetchStakeAccounts();
+    fetchVoteInfo();
+  }, [publicKey]);
 
-    let appPalette = systemPrefersDark ? darkSet : lightSet;
+  function refresh() {
+    fetchValidators();
+    fetchMarinadeStats();
+    fetchStakeAccounts();
+  }
 
-    if (theme === 'light') {
-        appPalette = lightSet
-    } else if (theme === 'dark') {
-        appPalette = darkSet
-    }
-
-  return <DataContext.Provider value={{ 
+  return (
+    <DataContext.Provider
+      value={{
         allowDirectStake,
-        validators, 
+        validators,
         stakeMode,
         setStakeMode,
         stakeAccounts,
         deposit,
         delegationStrategy,
-        palette: appPalette,
-        // full palette
-        colors: usedPalette,
         refresh,
         setDelegationStrategy,
         target,
@@ -442,5 +377,9 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         setTarget,
         setTargetAmount,
         calcVotePower,
-    }}>{children}</DataContext.Provider>;
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
 };

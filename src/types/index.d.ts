@@ -2,8 +2,7 @@ import { CSSProperties } from 'react';
 import { Root } from 'react-dom/client';
 
 import { Wallet } from '@solana/wallet-adapter-react';
-import { PublicKey, TransactionError } from '@solana/web3.js';
-import { SwapMode, SwapResult } from '@jup-ag/react-hook';
+import { TransactionError } from '@solana/web3.js';
 
 declare global {
   interface Window {
@@ -25,48 +24,48 @@ export type ThemeType = 'light' | 'dark' | 'auto';
 export type DEFAULT_EXPLORER = 'Solana Explorer' | 'Solscan' | 'Solana Beach' | 'SolanaFM';
 
 export type PaletteType = {
-    // Light
-    primaryLight: string,
-    secondaryLight: string,
-    primaryBgLight: string,
-    secondaryBgLight: string,
-    textLight: string,
-    disabledTextLight: string,
+  // Light
+  primaryLight: string;
+  secondaryLight: string;
+  primaryBgLight: string;
+  secondaryBgLight: string;
+  textLight: string;
+  disabledTextLight: string;
 
-    // Dark
-    primaryDark: string,
-    secondaryDark: string,
-    primaryBgDark: string,
-    secondaryBgDark: string,
-    textDark: string,
-    disabledTextDark: string,
-}
+  // Dark
+  primaryDark: string;
+  secondaryDark: string;
+  primaryBgDark: string;
+  secondaryBgDark: string;
+  textDark: string;
+  disabledTextDark: string;
+};
 
 export type PaletteInputType = {
   // Light
-  primaryLight?: string,
-  secondaryLight?: string,
-  primaryBgLight?: string,
-  secondaryBgLight?: string,
-  textLight?: string,
-  disabledTextLight?: string,
+  primaryLight?: string;
+  secondaryLight?: string;
+  primaryBgLight?: string;
+  secondaryBgLight?: string;
+  textLight?: string;
+  disabledTextLight?: string;
 
   // Dark
-  primaryDark?: string,
-  secondaryDark?: string,
-  primaryBgDark?: string,
-  secondaryBgDark?: string,
-  textDark?: string,
-  disabledTextDark?: string,
-}
+  primaryDark?: string;
+  secondaryDark?: string;
+  primaryBgDark?: string;
+  secondaryBgDark?: string;
+  textDark?: string;
+  disabledTextDark?: string;
+};
 
 export interface IInit {
   endpoint: string;
   formProps?: FormProps;
   defaultExplorer?: DEFAULT_EXPLORER;
-  theme?: ThemeType,
-  palette?: PaletteInputType,
-  
+  theme?: ThemeType;
+  palette?: PaletteInputType;
+
   // Display & Styling
   displayMode?: 'modal' | 'integrated' | 'widget';
   integratedTargetId?: string;
@@ -76,12 +75,12 @@ export interface IInit {
   };
   containerStyles?: CSSProperties;
   containerClassName?: string;
-  
+
   // Passthrough & Callbacks
   passThroughWallet?: Wallet | null;
-  onSwapError?: ({ error }: { error?: TransactionError }) => void;
-  onSuccess?: ({ txid, swapResult }: { txid: string; swapResult: SwapResult }) => void;
-  
+  onStakeError?: ({ error }: { error?: TransactionError }) => void;
+  onSuccess?: ({ txid }: { txid: string }) => void;
+
   // Internal resolves
   scriptDomain?: string;
 }
@@ -95,6 +94,6 @@ export interface MarinadeTerminal {
 
   // Passthrough & Callbacks
   passThroughWallet: IInit['passThroughWallet'];
-  onSwapError: IInit['onSwapError'];
+  onStakeError: IInit['onStakeError'];
   onSuccess: IInit['onSuccess'];
 }

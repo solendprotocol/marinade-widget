@@ -26,8 +26,9 @@ const TokenContext = React.createContext<{
 });
 
 const fetchAllMints = async (env: ENV, preferredTokenListMode: PreferredTokenListMode) => {
-  const tokens = await (
-    preferredTokenListMode === 'strict' ? await fetch('https://token.jup.ag/strict') : await fetch('https://token.jup.ag/all')
+  const tokens = await (preferredTokenListMode === 'strict'
+    ? await fetch('https://token.jup.ag/strict')
+    : await fetch('https://token.jup.ag/all')
   ).json();
   const res = new TokenListContainer(tokens);
   const list = res.filterByChainId(CLUSTER_TO_CHAIN_ID[env]).getList();

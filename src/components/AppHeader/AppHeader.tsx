@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import CloseIcon from 'src/icons/CloseIcon';
-import Marinade from 'src/icons/Marinade';
+import Marinade from 'src/icons/MarinadeLogo';
 import MenuIcon from 'src/icons/MenuIcon';
 import HeaderLinks from './HeaderLinks';
 import HeaderLinksMobile from './HeaderLinksMobile';

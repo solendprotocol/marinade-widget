@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 import { IInit } from './types';
 
 import 'tailwindcss/tailwind.css';
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from 'react-responsive';
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
 import MarinadeCircle from './icons/MarinadeCircle';
 import { INITIAL_FORM_CONFIG } from './constants';
@@ -20,7 +20,7 @@ const scriptDomain =
       return new URL(url).origin;
     }
     return '';
-  })() || 'https://terminal.jup.ag';
+  })() || 'https://marinade-widget-delta.vercel.app';
 
 async function loadRemote(id: string, href: string, type: 'text/javascript' | 'stylesheet') {
   return new Promise((res, rej) => {
@@ -29,9 +29,8 @@ async function loadRemote(id: string, href: string, type: 'text/javascript' | 's
     if (existing) {
       res({});
     } else {
-      let el: HTMLScriptElement | HTMLLinkElement = type === 'text/javascript'
-        ? document.createElement('script')
-        : document.createElement('link');
+      let el: HTMLScriptElement | HTMLLinkElement =
+        type === 'text/javascript' ? document.createElement('script') : document.createElement('link');
 
       el.id = id;
       el.onload = res;
@@ -57,12 +56,12 @@ async function loadMarinade() {
   try {
     // Load all the scripts and styles
     await Promise.all([
-      loadRemote('jupiter-load-script-app', `${scriptDomain}/${bundleName}-app.js`, 'text/javascript'),
-      loadRemote('jupiter-load-styles-tailwind', `${scriptDomain}/${bundleName}-Tailwind.css`, 'stylesheet'),
-      loadRemote('jupiter-load-styles-preflight', `${scriptDomain}/scoped-preflight.css`, 'stylesheet'),
+      loadRemote('marinade-load-script-app', `${scriptDomain}/${bundleName}-app.js`, 'text/javascript'),
+      loadRemote('marinade-load-styles-tailwind', `${scriptDomain}/${bundleName}-Tailwind.css`, 'stylesheet'),
+      loadRemote('marinade-load-styles-preflight', `${scriptDomain}/scoped-preflight.css`, 'stylesheet'),
     ]);
     // The sequence matters! the last imported Marinade.css takes precendent
-    loadRemote('jupiter-load-styles-jupiter', `${scriptDomain}/${bundleName}-Marinade.css`, 'stylesheet')
+    loadRemote('marinade-load-styles-marinade', `${scriptDomain}/${bundleName}-Marinade.css`, 'stylesheet');
   } catch (error) {
     console.error(`Error loading Marinade Terminal: ${error}`);
     throw new Error(`Error loading Marinade Terminal: ${error}`);
@@ -108,11 +107,9 @@ const RenderShell = (props: IInit) => {
   const displayMode = props.displayMode;
   const containerStyles = props.containerStyles;
   const containerClassName = props.containerClassName;
-  const systemPrefersDark = useMediaQuery(
-    {
-      query: "(prefers-color-scheme: dark)"
-    },
-  );
+  const systemPrefersDark = useMediaQuery({
+    query: '(prefers-color-scheme: dark)',
+  });
 
   const displayClassName = useMemo(() => {
     // Default Modal
@@ -126,8 +123,9 @@ const RenderShell = (props: IInit) => {
   const contentClassName = useMemo(() => {
     // Default Modal
     if (!displayMode || displayMode === 'modal') {
-      return `flex flex-col h-screen w-screen max-h-[90vh] md:max-h-[600px] max-w-[360px] overflow-auto text-black relative rounded-lg webkit-scrollbar ${containerClassName || ''
-        } p-4 h-fit`;
+      return `flex flex-col h-screen w-screen max-h-[90vh] md:max-h-[600px] max-w-[360px] overflow-auto text-black relative rounded-lg webkit-scrollbar ${
+        containerClassName || ''
+      } p-4 h-fit`;
     } else if (displayMode === 'integrated' || displayMode === 'widget') {
       return 'flex flex-col h-full w-full overflow-auto text-black relative webkit-scrollbar p-4';
     }
@@ -147,9 +145,17 @@ const RenderShell = (props: IInit) => {
         rel="stylesheet"
       ></link>
 
-      <div style={{ ...defaultStyles, ...containerStyles,
-      background: ((systemPrefersDark && props.theme !== 'light') || props.theme === 'dark') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
-       }} className={contentClassName}>
+      <div
+        style={{
+          ...defaultStyles,
+          ...containerStyles,
+          background:
+            (systemPrefersDark && props.theme !== 'light') || props.theme === 'dark'
+              ? props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark
+              : props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight,
+        }}
+        className={contentClassName}
+      >
         <RenderLoadableMarinade {...props} />
       </div>
 
@@ -163,11 +169,9 @@ const RenderShell = (props: IInit) => {
 const RenderWidgetShell = (props: IInit) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const systemPrefersDark = useMediaQuery(
-    {
-      query: "(prefers-color-scheme: dark)"
-    },
-  );
+  const systemPrefersDark = useMediaQuery({
+    query: '(prefers-color-scheme: dark)',
+  });
   const classes = useMemo(() => {
     const size = props.widgetStyle?.size || 'default';
 
@@ -215,12 +219,17 @@ const RenderWidgetShell = (props: IInit) => {
 
       <div
         id="integrated-terminal"
-        className={`p-4 absolute overflow-hidden ${classes.contentClassName
-          } flex flex-col w-[90vw] max-w-[384px] max-h-[75vh] rounded-2xl bg-jupiter-bg transition-opacity duration-300 shadow-2xl ${!isOpen ? 'h-0 opacity-0' : 'opacity-100'
-          }`}
-          style={{
-            background: ((systemPrefersDark && props.theme !== 'light') || props.theme === 'dark') ? (props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark) : (props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight)
-          }}
+        className={`p-4 absolute overflow-hidden ${
+          classes.contentClassName
+        } flex flex-col w-[90vw] max-w-[384px] max-h-[75vh] rounded-2xl transition-opacity duration-300 shadow-2xl ${
+          !isOpen ? 'h-0 opacity-0' : 'opacity-100'
+        }`}
+        style={{
+          background:
+            (systemPrefersDark && props.theme !== 'light') || props.theme === 'dark'
+              ? props.palette?.primaryBgDark ?? INITIAL_FORM_CONFIG.palette.primaryBgDark
+              : props.palette?.primaryBgLight ?? INITIAL_FORM_CONFIG.palette.primaryBgLight,
+        }}
       >
         <RenderLoadableMarinade {...props} />
       </div>
@@ -229,7 +238,7 @@ const RenderWidgetShell = (props: IInit) => {
 };
 
 async function init(props: IInit) {
-  const { passThroughWallet, onSwapError, onSuccess, integratedTargetId, ...restProps } = props;
+  const { passThroughWallet, onStakeError, onSuccess, integratedTargetId, ...restProps } = props;
   const targetDiv = document.createElement('div');
   const instanceExist = document.getElementById(containerId);
 
@@ -267,7 +276,7 @@ async function init(props: IInit) {
 
   // Passthrough & Callbacks
   window.Marinade.passThroughWallet = passThroughWallet;
-  window.Marinade.onSwapError = onSwapError;
+  window.Marinade.onStakeError = onStakeError;
   window.Marinade.onSuccess = onSuccess;
 }
 
@@ -279,11 +288,10 @@ if (typeof window !== 'undefined') {
 
     if (loadComplete && shouldPreload) {
       setTimeout(() => {
-        loadMarinade()
-          .catch((error) => {
-            console.error(`Error pre-loading Marinade Terminal: ${error}`);
-            throw new Error(`Error pre-loading Marinade Terminal: ${error}`);
-          })
+        loadMarinade().catch((error) => {
+          console.error(`Error pre-loading Marinade Terminal: ${error}`);
+          throw new Error(`Error pre-loading Marinade Terminal: ${error}`);
+        });
       }, 2000);
     }
   };

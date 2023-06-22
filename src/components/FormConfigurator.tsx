@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FormState, UseFormReset, UseFormSetValue } from 'react-hook-form';
+import { UseFormSetValue } from 'react-hook-form';
 import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import Toggle from './Toggle';
 import { AVAILABLE_EXPLORER } from '../contexts/preferredExplorer/index';
@@ -9,23 +9,22 @@ import { ThemeType } from 'src/types';
 import ChevronUpIcon from 'src/icons/ChevronUpIcon';
 import InputColor from 'react-input-color';
 
-
 const THEME_MODES: Array<{
-  value: ThemeType,
-  label: string,
+  value: ThemeType;
+  label: string;
 }> = [
   {
     value: 'auto',
-    label: 'Automatic'
+    label: 'Automatic',
   },
   {
     value: 'light',
-    label: 'Force light mode'
+    label: 'Force light mode',
   },
   {
     value: 'dark',
-    label: 'Force dark mode'
-  }
+    label: 'Force dark mode',
+  },
 ];
 
 const FormConfigurator = ({
@@ -35,15 +34,11 @@ const FormConfigurator = ({
   palette,
   theme,
   // Hook form
-  reset,
   setValue,
-  formState,
 }: IFormConfigurator & {
   // Hook form
   theme: ThemeType;
-  reset: UseFormReset<IFormConfigurator>;
   setValue: UseFormSetValue<IFormConfigurator>;
-  formState: FormState<IFormConfigurator>;
 }) => {
   const [isExplorerDropdownOpen, setIsExplorerDropdownOpen] = React.useState(false);
   const [isThemeDropdownOpen, setIsThemeDropdownOpen] = React.useState(false);
@@ -64,7 +59,7 @@ const FormConfigurator = ({
         className="mt-2 text-[#4A5568] w-full flex justify-between items-center space-x-2 text-left rounded-md bg-white/10 px-4 py-2 text-sm font-medium shadow-sm border border-white/10"
         value={formProps.referralCode}
         onChange={(e) => {
-            setValue('formProps.referralCode', e.target.value);
+          setValue('formProps.referralCode', e.target.value);
         }}
       />
 
@@ -72,7 +67,9 @@ const FormConfigurator = ({
       <div className="flex justify-between mt-5">
         <div>
           <p className="text-sm text-[#4A5568]/75">Allow direct stake</p>
-          <p className="text-xs text-[#4A5568]/30">Enable to allow user to selected a valiadator to stake directly to</p>
+          <p className="text-xs text-[#4A5568]/30">
+            Enable to allow user to selected a valiadator to stake directly to
+          </p>
         </div>
         <Toggle
           className="min-w-[40px]"
@@ -85,7 +82,9 @@ const FormConfigurator = ({
       <div className="flex justify-between mt-5">
         <div>
           <p className="text-sm text-[#4A5568]/75">Initial validator</p>
-          <p className="text-xs text-[#4A5568]/30">If direct staking is allowed, set a default validator. Otherwise, an automatic strategy is defaulted</p>
+          <p className="text-xs text-[#4A5568]/30">
+            If direct staking is allowed, set a default validator. Otherwise, an automatic strategy is defaulted
+          </p>
         </div>
       </div>
       <input
@@ -108,24 +107,24 @@ const FormConfigurator = ({
             aria-expanded="true"
             aria-haspopup="true"
           >
-            <div className='flex items-center justify-center space-x-2.5'>
-              <p>{Object.values(THEME_MODES).find(item => item.value === theme)?.label}</p>
+            <div className="flex items-center justify-center space-x-2.5">
+              <p>{Object.values(THEME_MODES).find((item) => item.value === theme)?.label}</p>
             </div>
 
             <ChevronDownIcon />
           </button>
-          {isThemeDropdownOpen &&
-         <div
+          {isThemeDropdownOpen && (
+            <div
               className="absolute left-0 bottom-6 z-10 ml-1 mt-1 origin-top-right rounded-md shadow-xl bg-[#EDF2F7] rounded-xl w-full border border-white/20"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"
             >
-              {THEME_MODES.map(m => 
+              {THEME_MODES.map((m) => (
                 <button
                   key={m.value}
                   onClick={() => {
-                    setValue('theme', m.value)
+                    setValue('theme', m.value);
                     setIsThemeDropdownOpen(false);
                   }}
                   type="button"
@@ -134,128 +133,136 @@ const FormConfigurator = ({
                   )}
                 >
                   <span>{m.label}</span>
-                </button>)}
-            </div>}
-      </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="relative inline-block text-left text-[#4A5568] w-full mt-5">
-          <p className="text-[#4A5568] mt-8 text-sm font-semibold flex justify-between items-center cursor-pointer" onClick={() => setIsPaletteDropdownOpen(!isPaletteDropdownOpen)}>Customize theme {isPaletteDropdownOpen ? <ChevronUpIcon /> : <ChevronDownIcon/>} </p>
-          
-          {isPaletteDropdownOpen && 
+        <p
+          className="text-[#4A5568] mt-8 text-sm font-semibold flex justify-between items-center cursor-pointer"
+          onClick={() => setIsPaletteDropdownOpen(!isPaletteDropdownOpen)}
+        >
+          Customize theme {isPaletteDropdownOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}{' '}
+        </p>
+
+        {isPaletteDropdownOpen && (
           <div>
             <p className="text-sm text-[#4A5568]/75">Light</p>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Primary</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Primary</p>
+              </div>
+              <InputColor
+                placement="left"
+                initialValue={palette.primaryLight}
+                onChange={(color) => setValue('palette.primaryLight', color.hex)}
+              />
             </div>
-            <InputColor
-            placement='left'
-            initialValue={palette.primaryLight}
-            onChange={(color) => setValue('palette.primaryLight', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Secondary</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Secondary</p>
+              </div>
+              <InputColor
+                initialValue={palette.secondaryLight}
+                onChange={(color) => setValue('palette.secondaryLight', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.secondaryLight}
-            onChange={(color) => setValue('palette.secondaryLight', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Primary BG</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Primary BG</p>
+              </div>
+              <InputColor
+                initialValue={palette.primaryBgLight}
+                onChange={(color) => setValue('palette.primaryBgLight', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.primaryBgLight}
-            onChange={(color) => setValue('palette.primaryBgLight', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
+              </div>
+              <InputColor
+                initialValue={palette.secondaryBgLight}
+                onChange={(color) => setValue('palette.secondaryBgLight', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.secondaryBgLight}
-            onChange={(color) => setValue('palette.secondaryBgLight', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Text</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Text</p>
+              </div>
+              <InputColor
+                initialValue={palette.textLight}
+                onChange={(color) => setValue('palette.textLight', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.textLight}
-            onChange={(color) => setValue('palette.textLight', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Disabled</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Disabled</p>
+              </div>
+              <InputColor
+                initialValue={palette.disabledTextLight}
+                onChange={(color) => setValue('palette.disabledTextLight', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.disabledTextLight}
-            onChange={(color) => setValue('palette.disabledTextLight', color.hex)}
-            />
-          </div>
-          <p className="text-sm text-[#4A5568]/75">Dark</p>
+            <p className="text-sm text-[#4A5568]/75">Dark</p>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Primary</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Primary</p>
+              </div>
+              <InputColor
+                initialValue={palette.primaryDark}
+                onChange={(color) => setValue('palette.primaryDark', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.primaryDark}
-            onChange={(color) => setValue('palette.primaryDark', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Secondary</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Secondary</p>
+              </div>
+              <InputColor
+                initialValue={palette.secondaryDark}
+                onChange={(color) => setValue('palette.secondaryDark', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.secondaryDark}
-            onChange={(color) => setValue('palette.secondaryDark', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Primary BG</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Primary BG</p>
+              </div>
+              <InputColor
+                initialValue={palette.primaryBgDark}
+                onChange={(color) => setValue('palette.primaryBgDark', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.primaryBgDark}
-            onChange={(color) => setValue('palette.primaryBgDark', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Secondary BG</p>
+              </div>
+              <InputColor
+                initialValue={palette.secondaryBgDark}
+                onChange={(color) => setValue('palette.secondaryBgDark', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.secondaryBgDark}
-            onChange={(color) => setValue('palette.secondaryBgDark', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Text</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Text</p>
+              </div>
+              <InputColor
+                initialValue={palette.textDark}
+                onChange={(color) => setValue('palette.textDark', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.textDark}
-            onChange={(color) => setValue('palette.textDark', color.hex)}
-            />
-          </div>
             <div className="flex justify-between mt-5">
-            <div>
-              <p className="text-xs text-[#4A5568]/30">Disabled</p>
+              <div>
+                <p className="text-xs text-[#4A5568]/30">Disabled</p>
+              </div>
+              <InputColor
+                initialValue={palette.disabledTextDark}
+                onChange={(color) => setValue('palette.disabledTextDark', color.hex)}
+              />
             </div>
-            <InputColor
-            initialValue={palette.disabledTextDark}
-            onChange={(color) => setValue('palette.disabledTextDark', color.hex)}
-            />
           </div>
-          </div>}
+        )}
       </div>
 
       {/* Wallet passthrough */}
@@ -285,8 +292,8 @@ const FormConfigurator = ({
             aria-expanded="true"
             aria-haspopup="true"
           >
-            <div className='flex items-center justify-center space-x-2.5'>
-              <p>{Object.values(AVAILABLE_EXPLORER).find(item => item.name === defaultExplorer)?.name}</p>
+            <div className="flex items-center justify-center space-x-2.5">
+              <p>{Object.values(AVAILABLE_EXPLORER).find((item) => item.name === defaultExplorer)?.name}</p>
             </div>
 
             <ChevronDownIcon />
@@ -303,7 +310,7 @@ const FormConfigurator = ({
                 <button
                   key={index}
                   onClick={() => {
-                    setValue('defaultExplorer', item.name)
+                    setValue('defaultExplorer', item.name);
                     setIsExplorerDropdownOpen(false);
                   }}
                   type="button"

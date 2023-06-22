@@ -48,21 +48,21 @@ const HeaderLinks = () => {
     <div className="flex-1 justify-center hidden md:!flex text-sm text-[#4A5568]-35 space-x-10 fill-current">
       <HeaderLink href="/" isActive title={'Demo'} icon={<SwapIcon width="20" height="20" />} />
       <HeaderLink
-        href="https://github.com/jup-ag/terminal"
+        href="https://github.com/solendprotocol/marinade-widget"
         isActive={false}
         external
         title={'Repo'}
         icon={<RepoLogo width="20" height="20" />}
       />
       <HeaderLink
-        href="https://station.jup.ag/docs/web-integration/jupiter-terminal"
+        href="https://docs.marinade.finance/"
         isActive={false}
         external
         title={'Docs'}
         icon={<RepoLogo width="20" height="20" />}
       />
       <HeaderLink
-        href="https://discord.gg/jup"
+        href="https://discord.gg/QU3acbjFem"
         isActive={false}
         external
         title={'Discord'}

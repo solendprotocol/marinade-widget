@@ -30,7 +30,7 @@ With several templates to get you started, and auto generated code snippets.
 In your document, link and embed `main-v1.js`.
 
 ```tsx
-<script src="https://terminal.jup.ag/main-v1.js" data-preload />
+<script src="https://marinade-widget-delta.vercel.app/main-v1.js" data-preload />
 ```
 
 ### Preloading Terminal
@@ -38,14 +38,14 @@ In your document, link and embed `main-v1.js`.
 Assign the attribute `data-preload` to the script tag, the full application will be preloaded on your browser's `(document.readyState === "complete")` event.
 
 ```tsx
-<script src="https://terminal.jup.ag/main-v1.js" data-preload />
+<script src="https://marinade-widget-delta.vercel.app/main-v1.js" data-preload />
 ```
 
 Then,
 
 ```tsx
-document.addEventListener('readystatechange', e => {
-  if (document.readyState === "complete") {
+document.addEventListener('readystatechange', (e) => {
+  if (document.readyState === 'complete') {
     window.Marinade.init({ endpoint: 'https://api.mainnet-beta.solana.com' });
   }
 });
@@ -85,7 +85,6 @@ If your user is not connected, Marinade Terminal have several built-in wallets t
 ### _*Modal*_
 
 By default, Marinade renders as a modal and take up the whole screen.
-<img src="public/demo/modal-demo.png" />
 
 ```tsx
 window.Marinade.init({ displayMode: 'modal' });
@@ -94,7 +93,6 @@ window.Marinade.init({ displayMode: 'modal' });
 ### _*Integrated*_
 
 Integrated mode renders Marinade Terminal as a part of your dApp.
-<img src="public/demo/integrated-demo.png" />
 
 ```tsx
 window.Marinade.init({ displayMode: 'integrated' });
@@ -102,7 +100,6 @@ window.Marinade.init({ displayMode: 'integrated' });
 
 ### _*Widget*_
 
-<img src="public/demo/widget-demo.png" />
 Widget mode renders Marinade Terminal as a widget that can be placed at different position.
 
 ````tsx
@@ -149,23 +146,12 @@ Example on how to migrate from `mode` to `formProps`:
 
 Configure Terminal's behaviour and allowed actions for your user
 
-- swapMode?: `SwapMode.ExactIn | SwapMode.ExactOut`
-  - Default to `ExactIn`, where user input the amount of token they want to swap.
-  - On `ExactOut`, user input the desired amount of token they want to receive.
-- initialAmount?: `string`
-  - The initial amount
-- initialInputMint?: `string`
-  - The default input mint
-  - can be used with `fixedInputMint`
-- fixedInputMint?: `boolean`
-  - must be used with `initialInputMint`
-  - user cannot change the input mint
-- initialOutputMint?: `string`
-  - The default output mint
-  - can be used with `fixedOutputMint`
-- fixedOutputMint?: `boolean`
-  - must be used with `initialInputMint`
-  - user cannot change the input mint
+- theme?: `'dark' | 'light' | 'auto'`
+  - Set the theme mode between forcing light/dark or using system settings
+- referralCode?: `string`
+  - Referral code for the Marinade referral program
+- initialValidator?: `string`
+  - Set the address of an validator to be selected by default for direct staking
 
 ---
 
@@ -187,45 +173,8 @@ window.Marinade.close();
 
 ---
 
-### Fee supports
-
-Similar to Marinade, Marinade Terminal supports fee for integrators.
-
-There are no protocol fees on Marinade, but integrators can introduce a platform fee on swaps. The platform fee is provided in basis points, e.g. 20 bps for 0.2% of the token output.
-
-Refer to [Adding your own fees](https://docs.jup.ag/integrating-jupiter/additional-guides/adding-your-own-fees) docs for more details.
-
-_Note: You will need to create the Token fee accounts to collect the platform fee._
-
-```tsx
-import { getPlatformFeeAccounts } from '@jup-ag/react-hook';
-
-// Marinade Core provides a helper function that returns all your feeAccounts
-const platformFeeAndAccounts = {
-  feeBps: 50,
-  feeAccounts: await getPlatformFeeAccounts(
-    connection,
-    new PublicKey('BUX7s2ef2htTGb2KKoPHWkmzxPj4nTWMWRgs5CSbQxf9'), // The platform fee account owner
-  ), // map of mint to token account pubkey
-};
-
-window.Marinade.init({
-  // ...
-  platformFeeAndAccounts,
-});
-```
-
-### Strict Token List
-- `strictTokenList?: boolean;`
-- Default: `true`
-
-The strict list contains a smaller set of validated tokens. To see all tokens, toggle "off".
-
-Learn more at: https://docs.jup.ag/api/token-list-api
-
----
-
 ### Default Explorer
+
 - `defaultExplorer?: 'Solana Explorer' | 'Solscan' | 'Solana Beach' | 'SolanaFM';`
 - Default: `Solana Explorer`
 
@@ -235,19 +184,19 @@ You can change the default explorer by passing in the explorer name to the `defa
 
 ---
 
-### onSuccess/onSwapError callback
+### onSuccess/onStakeError callback
 
 `onSuccess()` reference can be provided, and will be called when swap is successful.
 
-While `onSwapError()` will be called when an error has occurred.
+While `onStakeError()` will be called when an error has occurred.
 
 ```tsx
 window.Marinade.init({
-  onSuccess: ({ txid, swapResult }) => {
-    console.log({ txid, swapResult });
+  onSuccess: ({ txid }) => {
+    console.log({ txid });
   },
-  onSwapError: ({ error }) => {
-    console.log('onSwapError', error);
+  onStakeError: ({ error }) => {
+    console.log('onStakeError', error);
   },
 });
 ```
@@ -294,7 +243,8 @@ window.Marinade.init({
 ---
 
 ### Typescript Support
-Since Marinade Terminal is not published on npm, and are only importable via CDN, to get proper typing, you can create a typing decalarion `jupiter-terminal.d.ts` file in your project, and copy the contents in `src/types/index.d.ts`.
+
+Since Marinade Terminal is not published on npm, and are only importable via CDN, to get proper typing, you can create a typing decalarion `marinade-terminal.d.ts` file in your project, and copy the contents in `src/types/index.d.ts`.
 
 ```tsx
 declare global {

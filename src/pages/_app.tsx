@@ -6,7 +6,6 @@ import 'tailwindcss/tailwind.css';
 import '../styles/globals.css';
 
 import AppHeader from 'src/components/AppHeader/AppHeader';
-import SexyChameleonText from 'src/components/BigText/BigText';
 import Footer from 'src/components/Footer/Footer';
 
 import ModalTerminal from 'src/content/ModalTerminal';
@@ -83,23 +82,17 @@ export default function App({ Component, pageProps }: AppProps) {
           locale: 'en',
           title: 'Marinade Widget',
           description: 'Marinade Widget: An open-sourced, lite version of Marinade that provides end-to-end swap flow.',
-          url: 'https://terminal.jup.ag/',
+          url: 'https://marinade-widget-delta.vercel.app/',
           site_name: 'Marinade Widget',
-          images: [
-            {
-              url: `https://og.jup.ag/api/jupiter`,
-              alt: 'Marinade Widget',
-            }
-          ],
         }}
         twitter={{
           cardType: 'summary_large_image',
-          site: 'jup.ag',
-          handle: '@MarinadeExchange',
+          site: 'marinade.finance/',
+          handle: '@MarinadeFinance',
         }}
       />
 
-      <div className="bg-jupiter-dark-bg h-screen w-screen max-w-screen overflow-x-hidden flex flex-col justify-between">
+      <div className="h-screen w-screen max-w-screen overflow-x-hidden flex flex-col justify-between">
         <div>
           <AppHeader />
 
@@ -110,8 +103,8 @@ export default function App({ Component, pageProps }: AppProps) {
                   Marinade Widget
                 </span>
                 <p className="text-[#9D9DA6] w-[80%] md:max-w-[60%] text-md mt-4 heading-[24px]">
-                  An open-sourced, Marinade widget that provides end-to-end swap flow by linking it in your HTML.
-                  Check out the visual demo for the various integration modes below.
+                  An open-sourced, Marinade widget that provides end-to-end swap flow by linking it in your HTML. Check
+                  out the visual demo for the various integration modes below.
                 </p>
               </div>
             </div>
@@ -119,8 +112,8 @@ export default function App({ Component, pageProps }: AppProps) {
             <div className="flex justify-center">
               <div className="max-w-6xl bg-white mt-12 rounded-xl flex flex-col md:flex-row w-full md:p-4">
                 {/* Desktop configurator */}
-                <div className='hidden md:flex'>
-                  <FormConfigurator {...watchAllFields} reset={reset} setValue={setValue} formState={formState} />
+                <div className="hidden md:flex">
+                  <FormConfigurator {...watchAllFields} setValue={setValue} />
                 </div>
 
                 <div className="mt-8 md:mt-0 md:ml-4 h-full w-full bg-[#f7fafc] rounded-xl flex flex-col">
@@ -222,13 +215,12 @@ export default function App({ Component, pageProps }: AppProps) {
                     ) : null}
                   </div>
                 </div>
-
               </div>
             </div>
-              {/* Mobile configurator */}
-              <div className='flex md:hidden'>
-                <FormConfigurator {...watchAllFields} reset={reset} setValue={setValue} formState={formState} />
-              </div>
+            {/* Mobile configurator */}
+            <div className="flex md:hidden">
+              <FormConfigurator {...watchAllFields} reset={reset} setValue={setValue} formState={formState} />
+            </div>
           </div>
         </div>
 

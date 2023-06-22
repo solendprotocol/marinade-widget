@@ -23,7 +23,6 @@ const rowRenderer = memo((props: ListChildComponentProps) => {
   return <ValidatorRow key={item.address} item={item} style={style} onSubmit={data.onSubmit} />;
 }, areEqual);
 
-
 const ValidatorSelector = ({
   onSubmit,
   tokenInfos,
@@ -38,11 +37,15 @@ const ValidatorSelector = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResult, setSearchResult] = useState<ValidatorType[]>(validators);
   useEffect(() => {
-    const sortedList = validators
-      .sort((a, b) => a.score > b.score ? -1 : 1)
+    const sortedList = validators.sort((a, b) => (a.score > b.score ? -1 : 1));
 
     if (searchTerm) {
-      const filteredList = sortedList.filter((item) => item.address.includes(searchTerm) || item.voteAddress.includes(searchTerm) || item.name?.toLowerCase()?.includes(searchTerm.toLowerCase()));
+      const filteredList = sortedList.filter(
+        (item) =>
+          item.address.includes(searchTerm) ||
+          item.voteAddress.includes(searchTerm) ||
+          item.name?.toLowerCase()?.includes(searchTerm.toLowerCase()),
+      );
       setSearchResult(filteredList);
     } else {
       setSearchResult(sortedList);
@@ -56,9 +59,9 @@ const ValidatorSelector = ({
   return (
     <div className="flex flex-col h-full w-full p-4">
       <div className="flex w-full justify-between">
-      <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={onClose}>
-        <LeftArrowIcon width={24} height={24} />
-      </div>
+        <div className="text-[#4A5568] fill-current w-6 h-6 cursor-pointer" onClick={onClose}>
+          <LeftArrowIcon width={24} height={24} />
+        </div>
 
         <div className="text-[#4A5568] font-bold">Select a validator to direct stake</div>
 
@@ -69,7 +72,6 @@ const ValidatorSelector = ({
         className="flex px-5 mt-4 w-[98%] rounded-lg border border-[#EDF2F7] border hover:border-[#EDF2F7]/90"
         style={{ height: SEARCH_BOX_HEIGHT, maxHeight: SEARCH_BOX_HEIGHT }}
       >
-
         <input
           autoComplete="off"
           className="w-full rounded-xl mr-4 truncate "

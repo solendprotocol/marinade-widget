@@ -30,7 +30,7 @@ const CodeBlocks = ({
     if (displayMode === 'integrated') return { displayMode: 'integrated', integratedTargetId: 'integrated-terminal' };
     if (displayMode === 'widget') return { displayMode: 'widget' };
   })();
-  
+
   // Filter out the key that's not default
   const filteredFormProps = Object.keys(formConfigurator.formProps).reduce<Partial<FormProps>>((acc, key) => {
     const itemKey = key as keyof FormProps;
@@ -38,7 +38,7 @@ const CodeBlocks = ({
       acc[itemKey] = formConfigurator.formProps[itemKey] as any;
     }
     return acc;
-  }, {})
+  }, {});
 
   const valuesToFormat = {
     ...DISPLAY_MODE_VALUES,
@@ -46,7 +46,7 @@ const CodeBlocks = ({
     ...(formConfigurator.defaultExplorer !== 'Solana Explorer'
       ? { defaultExplorer: formConfigurator.defaultExplorer }
       : undefined),
-      ...(Object.keys(filteredFormProps || {}).length > 0 ? { formProps: filteredFormProps } : undefined),
+    ...(Object.keys(filteredFormProps || {}).length > 0 ? { formProps: filteredFormProps } : undefined),
   };
 
   const formPropsSnippet = Object.keys(valuesToFormat).length > 0 ? JSON.stringify(valuesToFormat, null, 4) : '';
@@ -72,7 +72,6 @@ const CodeBlocks = ({
     setIsCopied(true);
   };
 
-
   const [isCopiedShareLink, setIsCopiedShareLink] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -83,18 +82,16 @@ const CodeBlocks = ({
     if (typeof window === 'undefined') return;
 
     const stringifiedQuery = JSON.stringify(jsonToBase64(valuesToFormat));
-    navigator.clipboard.writeText(
-      `${window.location.origin}?import=${stringifiedQuery.replaceAll('"', '')}`
-    );
+    navigator.clipboard.writeText(`${window.location.origin}?import=${stringifiedQuery.replaceAll('"', '')}`);
     setIsCopiedShareLink(true);
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center mt-12">
       <div className="relative w-full max-w-3xl overflow-hidden px-4 md:px-0">
         <p className="text-[#4A5568] self-start pb-2 font-semibold">Code snippet</p>
 
-        <div className='absolute flex space-x-2 top-0 right-4 md:top-10 md:right-2 '>
+        <div className="absolute flex space-x-2 top-0 right-4 md:top-10 md:right-2 ">
           <button
             className={classNames(
               'text-xs text-[#4A5568] border rounded-xl px-2 py-1 opacity-50 hover:opacity-100',
@@ -115,7 +112,6 @@ const CodeBlocks = ({
             {isCopiedShareLink ? 'Copied share link!' : 'Share'}
           </button>
         </div>
-
 
         <SyntaxHighlighter language="typescript" showLineNumbers style={vs2015}>
           {snippet}

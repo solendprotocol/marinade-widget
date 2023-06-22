@@ -6,7 +6,14 @@ import LeftArrowIcon from 'src/icons/LeftArrowIcon';
 import { useDebouncedEffect } from 'src/misc/utils';
 import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType, WidgetPosition, WidgetSize } from 'src/types';
 
-const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl: string, formProps: FormProps, fakeWallet: Wallet | null, defaultExplorer: DEFAULT_EXPLORER }) => {
+const WidgetTerminal = (props: {
+  theme: ThemeType;
+  palette: PaletteType;
+  rpcUrl: string;
+  formProps: FormProps;
+  fakeWallet: Wallet | null;
+  defaultExplorer: DEFAULT_EXPLORER;
+}) => {
   const { palette, theme, rpcUrl, fakeWallet, formProps, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
   const [position, setPosition] = useState<WidgetPosition>('bottom-right');
@@ -24,7 +31,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
       theme,
       passThroughWallet: fakeWallet,
       endpoint: rpcUrl,
-      defaultExplorer
+      defaultExplorer,
     });
   };
 
@@ -41,11 +48,15 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
     }
   }, []);
 
-  useDebouncedEffect(() => {
-    if (isLoaded && Boolean(window.Marinade.init)) {
-      launchTerminal();
-    }
-  }, [isLoaded, props, position, size], 1000)
+  useDebouncedEffect(
+    () => {
+      if (isLoaded && Boolean(window.Marinade.init)) {
+        launchTerminal();
+      }
+    },
+    [isLoaded, props, position, size],
+    1000,
+  );
 
   return (
     <div className="flex flex-col items-center">
@@ -61,9 +72,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
 
               {/* Top left  */}
               <div
-                className={classNames('absolute left-1 top-1 cursor-pointer hover:bg-black/20 rounded-full p-1', {
-                  'jup-gradient': position === 'top-left',
-                })}
+                className={classNames('absolute left-1 top-1 cursor-pointer hover:bg-black/20 rounded-full p-1')}
                 onClick={() => setPosition('top-left')}
               >
                 <div className="rotate-45">
@@ -73,9 +82,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
 
               {/* Top right  */}
               <div
-                className={classNames('absolute right-1 top-1 cursor-pointer hover:bg-black/20 rounded-full p-1', {
-                  'jup-gradient': position === 'top-right',
-                })}
+                className={classNames('absolute right-1 top-1 cursor-pointer hover:bg-black/20 rounded-full p-1')}
                 onClick={() => setPosition('top-right')}
               >
                 <div className="rotate-[135deg]">
@@ -85,9 +92,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
 
               {/* Bottom left  */}
               <div
-                className={classNames('absolute left-1 bottom-1 cursor-pointer hover:bg-black/20 rounded-full p-1', {
-                  'jup-gradient': position === 'bottom-left',
-                })}
+                className={classNames('absolute left-1 bottom-1 cursor-pointer hover:bg-black/20 rounded-full p-1')}
                 onClick={() => setPosition('bottom-left')}
               >
                 <div className="-rotate-45">
@@ -97,9 +102,7 @@ const WidgetTerminal = (props: { theme: ThemeType, palette: PaletteType, rpcUrl:
 
               {/* Bottom right  */}
               <div
-                className={classNames('absolute right-1 bottom-1 cursor-pointer hover:bg-black/20 rounded-full p-1', {
-                  'jup-gradient': position === 'bottom-right',
-                })}
+                className={classNames('absolute right-1 bottom-1 cursor-pointer hover:bg-black/20 rounded-full p-1')}
                 onClick={() => setPosition('bottom-right')}
               >
                 <div className="rotate-[225deg]">

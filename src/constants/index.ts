@@ -1,7 +1,8 @@
 import { PublicKey } from '@solana/web3.js';
 import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
 
-export const JUPITER_DEFAULT_RPC = process.env.NEXT_PUBLIC_JUPITER_DEFAULT_RPC || 'https://solend.rpcpool.com/a3e03ba77d5e870c8c694b19d61c';
+export const JUPITER_DEFAULT_RPC =
+  process.env.NEXT_PUBLIC_JUPITER_DEFAULT_RPC || 'https://solend.rpcpool.com/a3e03ba77d5e870c8c694b19d61c';
 
 export const WRAPPED_SOL_MINT = new PublicKey('So11111111111111111111111111111111111111112');
 export const SOL_MINT_TOKEN_INFO = {
@@ -31,8 +32,8 @@ export interface IFormConfigurator {
 }
 
 export const COLOR_PALETTE = {
-  darkText: '#4A5568'
-}
+  darkText: '#4A5568',
+};
 
 export const INITIAL_FORM_CONFIG: IFormConfigurator = Object.freeze({
   useWalletPassthrough: false,
@@ -59,5 +60,5 @@ export const INITIAL_FORM_CONFIG: IFormConfigurator = Object.freeze({
     secondaryBgDark: '#353841',
     textDark: '#A0AEC0',
     disabledTextDark: '#4A5568',
-  }
-})
+  },
+});
