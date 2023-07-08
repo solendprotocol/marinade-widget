@@ -11,7 +11,7 @@ const Header: React.FC<{
   setShowStakeModeSettings(arg: boolean): void;
   setShowDelegationStrategy(arg: boolean): void;
 }> = ({ setIsWalletModalOpen, setShowDelegationStrategy }) => {
-  const { allowDirectStake, delegationStrategy, refresh } = useData();
+  const { allowDirectStake, delegationStrategy, refresh, initialValidator } = useData();
   const { palette } = useTheme();
 
   return (
@@ -28,12 +28,14 @@ const Header: React.FC<{
               }}
               onClick={() => setShowDelegationStrategy(true)}
             >
-              <span suppressHydrationWarning className="text-xs">
-                <TbSettingsAutomation className="inline" /> {delegationStrategy ? delegationStrategy.name : 'Automatic'}
+              <span suppressHydrationWarning className="text-xs items-center flex gap-1">
+                <TbSettingsAutomation className="inline" /> {delegationStrategy && delegationStrategy.name.slice(0, 12)}
+                {initialValidator && !delegationStrategy && 'Loading...'}
+                {!initialValidator && !delegationStrategy && 'Automatic'}
               </span>
             </button>
           )}
-          <button
+          {/* <button
             type="button"
             onClick={() => refresh()}
             className="p-2 h-7 space-x-1 flex items-center justify-center border rounded-lg	border-white/10 border-solid border-1 fill-current"
@@ -43,7 +45,7 @@ const Header: React.FC<{
             }}
           >
             <RefreshSVG />
-          </button>
+          </button> */}
         </div>
         <WalletButton setIsWalletModalOpen={setIsWalletModalOpen} />
       </div>

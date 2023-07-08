@@ -3,14 +3,28 @@ import { useConnection } from '@solana/wallet-adapter-react';
 import axios from 'axios';
 import { BN, Marinade, MarinadeConfig } from '@marinade.finance/marinade-ts-sdk';
 import { solToLamports, STAKE_PROGRAM_ID } from '@marinade.finance/marinade-ts-sdk/dist/src/util';
+import { Jupiter, RouteInfo } from '@jup-ag/core';
 import { useWalletPassThrough } from './WalletPassthroughProvider';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { IInit } from 'src/types';
+import { AllowedStakeModeType, IInit } from 'src/types';
 import { formatAddress } from 'src/components/ValidatorRow';
 import { useScreenState } from './ScreenProvider';
 import { useAccounts } from './accounts';
+import { MSOL_MINT } from 'src/misc/constants';
+import { NATIVE_MINT } from '@solana/spl-token';
+import JSBI from 'jsbi';
 
 type ValidatorsResponseType = {
+  validators: Array<{
+    identity: string;
+    info_name: string;
+    vote_account: string;
+    info_keybase: string;
+    score: number;
+  }>;
+};
+
+type JupiterQuoteResponseType = {
   validators: Array<{
     identity: string;
     info_name: string;
@@ -28,7 +42,7 @@ export type ValidatorType = {
   score: number;
 };
 
-type StakeModeType = 'liquid' | 'native';
+type StakeModeType = 'stake' | 'unstake';
 
 type DataType = {
   validators: Array<ValidatorType>;
@@ -37,31 +51,44 @@ type DataType = {
   delegationStrategy: ValidatorType | null;
   target: TargetType | null;
   marinadeStats: MarinadeStatsType | null;
+  priceLoading: boolean;
+  allowedStakeModes: AllowedStakeModeType;
   deposit: () => Promise<string | undefined>;
+  unstake: () => Promise<string | undefined>;
   refresh: () => void;
   setStakeMode: (mode: StakeModeType) => void;
+  bestRoute: RouteInfo | null;
   calcVotePower: (stakeAmount?: number) => number;
   setTarget: (mode: TargetType | null) => void;
   allowDirectStake: boolean;
   setTargetAmount: (amount?: number) => void;
   setDelegationStrategy: (validator: ValidatorType | null) => void;
+  initialValidator?: string;
+  instantUnstake: boolean;
+  setInstantUnstake: (arg: boolean) => void;
 };
 
 const defaultContextValues = {
   validators: [],
-  stakeMode: 'liquid' as StakeModeType,
+  stakeMode: 'stake' as StakeModeType,
+  instantUnstake: false,
   stakeAccounts: [],
   target: null,
   delegationStrategy: null,
+  allowedStakeModes: 'both' as AllowedStakeModeType,
+  priceLoading: false,
   marinadeStats: null,
   allowDirectStake: true,
+  bestRoute: null,
   deposit: () => Promise.resolve(''),
+  unstake: () => Promise.resolve(''),
   refresh: () => undefined,
   setTarget: () => undefined,
   setStakeMode: () => undefined,
   calcVotePower: () => 1,
   setTargetAmount: () => undefined,
   setDelegationStrategy: () => undefined,
+  setInstantUnstake: () => undefined,
 };
 
 const VALIDATORS_API = 'https://validators-api.marinade.finance/validators?limit=9999&epochs=0';
@@ -105,6 +132,7 @@ type MarinadeStatsType = {
   stakingRewardFee: number;
   rewardDepositFee: number;
   rewardDepositStakeFee: number;
+  timeTillNextEpoch?: string;
 };
 
 function getRandomHEXColor(seed: string) {
@@ -116,9 +144,15 @@ function getRandomHEXColor(seed: string) {
   return output;
 }
 
-export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, children }) => {
+export const DataProvider: FC<IInit & { children: ReactNode }> = ({
+  formProps,
+  children,
+  stakeMode: allowedStakeModes,
+}) => {
   const [validators, setValidators] = useState<DataType['validators']>(defaultContextValues.validators);
-  const [stakeMode, setStakeMode] = useState<StakeModeType>(defaultContextValues.stakeMode);
+  const [stakeMode, setStakeMode] = useState<StakeModeType>(
+    allowedStakeModes === 'unstake' ? 'unstake' : defaultContextValues.stakeMode,
+  );
   const [voteData, setVoteData] = useState<{
     snapshotAmount: number;
     totalDirectStake: number;
@@ -130,13 +164,17 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   });
   const [target, setTarget] = useState<TargetType | null>(defaultContextValues.target);
   const [marinadeStats, setMarinadeStats] = useState<MarinadeStatsType | null>(null);
+  const [jupiter, setJupiter] = useState<Jupiter | null>(null);
   const { publicKey, wallet } = useWalletPassThrough();
   const { connection } = useConnection();
   const { setScreen, setContext } = useScreenState();
+  const [instantUnstake, setInstantUnstake] = useState(true);
+  const [priceLoading, setPriceLoading] = useState(false);
+  const [bestRoute, setBestRoute] = useState<RouteInfo | null>(null);
   const [stakeAccounts, setStakeAccounts] = useState<Array<StakeAccountType>>([]);
   const { refresh: refreshAccounts } = useAccounts();
   const allowDirectStake =
-    typeof formProps?.allowDirectStake === undefined ? true : Boolean(formProps?.allowDirectStake);
+    typeof formProps?.allowDirectStake === 'undefined' ? true : Boolean(formProps?.allowDirectStake);
   const [directedValidatorAddress, setDirectedValidatorAddress] = useState<string | null>(
     allowDirectStake ? formProps?.initialValidator ?? defaultContextValues.delegationStrategy : null,
   );
@@ -146,9 +184,37 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
     setDirectedValidatorAddress(validator?.address ?? null);
   }
 
+  async function loadJupiter() {
+    if (!publicKey) return null;
+    setJupiter(
+      await Jupiter.load({
+        connection,
+        cluster: 'mainnet-beta',
+        user: publicKey, // or public key
+      }),
+    );
+  }
+  useEffect(() => {
+    loadJupiter();
+  }, [publicKey, connection]);
+
   useEffect(() => {
     setDirectedValidatorAddress(formProps?.initialValidator ?? null);
   }, [formProps?.initialValidator]);
+
+  useEffect(() => {
+    if (!target && !stakeAccounts.length) {
+      setTarget({
+        type: 'native',
+      });
+    }
+  }, [stakeAccounts.length, target]);
+
+  useEffect(() => {
+    if (stakeMode === 'unstake') {
+      estimateInstantUnstakeAmount();
+    }
+  }, [target?.amount, stakeMode, jupiter]);
 
   const marinadeConfig = useMemo(() => {
     const defaultConfig = new MarinadeConfig({
@@ -166,6 +232,20 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
       return defaultConfig;
     }
   }, [formProps?.referralCode, publicKey]);
+
+  async function estimateInstantUnstakeAmount() {
+    if (!jupiter || !target?.amount) return;
+
+    const routes = await jupiter.computeRoutes({
+      inputMint: MSOL_MINT,
+      outputMint: NATIVE_MINT,
+      amount: JSBI.BigInt(solToLamports(target.amount)), // raw input amount of tokens
+      slippageBps: 10,
+    });
+
+    setPriceLoading(false);
+    setBestRoute(routes.routesInfos[0]);
+  }
 
   async function fetchValidators() {
     const response = (await axios.get(VALIDATORS_API)).data as ValidatorsResponseType;
@@ -220,6 +300,14 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
     const marinade = new Marinade(marinadeConfig);
     const response = (await axios.get(MSOLSOLPRICE_API)).data as number;
     const state = await marinade.getMarinadeState();
+    const nextEpochTimestamp = (await marinade.getEstimatedUnstakeTicketDueDate()).ticketDueDate?.getTime()! / 1000;
+    const currentTimeStamp = new Date().getTime() / 1000;
+
+    const timeDifference = nextEpochTimestamp - currentTimeStamp;
+
+    const days = Math.floor((timeDifference % 31536000) / 86400);
+    const hours = Math.floor(((timeDifference % 31536000) % 86400) / 3600);
+    const minutes = Math.floor((((timeDifference % 31536000) % 86400) % 3600) / 60);
 
     const partnerState = marinadeConfig.referralCode ? await marinade.getReferralPartnerState() : null;
 
@@ -228,6 +316,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
       stakingRewardFee: state.rewardsCommissionPercent,
       rewardDepositFee: partnerState?.state.operationDepositSolFee ?? 0,
       rewardDepositStakeFee: partnerState?.state.operationDepositStakeAccountFee ?? 0,
+      timeTillNextEpoch: `${days}D ${hours}H ${minutes}M`,
     });
   }
 
@@ -240,6 +329,95 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
           }
         : null,
     );
+    if (stakeMode === 'unstake') {
+      setPriceLoading(true);
+    }
+  }
+  async function unstake() {
+    if (!wallet || !target?.amount) return;
+
+    if (instantUnstake) {
+      try {
+        if (!bestRoute || !jupiter) return;
+        const { swapTransaction } = await jupiter.exchange({
+          routeInfo: bestRoute,
+        });
+
+        setScreen('Signing');
+        const signature = await wallet.adapter.sendTransaction(swapTransaction, connection);
+        const latestBlockhash = await connection.getLatestBlockhash();
+        setScreen('Confirming');
+        await connection.confirmTransaction(
+          {
+            signature,
+            ...latestBlockhash,
+          },
+          'confirmed',
+        );
+
+        setScreen('Success');
+        setContext({
+          message: signature,
+          callback: () => {
+            setScreen('Initial');
+            setTargetAmount(0);
+          },
+        });
+
+        refresh();
+        return signature;
+      } catch (e: any) {
+        setScreen('Error');
+        setContext({
+          message: String(e.message ?? e),
+          callback: () => {
+            setScreen('Initial');
+          },
+        });
+      }
+    } else {
+      try {
+        const marinade = new Marinade(marinadeConfig);
+
+        const bnAmount = new BN(solToLamports(target.amount));
+
+        const { transaction, ticketAccountKeypair } = await marinade.orderUnstake(bnAmount);
+
+        setScreen('Signing');
+        const signature = await wallet.adapter.sendTransaction(transaction, connection, {
+          signers: [ticketAccountKeypair],
+        });
+        const latestBlockhash = await connection.getLatestBlockhash();
+        setScreen('Confirming');
+        await connection.confirmTransaction(
+          {
+            signature,
+            ...latestBlockhash,
+          },
+          'confirmed',
+        );
+
+        setScreen('Success');
+        setContext({
+          message: signature,
+          callback: () => {
+            setScreen('Initial');
+            setTargetAmount(0);
+          },
+        });
+
+        refresh();
+        return signature;
+      } catch (e: any) {
+        setScreen('Error');
+        setContext({
+          message: String(e.message ?? e),
+          callback: () => {
+            setScreen('Initial');
+          },
+        });
+      }
+    }
   }
 
   async function deposit() {
@@ -368,9 +546,14 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
   return (
     <DataContext.Provider
       value={{
+        allowedStakeModes,
+        instantUnstake,
+        setInstantUnstake,
         allowDirectStake,
         validators,
+        bestRoute,
         stakeMode,
+        unstake,
         setStakeMode,
         stakeAccounts,
         deposit,
@@ -382,6 +565,8 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({ formProps, c
         setTarget,
         setTargetAmount,
         calcVotePower,
+        initialValidator: formProps?.initialValidator,
+        priceLoading,
       }}
     >
       {children}

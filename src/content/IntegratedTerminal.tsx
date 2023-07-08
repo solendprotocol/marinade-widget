@@ -1,6 +1,6 @@
 import { Wallet } from '@solana/wallet-adapter-react';
 import React, { useEffect, useState } from 'react';
-import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
+import { AllowedStakeModeType, DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
 import { useDebouncedEffect } from 'src/misc/utils';
 
 const IntegratedTerminal = (props: {
@@ -8,10 +8,11 @@ const IntegratedTerminal = (props: {
   formProps: FormProps;
   theme: ThemeType;
   palette: PaletteType;
+  stakeMode: AllowedStakeModeType;
   fakeWallet: Wallet | null;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
-  const { rpcUrl, theme, palette, formProps, fakeWallet, defaultExplorer } = props;
+  const { stakeMode, rpcUrl, theme, palette, formProps, fakeWallet, defaultExplorer } = props;
   const [isLoaded, setIsLoaded] = useState(false);
 
   const launchTerminal = async () => {
@@ -21,6 +22,7 @@ const IntegratedTerminal = (props: {
       endpoint: rpcUrl,
       palette,
       formProps,
+      stakeMode,
       theme,
       passThroughWallet: fakeWallet,
       defaultExplorer,

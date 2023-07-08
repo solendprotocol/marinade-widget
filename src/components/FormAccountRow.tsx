@@ -41,7 +41,6 @@ const FormAccountRow: React.FC<{
             }}
           />
         </div>
-
         <div className="flex-1 min-w-0">
           <div className="flex flex-row space-x-2">
             <p
@@ -53,18 +52,31 @@ const FormAccountRow: React.FC<{
               {formatAddress(item.address)}
             </p>
           </div>
-
           <div
             className="mt-1 text-xs truncate flex space-x-1"
             style={{
               color: palette.text,
             }}
           >
-            {item.status === 'active' ? (
-              `Stake account: ${formatAddress(item.address)}`
-            ) : (
-              <span>
+            {item.status === 'active' && `Stake account: ${formatAddress(item.address)}`}
+            {item.status === 'inactive' && (
+              <span
+                className="text-xs mb-1"
+                style={{
+                  color: palette.disabledText,
+                }}
+              >
                 Inactive... Wait {item.waitEpoch} epoch{item.waitEpoch === 1 ? '' : 's'}
+              </span>
+            )}
+            {item.status === 'minBalance' && (
+              <span
+                className="text-xs mb-1"
+                style={{
+                  color: palette.disabledText,
+                }}
+              >
+                Amount must be &gt; 1 SOL
               </span>
             )}
           </div>

@@ -19,6 +19,8 @@ export interface FormProps {
   initialValidator?: string;
 }
 
+export type AllowedStakeModeType = 'stake' | 'unstake' | 'both';
+
 export type ThemeType = 'light' | 'dark' | 'auto';
 
 export type DEFAULT_EXPLORER = 'Solana Explorer' | 'Solscan' | 'Solana Beach' | 'SolanaFM';
@@ -63,6 +65,7 @@ export interface IInit {
   endpoint: string;
   formProps?: FormProps;
   defaultExplorer?: DEFAULT_EXPLORER;
+  stakeMode: AllowedStakeModeType;
   theme?: ThemeType;
   palette?: PaletteInputType;
 

@@ -189,6 +189,7 @@ export default function App() {
                         formProps={watchAllFields.formProps}
                         palette={watchAllFields.palette}
                         theme={watchAllFields.theme}
+                        stakeMode={watchAllFields.stakeMode}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
@@ -199,6 +200,7 @@ export default function App() {
                         formProps={watchAllFields.formProps}
                         palette={watchAllFields.palette}
                         theme={watchAllFields.theme}
+                        stakeMode={watchAllFields.stakeMode}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />
@@ -209,6 +211,7 @@ export default function App() {
                         formProps={watchAllFields.formProps}
                         palette={watchAllFields.palette}
                         theme={watchAllFields.theme}
+                        stakeMode={watchAllFields.stakeMode}
                         fakeWallet={wallet}
                         defaultExplorer={watchAllFields.defaultExplorer}
                       />

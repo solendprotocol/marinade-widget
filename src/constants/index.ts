@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
+import { AllowedStakeModeType, DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
 
 export const JUPITER_DEFAULT_RPC =
   process.env.NEXT_PUBLIC_JUPITER_DEFAULT_RPC || 'https://solend.rpcpool.com/a3e03ba77d5e870c8c694b19d61c';
@@ -28,6 +28,7 @@ export interface IFormConfigurator {
   allowDirectStake?: boolean;
   formProps: FormProps;
   theme: ThemeType;
+  stakeMode: AllowedStakeModeType;
   palette: PaletteType;
 }
 
@@ -38,6 +39,7 @@ export const COLOR_PALETTE = {
 export const INITIAL_FORM_CONFIG: IFormConfigurator = Object.freeze({
   useWalletPassthrough: false,
   defaultExplorer: 'Solana Explorer',
+  stakeMode: 'both',
   theme: 'light',
   formProps: {
     referralCode: '',

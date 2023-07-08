@@ -5,9 +5,27 @@ import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import Toggle from './Toggle';
 import { AVAILABLE_EXPLORER } from '../contexts/preferredExplorer/index';
 import { IFormConfigurator } from 'src/constants';
-import { ThemeType } from 'src/types';
+import { AllowedStakeModeType, ThemeType } from 'src/types';
 import ChevronUpIcon from 'src/icons/ChevronUpIcon';
 import InputColor from 'react-input-color';
+
+const ALLOWED_STAKE_MODES: Array<{
+  value: AllowedStakeModeType;
+  label: string;
+}> = [
+  {
+    value: 'stake',
+    label: 'Staking only',
+  },
+  {
+    value: 'unstake',
+    label: 'Unstaking only',
+  },
+  {
+    value: 'both',
+    label: 'Staking + Unstaking',
+  },
+];
 
 const THEME_MODES: Array<{
   value: ThemeType;
@@ -32,6 +50,7 @@ const FormConfigurator = ({
   defaultExplorer,
   formProps,
   palette,
+  stakeMode,
   theme,
   // Hook form
   setValue,
@@ -42,6 +61,7 @@ const FormConfigurator = ({
 }) => {
   const [isExplorerDropdownOpen, setIsExplorerDropdownOpen] = React.useState(false);
   const [isThemeDropdownOpen, setIsThemeDropdownOpen] = React.useState(false);
+  const [isStakeModeDropdownOpen, setIsStakeModeDropdownOpen] = React.useState(false);
   const [isPaletteDropdownOpen, setIsPaletteDropdownOpen] = React.useState(false);
 
   return (
@@ -126,6 +146,53 @@ const FormConfigurator = ({
                   onClick={() => {
                     setValue('theme', m.value);
                     setIsThemeDropdownOpen(false);
+                  }}
+                  type="button"
+                  className={classNames(
+                    'flex items-center w-full px-4 py-2 text-sm hover:[#308D8A]/20 text-left hover:bg-[#308D8A]/50',
+                  )}
+                >
+                  <span>{m.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Allowed modes */}
+      <div className="relative inline-block text-left text-[#4A5568] w-full mt-5">
+        <div>
+          <p className="text-sm text-[#4A5568]/75">Allowed actions</p>
+        </div>
+        <div className="mt-4">
+          <button
+            onClick={() => setIsStakeModeDropdownOpen(!isStakeModeDropdownOpen)}
+            type="button"
+            className="w-full flex justify-between items-center space-x-2 text-left rounded-md bg-white/10 px-4 py-2 text-sm font-medium shadow-sm border border-white/10"
+            id="menu-button"
+            aria-expanded="true"
+            aria-haspopup="true"
+          >
+            <div className="flex items-center justify-center space-x-2.5">
+              <p>{Object.values(ALLOWED_STAKE_MODES).find((item) => item.value === stakeMode)?.label}</p>
+            </div>
+
+            <ChevronDownIcon />
+          </button>
+          {isStakeModeDropdownOpen && (
+            <div
+              className="absolute left-0 bottom-6 z-10 ml-1 mt-1 origin-top-right rounded-md shadow-xl bg-[#EDF2F7] rounded-xl w-full border border-white/20"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+            >
+              {ALLOWED_STAKE_MODES.map((m) => (
+                <button
+                  key={m.value}
+                  onClick={() => {
+                    setValue('stakeMode', m.value);
+                    setIsStakeModeDropdownOpen(false);
                   }}
                   type="button"
                   className={classNames(

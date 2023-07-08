@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Wallet } from '@solana/wallet-adapter-react';
 
-import { DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
+import { AllowedStakeModeType, DEFAULT_EXPLORER, FormProps, PaletteType, ThemeType } from 'src/types';
 
 import WalletDisconnectedGraphic from 'src/icons/WalletDisconnectedGraphic';
 
@@ -10,17 +10,19 @@ const ModalTerminal = (props: {
   rpcUrl: string;
   formProps: FormProps;
   theme: ThemeType;
+  stakeMode: AllowedStakeModeType;
   palette: PaletteType;
   fakeWallet: Wallet | null;
   defaultExplorer: DEFAULT_EXPLORER;
 }) => {
-  const { rpcUrl, formProps, fakeWallet, theme, palette, defaultExplorer } = props;
+  const { stakeMode, rpcUrl, formProps, fakeWallet, theme, palette, defaultExplorer } = props;
 
   const launchTerminal = () => {
     window.Marinade.init({
       endpoint: rpcUrl,
       formProps,
       palette,
+      stakeMode,
       passThroughWallet: fakeWallet,
       defaultExplorer,
       theme,

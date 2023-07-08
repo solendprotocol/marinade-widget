@@ -8,6 +8,7 @@ import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { useWalletPassThrough } from 'src/contexts/WalletPassthroughProvider';
 import ChevronDownIcon from 'src/icons/ChevronDownIcon';
 import { FaWallet } from 'react-icons/fa';
+import { VscArrowSwap } from 'react-icons/vsc';
 import BigText from './BigText/BigText';
 import classNames from 'classnames';
 import { detectedSeparator } from 'src/misc/utils';
@@ -20,6 +21,8 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { formatAddress } from './ValidatorRow';
 import ChevronUpIcon from 'src/icons/ChevronUpIcon';
 import Tooltip from './Tooltip';
+import { TokenInfo } from '@solana/spl-token-registry';
+import UnstakeResults, { TokenBadge } from './UnstakeResults';
 
 const Form: React.FC<{
   setSelectPairSelector: React.Dispatch<React.SetStateAction<'fromMint' | 'toMint' | null>>;
@@ -27,8 +30,22 @@ const Form: React.FC<{
 }> = ({ setSelectPairSelector, setIsWalletModalOpen }) => {
   const { connect, wallet } = useWalletPassThrough();
   const { accounts } = useAccounts();
-  const [showTransactionInfo, setShowTransactionInfo] = useState<boolean>(false);
-  const { target, setTargetAmount, marinadeStats, deposit, delegationStrategy, calcVotePower } = useData();
+  const [showTransactionInfo, setShowTransactionInfo] = useState<boolean>(true);
+  const {
+    bestRoute,
+    instantUnstake,
+    unstake,
+    stakeMode,
+    setStakeMode,
+    target,
+    setTargetAmount,
+    marinadeStats,
+    deposit,
+    delegationStrategy,
+    calcVotePower,
+    stakeAccounts,
+    allowedStakeModes,
+  } = useData();
   const { palette, colors } = useTheme();
   const { tokenMap } = useTokenContext();
 
@@ -61,6 +78,8 @@ const Form: React.FC<{
   const stakeFromTransaction = target?.amount ? calcVotePower(target.amount) : 0;
   const stakeFromSnapshot = calcVotePower();
 
+  const chosenAccount = stakeMode === 'stake' ? solAccount : mSolAccount;
+
   return (
     <div className="h-full flex flex-col items-center justify-center pb-1">
       <div className="w-full mt-2 rounded-xl flex flex-col">
@@ -70,9 +89,9 @@ const Form: React.FC<{
               style={{
                 color: colors.disabledTextDark,
               }}
-              className={`text-xs font-semibold mb-1`}
+              className={`font-medium mb-2`}
             >
-              You&apos;re staking
+              You&apos;re {stakeMode === 'stake' ? 'staking' : 'unstaking'}
             </span>
             {target?.type === 'native' && (
               <span
@@ -81,14 +100,14 @@ const Form: React.FC<{
                 }}
                 className={`text-xs text-thin flex items-center gap-1`}
               >
-                <FaWallet className="inline text-[#CBD5E0]" /> {solAccount?.balance ?? 0} SOL{' '}
+                <FaWallet className="inline text-[#CBD5E0]" /> {chosenAccount?.balance ?? 0} SOL{' '}
                 <button
                   style={{
                     color: palette.primary,
                   }}
                   type="button"
                   className="font-light"
-                  onClick={() => setTargetAmount(solAccount ? solAccount.balance / 2 : 0)}
+                  onClick={() => setTargetAmount(chosenAccount ? chosenAccount.balance / 2 : 0)}
                 >
                   HALF
                 </button>{' '}
@@ -98,7 +117,7 @@ const Form: React.FC<{
                   }}
                   type="button"
                   className="font-light"
-                  onClick={() => setTargetAmount(solAccount?.balance ?? 0)}
+                  onClick={() => setTargetAmount(chosenAccount?.balance ?? 0)}
                 >
                   MAX
                 </button>
@@ -115,62 +134,72 @@ const Form: React.FC<{
               <div>
                 <div className={`p-4 flex flex-col`}>
                   <div className="flex justify-between items-center">
-                    <button
-                      type="button"
-                      className={`py-2 rounded-lg flex items-center hover:opacity-75 disabled:opacity-50`}
-                      style={{
-                        background: target ? undefined : palette.primary,
-                      }}
-                      disabled={!wallet}
-                      onClick={onClickSelectFromMint}
-                    >
-                      {target && (
-                        <div className="h-5 w-5">
-                          {(target?.type === 'native' ? (
-                            <TokenIcon tokenInfo={solTokenInfo} width={20} height={20} />
-                          ) : null) ??
-                            (target?.type === 'stakeAccount' ? (
-                              <div
-                                className="h-5 w-5 rounded-full"
-                                style={{
-                                  background: target.stakeAccount.background,
-                                }}
-                              />
-                            ) : null)}
-                        </div>
-                      )}
-                      <div className="ml-2 font-semibold" translate="no">
-                        {target && (
-                          <span
-                            style={{
-                              color: palette.text,
-                            }}
-                          >
-                            {' '}
-                            SOL
-                          </span>
-                        )}
-                        {!target && (
-                          <span
-                            className="fill-current mx-2"
-                            style={{
-                              color: palette.primaryBg,
-                            }}
-                          >
-                            Select
-                          </span>
-                        )}
-                      </div>
-
-                      <span
+                    {stakeMode === 'stake' ? (
+                      <button
+                        type="button"
+                        className={`py-2 rounded-lg flex items-center hover:opacity-75 pl-2`}
                         style={{
-                          color: palette.primaryBg,
+                          background: target
+                            ? (Boolean(stakeAccounts.length) && palette.primaryBg) || undefined
+                            : palette.primary,
                         }}
-                        className="fill-current mx-2"
+                        disabled={!wallet || !stakeAccounts.length}
+                        onClick={onClickSelectFromMint}
                       >
-                        <ChevronDownIcon />
-                      </span>
-                    </button>
+                        {target && (
+                          <div className="h-5 w-5">
+                            {(target?.type === 'native' ? (
+                              <TokenIcon tokenInfo={solTokenInfo} width={20} height={20} />
+                            ) : null) ??
+                              (target?.type === 'stakeAccount' ? (
+                                <div
+                                  className="h-5 w-5 rounded-full"
+                                  style={{
+                                    background: target.stakeAccount.background,
+                                  }}
+                                />
+                              ) : null)}
+                          </div>
+                        )}
+                        <div className="ml-2 font-semibold" translate="no">
+                          {target && (
+                            <span
+                              style={{
+                                color: palette.text,
+                              }}
+                            >
+                              {' '}
+                              SOL
+                            </span>
+                          )}
+                          {!target && (
+                            <span
+                              className="fill-current mx-2"
+                              style={{
+                                color: palette.primaryBg,
+                              }}
+                            >
+                              Select
+                            </span>
+                          )}
+                        </div>
+
+                        {wallet && Boolean(stakeAccounts.length) && (
+                          <span
+                            style={{
+                              color: target
+                                ? (Boolean(stakeAccounts.length) && palette.text) || undefined
+                                : palette.primaryBg,
+                            }}
+                            className="fill-current mx-2"
+                          >
+                            <ChevronDownIcon />
+                          </span>
+                        )}
+                      </button>
+                    ) : (
+                      <TokenBadge tokenInfo={msolTokenInfo!} color={palette.text} />
+                    )}
 
                     <div className="text-right">
                       <NumericFormat
@@ -217,9 +246,23 @@ const Form: React.FC<{
               </div>
             </div>
           </div>
-
-          <div className="flex justify-between items-center mt-8 mb-1">
-            <span className={`text-xs text-[${colors.disabledTextDark}] font-semibold`}>To receive</span>
+          {allowedStakeModes === 'both' && (
+            <button
+              className="w-full flex justify-center my-2"
+              onClick={() => {
+                setStakeMode(stakeMode === 'stake' ? 'unstake' : 'stake');
+              }}
+            >
+              <VscArrowSwap
+                className="rotate-90 border rounded-full p-1 w-6 h-6 cursor-pointer"
+                style={{
+                  color: palette.disabledText,
+                }}
+              />
+            </button>
+          )}
+          <div className="flex justify-between items-center my-2">
+            <span className={` text-[${colors.disabledTextDark}] font-medium`}>To receive</span>
             <span
               className={`text-xs text-thin flex items-center gap-1`}
               style={{
@@ -229,71 +272,15 @@ const Form: React.FC<{
               <FaWallet className="inline text-[#CBD5E0]" /> {mSolAccount?.balance ?? 0} mSOL{' '}
             </span>
           </div>
-          <div
-            className="border-b border-transparent rounded-xl"
-            style={{
-              background: palette.secondaryBg,
-            }}
-          >
-            <div className="px-x border-transparent rounded-xl">
-              <div>
-                <div className={classNames('p-4 flex flex-col')}>
-                  <div className="flex justify-between items-center">
-                    <button type="button" className="py-2 rounded-lg flex items-center" disabled={true}>
-                      <div className="h-5 w-5">
-                        <TokenIcon tokenInfo={msolTokenInfo} width={20} height={20} />
-                      </div>
-                      <div className="mx-2 font-semibold" translate="no">
-                        <span
-                          style={{
-                            color: palette.text,
-                          }}
-                        >
-                          mSOL
-                        </span>
-                      </div>
-                    </button>
-
-                    {marinadeStats && target ? (
-                      <div className="text-right">
-                        <NumericFormat
-                          disabled={true}
-                          value={((target?.amount ?? 0) / marinadeStats.msolSolPrice).toString()}
-                          decimalScale={mSolAccount?.decimals ?? 9}
-                          thousandSeparator={thousandSeparator}
-                          allowNegative={false}
-                          valueIsNumericString
-                          className={classNames('h-full w-full bg-transparent text-right font-semibold text-lg')}
-                          style={{
-                            color: target?.amount ? palette.text : palette.disabledText,
-                          }}
-                          decimalSeparator={detectedSeparator}
-                          isAllowed={withValueLimit}
-                        />
-                      </div>
-                    ) : null}
-                  </div>
-                  {msolTokenInfo && marinadeStats && target?.amount ? (
-                    <div className="flex justify-end items-center">
-                      <span className="text-xs" style={{ color: palette.text }}>
-                        {' '}
-                        <CoinBalanceUSD
-                          tokenInfo={msolTokenInfo}
-                          amount={(target.amount / marinadeStats.msolSolPrice).toString()}
-                        />
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="h-4" />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          <UnstakeResults
+            tokenInfo={(stakeMode === 'stake' ? msolTokenInfo : solTokenInfo)!}
+            tokenAccount={stakeMode === 'stake' ? mSolAccount : solAccount}
+            thousandSeparator={thousandSeparator}
+          />
         </div>
       </div>
 
-      <div className="flex justify-between w-full p-2">
+      <div className="flex justify-between w-full py-2 mb-4">
         <span className="font-normal text-xs" style={{ color: palette.text }}>
           Deposit fee:{' '}
           {((target?.type === 'native' ? marinadeStats?.rewardDepositFee : marinadeStats?.rewardDepositStakeFee) ?? 0) /
@@ -301,7 +288,7 @@ const Form: React.FC<{
           %
         </span>
       </div>
-      <div className="w-full">
+      <div className="w-full mb-4">
         {!walletPublicKey ? (
           <ActionButton size="lg" className="w-full" type="button" onClick={onConnectWallet}>
             Connect Wallet
@@ -309,12 +296,12 @@ const Form: React.FC<{
         ) : (
           <ActionButton
             size="lg"
-            className="w-full disabled:opacity-50"
+            className="w-full"
             type="button"
-            onClick={deposit}
-            disabled={!target || !target.amount}
+            onClick={stakeMode === 'stake' ? deposit : unstake}
+            disabled={!target || !target.amount || (!bestRoute && stakeMode === 'unstake' && instantUnstake)}
           >
-            <BigText>Stake</BigText>
+            <BigText>{stakeMode === 'stake' ? 'Stake' : 'Unstake'}</BigText>
           </ActionButton>
         )}
       </div>
@@ -324,25 +311,27 @@ const Form: React.FC<{
             <span className="font-normal text-xs" style={{ color: palette.text }}>
               1 mSOL ≈ {marinadeStats.msolSolPrice.toFixed(6)} SOL
             </span>
-            <span
-              className="flex items-center gap-1 font-normal text-xs cursor-pointer"
-              style={{ color: palette.text }}
-              onClick={() => setShowTransactionInfo(!showTransactionInfo)}
-            >
-              {showTransactionInfo ? (
-                <>
-                  <ChevronDownIcon /> Hide
-                </>
-              ) : (
-                <>
-                  <ChevronUpIcon /> Show
-                </>
-              )}{' '}
-              transaction info
-            </span>
+            {delegationStrategy && (
+              <span
+                className="flex items-center gap-1 font-normal text-xs cursor-pointer"
+                style={{ color: palette.text }}
+                onClick={() => setShowTransactionInfo(!showTransactionInfo)}
+              >
+                {showTransactionInfo ? (
+                  <>
+                    <ChevronUpIcon /> Hide
+                  </>
+                ) : (
+                  <>
+                    <ChevronDownIcon /> Show
+                  </>
+                )}{' '}
+                transaction info
+              </span>
+            )}
           </div>
         )}
-        {delegationStrategy && target?.amount && (
+        {delegationStrategy && target?.amount && showTransactionInfo && (
           <>
             <div className="flex justify-between w-full">
               <span

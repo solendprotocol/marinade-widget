@@ -6,12 +6,9 @@
   outline: 1px solid red;
 } */
 
-html {
-  font-family: 'Maven Pro', sans-serif;
-}
-
 #marinade-terminal * {
   box-sizing: border-box;
+  font-family: 'Maven Pro', sans-serif;
 }
 
 #marinade-terminal *:focus {

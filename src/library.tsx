@@ -141,9 +141,9 @@ const RenderShell = (props: IInit) => {
     <div className={displayClassName}>
       {/* eslint-disable @next/next/no-page-custom-font */}
       <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Maven+Pro:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet"
-      ></link>
+      />
 
       <div
         style={{
@@ -210,6 +210,11 @@ const RenderWidgetShell = (props: IInit) => {
 
   return (
     <div className={`fixed ${classes.containerClassName}`}>
+      {/* eslint-disable @next/next/no-page-custom-font */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Maven+Pro:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+      />
       <div
         className={`${classes.widgetContainerClassName} rounded-full bg-white/75 flex items-center justify-center cursor-pointer`}
         onClick={() => setIsOpen(!isOpen)}

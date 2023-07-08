@@ -43,6 +43,7 @@ const CodeBlocks = ({
   const valuesToFormat = {
     ...DISPLAY_MODE_VALUES,
     endpoint: 'https://api.mainnet-beta.solana.com',
+    stakeMode: formConfigurator.stakeMode,
     ...(formConfigurator.defaultExplorer !== 'Solana Explorer'
       ? { defaultExplorer: formConfigurator.defaultExplorer }
       : undefined),

@@ -42,9 +42,9 @@ const queryClient = new QueryClient();
 const MarinadeApp = () => {
   return (
     <QueryClientProvider client={queryClient}>
-        <USDValueProvider>
-          <Content />
-        </USDValueProvider>
+      <USDValueProvider>
+        <Content />
+      </USDValueProvider>
     </QueryClientProvider>
   );
 };

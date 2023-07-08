@@ -17,7 +17,7 @@ export const CurrentUserBadge: React.FC = () => {
         <img alt="Wallet logo" width={16} height={16} src={wallet?.adapter?.icon} />
       </div>
 
-      <div className="ml-2">
+      <div className="ml-2 font-semibold font-['Inter']">
         <div className="text-xs">{shortenAddress(`${publicKey}`)}</div>
       </div>
     </div>

@@ -124,7 +124,7 @@ export const USDValueProvider: FC<{ children: ReactNode }> = ({ children }) => {
           };
         });
       } catch (error) {
-        console.log('Error fetching prices from Marinade Pricing API', error);
+        console.error('Error fetching prices from Marinade Pricing API', error);
       }
       return results;
     },

@@ -32,7 +32,7 @@ const ErrorIcon = () => {
 
 const ActionScreen = () => {
   const { context, screen } = useScreenState();
-  const { target } = useData();
+  const { target, stakeMode, instantUnstake, marinadeStats } = useData();
   const { palette } = useTheme();
 
   const { explorer, getExplorer } = usePreferredExplorer();
@@ -46,7 +46,7 @@ const ActionScreen = () => {
               color: palette.text,
             }}
           >
-            Staking...
+            {stakeMode === 'stake' ? 'Staking' : 'Unstaking'}...
           </div>
         </div>
 
@@ -92,7 +92,7 @@ const ActionScreen = () => {
               color: palette.text,
             }}
           >
-            Staking successful
+            {stakeMode === 'stake' ? 'Staking' : 'Unstaking'} successful
           </p>
 
           <div
@@ -108,7 +108,23 @@ const ActionScreen = () => {
                   color: palette.invertedPrimaryBg,
                 }}
               >
-                Successfully staked {target?.amount} SOL!
+                Successfully {stakeMode === 'stake' ? 'staked' : 'unstaked'} {target?.amount} SOL!
+                {stakeMode === 'unstake' && !instantUnstake && (
+                  <>
+                    <br />
+                    <br />
+                    Visit{' '}
+                    <a
+                      href="https://marinade.finance/app/staking/"
+                      rel="noreferrer"
+                      target={'_blank'}
+                      className="cursor-pointer"
+                    >
+                      Marinade Finance
+                    </a>{' '}
+                    in {marinadeStats?.timeTillNextEpoch} to claim.
+                  </>
+                )}
               </p>
             </div>
           </div>

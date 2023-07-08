@@ -64,7 +64,7 @@ const FormPairSelector = ({ tokenInfos, onClose }: { onClose: () => void; tokenI
           />
         )}
         <span
-          className="pl-2 text-xs font-semibold mb-1"
+          className="pl-2 text-xs font-semibold"
           style={{
             color: palette.text,
           }}
@@ -72,7 +72,7 @@ const FormPairSelector = ({ tokenInfos, onClose }: { onClose: () => void; tokenI
           Stake accounts
         </span>
         {stakeAccounts
-          .filter((s) => s.status !== 'minBalance')
+          .filter((s) => s.status === 'active')
           .map((r) => (
             <FormAccountRow
               key={r.address}
@@ -88,33 +88,42 @@ const FormPairSelector = ({ tokenInfos, onClose }: { onClose: () => void; tokenI
               }}
             />
           ))}
+        {stakeAccounts
+          .filter((s) => s.status === 'inactive')
+          .map((r) => (
+            <FormAccountRow
+              key={r.address}
+              item={r}
+              style={{}}
+              onSubmit={() => {
+                setTarget({
+                  type: 'stakeAccount',
+                  stakeAccount: r,
+                  amount: Number(r.balance),
+                });
+                onClose();
+              }}
+            />
+          ))}
+        {stakeAccounts
+          .filter((s) => s.status === 'minBalance')
+          .map((r) => (
+            <FormAccountRow
+              disabled
+              key={r.address}
+              item={r}
+              style={{}}
+              onSubmit={() => {
+                setTarget({
+                  type: 'stakeAccount',
+                  stakeAccount: r,
+                  amount: Number(r.balance),
+                });
+                onClose();
+              }}
+            />
+          ))}
       </div>
-      <span
-        className="pl-2 text-xs mb-1"
-        style={{
-          color: palette.disabledText,
-        }}
-      >
-        Amount must be &gt; 1 SOL
-      </span>
-      {stakeAccounts
-        .filter((s) => s.status === 'minBalance')
-        .map((r) => (
-          <FormAccountRow
-            disabled
-            key={r.address}
-            item={r}
-            style={{}}
-            onSubmit={() => {
-              setTarget({
-                type: 'stakeAccount',
-                stakeAccount: r,
-                amount: Number(r.balance),
-              });
-              onClose();
-            }}
-          />
-        ))}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "marinade-widget",
-  "version": "1.0.18",
+  "version": "1.0.21",
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -14,7 +14,8 @@
     "clean": "prettier --write .; prettier --check .;eslint ."
   },
   "dependencies": {
-    "@marinade.finance/marinade-ts-sdk": "^5.0.0",
+    "@jup-ag/core": "4.0.0-beta.20",
+    "@marinade.finance/marinade-ts-sdk": "^5.0.2",
     "@solana/spl-token": "0.1.8",
     "@solana/spl-token-registry": "~0.2.1105",
     "@solana/wallet-adapter-backpack": "0.1.11",
