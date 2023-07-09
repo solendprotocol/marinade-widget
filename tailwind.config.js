@@ -4,7 +4,7 @@ const isWidgetOnly = process.env.MODE === 'widget';
 module.exports = {
   important: isWidgetOnly ? '#marinade-terminal' : false,
   corePlugins: {
-    preflight: isWidgetOnly ? false : true,
+    preflight: true,
   },
   mode: 'jit',
   darkMode: 'media',

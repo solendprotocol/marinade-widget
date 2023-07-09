@@ -185,12 +185,11 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
   }
 
   async function loadJupiter() {
-    if (!publicKey) return null;
     setJupiter(
       await Jupiter.load({
         connection,
         cluster: 'mainnet-beta',
-        user: publicKey, // or public key
+        user: publicKey ?? PublicKey.default, // or public key
       }),
     );
   }
