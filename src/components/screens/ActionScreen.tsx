@@ -108,7 +108,8 @@ const ActionScreen = () => {
                   color: palette.invertedPrimaryBg,
                 }}
               >
-                Successfully {stakeMode === 'stake' ? 'staked' : 'unstaked'} {target?.amount} {stakeMode === 'stake' ? 'SOL' : 'mSOL'}!
+                Successfully {stakeMode === 'stake' ? 'staked' : 'unstaked'} {target?.amount}{' '}
+                {stakeMode === 'stake' ? 'SOL' : 'mSOL'}!
                 {stakeMode === 'unstake' && !instantUnstake && (
                   <>
                     <br />

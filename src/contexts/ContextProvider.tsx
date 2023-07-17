@@ -8,9 +8,7 @@ import { AutoConnectProvider, useAutoConnect } from './AutoConnectProvider';
 import { NetworkConfigurationProvider, useNetworkConfiguration } from './NetworkConfigurationProvider';
 
 // Built in wallets
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
-import { BackpackWalletAdapter } from '@solana/wallet-adapter-backpack';
 import { GlowWalletAdapter } from '@solana/wallet-adapter-glow';
 import { PreferredExplorerProvider } from './preferredExplorer';
 import { IInit } from 'src/types';
@@ -31,12 +29,7 @@ const WalletContextProvider: FC<{ endpoint?: string; children: ReactNode }> = ({
       return [];
     }
 
-    return [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new BackpackWalletAdapter(),
-      new GlowWalletAdapter(),
-    ];
+    return [new SolflareWalletAdapter(), new GlowWalletAdapter()];
   }, [network]);
 
   const onError = useCallback((error: WalletError) => {

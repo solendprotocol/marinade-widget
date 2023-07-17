@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useAccounts } from '../contexts/accounts';
-import { MAX_INPUT_LIMIT, MSOL_MINT } from '../misc/constants';
+import { MAX_INPUT_LIMIT, MINIMUM_SOL_BALANCE, MSOL_MINT } from '../misc/constants';
 import ActionButton from './ActionButton';
 import TokenIcon from './TokenIcon';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
@@ -21,7 +21,6 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { formatAddress } from './ValidatorRow';
 import ChevronUpIcon from 'src/icons/ChevronUpIcon';
 import Tooltip from './Tooltip';
-import { TokenInfo } from '@solana/spl-token-registry';
 import UnstakeResults, { TokenBadge } from './UnstakeResults';
 
 const Form: React.FC<{
@@ -78,7 +77,10 @@ const Form: React.FC<{
   const stakeFromTransaction = target?.amount ? calcVotePower(target.amount) : 0;
   const stakeFromSnapshot = calcVotePower();
 
-  const chosenAccount = stakeMode === 'stake' ? solAccount : mSolAccount;
+  const inputAccount = stakeMode === 'stake' ? solAccount : mSolAccount;
+  const outputAccount = stakeMode === 'stake' ? mSolAccount : solAccount;
+
+  const minimumAccountBalance = stakeMode === 'stake' ? MINIMUM_SOL_BALANCE : 0;
 
   return (
     <div className="h-full flex flex-col items-center justify-center pb-1">
@@ -100,14 +102,16 @@ const Form: React.FC<{
                 }}
                 className={`text-xs text-thin flex items-center gap-1`}
               >
-                <FaWallet className="inline text-[#CBD5E0]" /> {chosenAccount?.balance ?? 0} SOL{' '}
+                <FaWallet className="inline text-[#CBD5E0]" /> {inputAccount?.balance ?? 0} SOL{' '}
                 <button
                   style={{
                     color: palette.primary,
                   }}
                   type="button"
                   className="font-light"
-                  onClick={() => setTargetAmount(chosenAccount ? chosenAccount.balance / 2 : 0)}
+                  onClick={() =>
+                    setTargetAmount(inputAccount ? Math.max(inputAccount.balance / 2 - minimumAccountBalance, 0) : 0)
+                  }
                 >
                   HALF
                 </button>{' '}
@@ -117,7 +121,7 @@ const Form: React.FC<{
                   }}
                   type="button"
                   className="font-light"
-                  onClick={() => setTargetAmount(chosenAccount?.balance ?? 0)}
+                  onClick={() => setTargetAmount(Math.max(inputAccount?.balance - minimumAccountBalance, 0) ?? 0)}
                 >
                   MAX
                 </button>
@@ -269,12 +273,12 @@ const Form: React.FC<{
                 color: colors.disabledTextDark,
               }}
             >
-              <FaWallet className="inline text-[#CBD5E0]" /> {mSolAccount?.balance ?? 0} mSOL{' '}
+              <FaWallet className="inline text-[#CBD5E0]" /> {outputAccount?.balance ?? 0} mSOL{' '}
             </span>
           </div>
           <UnstakeResults
             tokenInfo={(stakeMode === 'stake' ? msolTokenInfo : solTokenInfo)!}
-            tokenAccount={stakeMode === 'stake' ? mSolAccount : solAccount}
+            tokenAccount={outputAccount}
             thousandSeparator={thousandSeparator}
           />
         </div>

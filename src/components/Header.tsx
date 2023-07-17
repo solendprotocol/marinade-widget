@@ -11,7 +11,7 @@ const Header: React.FC<{
   setShowStakeModeSettings(arg: boolean): void;
   setShowDelegationStrategy(arg: boolean): void;
 }> = ({ setIsWalletModalOpen, setShowDelegationStrategy }) => {
-  const { allowDirectStake, delegationStrategy, refresh, initialValidator } = useData();
+  const { allowDirectStake, delegationStrategy, loadingInitialValidator } = useData();
   const { palette } = useTheme();
 
   return (
@@ -30,8 +30,8 @@ const Header: React.FC<{
             >
               <span suppressHydrationWarning className="text-xs items-center flex gap-1">
                 <TbSettingsAutomation className="inline" /> {delegationStrategy && delegationStrategy.name.slice(0, 12)}
-                {initialValidator && !delegationStrategy && 'Loading...'}
-                {!initialValidator && !delegationStrategy && 'Automatic'}
+                {loadingInitialValidator && !delegationStrategy && 'Loading...'}
+                {!loadingInitialValidator && !delegationStrategy && 'Automatic'}
               </span>
             </button>
           )}

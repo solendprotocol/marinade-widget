@@ -24,16 +24,6 @@ type ValidatorsResponseType = {
   }>;
 };
 
-type JupiterQuoteResponseType = {
-  validators: Array<{
-    identity: string;
-    info_name: string;
-    vote_account: string;
-    info_keybase: string;
-    score: number;
-  }>;
-};
-
 export type ValidatorType = {
   name: string;
   address: string;
@@ -63,7 +53,7 @@ type DataType = {
   allowDirectStake: boolean;
   setTargetAmount: (amount?: number) => void;
   setDelegationStrategy: (validator: ValidatorType | null) => void;
-  initialValidator?: string;
+  loadingInitialValidator?: boolean;
   instantUnstake: boolean;
   setInstantUnstake: (arg: boolean) => void;
 };
@@ -89,6 +79,7 @@ const defaultContextValues = {
   setTargetAmount: () => undefined,
   setDelegationStrategy: () => undefined,
   setInstantUnstake: () => undefined,
+  loadingInitialValidator: false,
 };
 
 const VALIDATORS_API = 'https://validators-api.marinade.finance/validators?limit=9999&epochs=0';
@@ -179,9 +170,11 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
     allowDirectStake ? formProps?.initialValidator ?? defaultContextValues.delegationStrategy : null,
   );
   const delegationStrategy = validators.find((v) => v.address === directedValidatorAddress) ?? null;
+  const [loadingInitialValidator, setLoadingInitialValidator] = useState(Boolean(formProps?.initialValidator));
 
   function setDelegationStrategy(validator: ValidatorType | null) {
     setDirectedValidatorAddress(validator?.address ?? null);
+    setLoadingInitialValidator(false);
   }
 
   async function loadJupiter() {
@@ -262,11 +255,11 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
 
   async function fetchVoteInfo() {
     if (!publicKey) return;
-    const snapshotPromise = axios.get(`${SNAPSHOT_API}${publicKey}`);
+    const snapshotPromise = axios.get(`${SNAPSHOT_API}${publicKey}`).catch((e) => console.error(e));
     const votePromise = axios.get(VOTES_API);
 
     const tvlPromise = axios.get(TVL_API);
-    const [snapshot, vote, tvl] = (await Promise.all([snapshotPromise, votePromise, tvlPromise])).map((r) => r.data);
+    const [snapshot, vote, tvl] = (await Promise.all([snapshotPromise, votePromise, tvlPromise])).map((r) => r?.data);
 
     const totalDirectStake = vote.records.reduce(
       (acc: number, r: { amount: string }) => acc + Number(r.amount ?? 0),
@@ -274,7 +267,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
     );
 
     setVoteData({
-      snapshotAmount: Number(snapshot.amount),
+      snapshotAmount: Number(snapshot?.amount ?? 0),
       totalDirectStake,
       poolSize: tvl.staked_sol,
     });
@@ -297,7 +290,6 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
 
   async function fetchMarinadeStats() {
     const marinade = new Marinade(marinadeConfig);
-    const response = (await axios.get(MSOLSOLPRICE_API)).data as number;
     const state = await marinade.getMarinadeState();
     const nextEpochTimestamp = (await marinade.getEstimatedUnstakeTicketDueDate()).ticketDueDate?.getTime()! / 1000;
     const currentTimeStamp = new Date().getTime() / 1000;
@@ -311,7 +303,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
     const partnerState = marinadeConfig.referralCode ? await marinade.getReferralPartnerState() : null;
 
     setMarinadeStats({
-      msolSolPrice: response,
+      msolSolPrice: state.mSolPrice,
       stakingRewardFee: state.rewardsCommissionPercent,
       rewardDepositFee: partnerState?.state.operationDepositSolFee ?? 0,
       rewardDepositStakeFee: partnerState?.state.operationDepositStakeAccountFee ?? 0,
@@ -564,7 +556,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
         setTarget,
         setTargetAmount,
         calcVotePower,
-        initialValidator: formProps?.initialValidator,
+        loadingInitialValidator,
         priceLoading,
       }}
     >

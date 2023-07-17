@@ -142,19 +142,6 @@ Example on how to migrate from `mode` to `formProps`:
 
 ---
 
-### formProps (Available on v1)
-
-Configure Terminal's behaviour and allowed actions for your user
-
-- theme?: `'dark' | 'light' | 'auto'`
-  - Set the theme mode between forcing light/dark or using system settings
-- referralCode?: `string`
-  - Referral code for the Marinade referral program
-- initialValidator?: `string`
-  - Set the address of an validator to be selected by default for direct staking
-
----
-
 ### Resuming / Closing activity
 
 - Everytime `init()` is called, it will create a new activity.

@@ -9,10 +9,8 @@ specifiers:
   '@marinade.finance/marinade-ts-sdk': ^5.0.2
   '@solana/spl-token': 0.1.8
   '@solana/spl-token-registry': ~0.2.1105
-  '@solana/wallet-adapter-backpack': 0.1.11
   '@solana/wallet-adapter-base': 0.9.20
   '@solana/wallet-adapter-glow': 0.1.15
-  '@solana/wallet-adapter-phantom': 0.9.19
   '@solana/wallet-adapter-react': 0.15.28
   '@solana/wallet-adapter-solflare': 0.6.21
   '@solana/wallet-adapter-wallets': 0.19.10
@@ -78,10 +76,8 @@ dependencies:
   '@marinade.finance/marinade-ts-sdk': 5.0.2_iziyofpkyexr3iekamwp24a3lm
   '@solana/spl-token': 0.1.8
   '@solana/spl-token-registry': 0.2.4574
-  '@solana/wallet-adapter-backpack': 0.1.11_@solana+web3.js@1.73.0
   '@solana/wallet-adapter-base': 0.9.20_@solana+web3.js@1.73.0
   '@solana/wallet-adapter-glow': 0.1.15_@solana+web3.js@1.73.0
-  '@solana/wallet-adapter-phantom': 0.9.19_@solana+web3.js@1.73.0
   '@solana/wallet-adapter-react': 0.15.28_xlhudxas6ds7l5hebkzvzyrmni
   '@solana/wallet-adapter-solflare': 0.6.21_@solana+web3.js@1.73.0
   '@solana/wallet-adapter-wallets': 0.19.10_t5z6kkqlain2netts3o5pq37jy
@@ -3160,7 +3156,7 @@ packages:
     dependencies:
       '@apocentre/alias-sampling': 0.5.3
       assert: 2.0.0
-      bignumber.js: 9.1.0
+      bignumber.js: 9.1.1
       cbor-sync: 1.0.4
       crc: 3.8.0
       jsbi: 3.2.5
@@ -5320,7 +5316,7 @@ packages:
       '@toruslabs/http-helpers': 3.2.0
       '@toruslabs/openlogin-jrpc': 2.9.0
       async-mutex: 0.3.2
-      bignumber.js: 9.1.0
+      bignumber.js: 9.1.1
       bowser: 2.11.0
       eth-rpc-errors: 4.0.3
       ethereumjs-util: 7.1.5

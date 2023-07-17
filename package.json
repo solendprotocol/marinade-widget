@@ -1,6 +1,6 @@
 {
   "name": "marinade-widget",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -18,10 +18,8 @@
     "@marinade.finance/marinade-ts-sdk": "^5.0.2",
     "@solana/spl-token": "0.1.8",
     "@solana/spl-token-registry": "~0.2.1105",
-    "@solana/wallet-adapter-backpack": "0.1.11",
     "@solana/wallet-adapter-base": "0.9.20",
     "@solana/wallet-adapter-glow": "0.1.15",
-    "@solana/wallet-adapter-phantom": "0.9.19",
     "@solana/wallet-adapter-react": "0.15.28",
     "@solana/wallet-adapter-solflare": "0.6.21",
     "@solana/wallet-adapter-wallets": "0.19.10",

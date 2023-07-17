@@ -159,7 +159,7 @@ const DelegationStrategy = ({ tokenInfos, onClose }: { onClose: () => void; toke
               borderColor: palette.secondary,
               background: palette.primaryBg,
             }}
-            disabled={Boolean(validators.length)}
+            disabled={!Boolean(validators.length)}
             onClick={() => setShowValidatorSelector(true)}
           >
             {selectedValidator ? (
