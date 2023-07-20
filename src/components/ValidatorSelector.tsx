@@ -44,7 +44,7 @@ const ValidatorSelector = ({
       const filteredList = sortedList.filter(
         (item) =>
           item.address.includes(searchTerm) ||
-          item.voteAddress.includes(searchTerm) ||
+          item.identity.includes(searchTerm) ||
           item.name?.toLowerCase()?.includes(searchTerm.toLowerCase()),
       );
       setSearchResult(filteredList);

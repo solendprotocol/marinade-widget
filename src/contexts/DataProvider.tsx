@@ -27,7 +27,7 @@ type ValidatorsResponseType = {
 export type ValidatorType = {
   name: string;
   address: string;
-  voteAddress: string;
+  identity: string;
   logo: string;
   score: number;
 };
@@ -83,7 +83,6 @@ const defaultContextValues = {
 };
 
 const VALIDATORS_API = 'https://validators-api.marinade.finance/validators?limit=9999&epochs=0';
-const MSOLSOLPRICE_API = 'https://api.marinade.finance/msol/price_sol';
 const VOTES_API = 'https://snapshots-api.marinade.finance/v1/votes/msol/latest';
 const SNAPSHOT_API = 'https://snapshots-api.marinade.finance/v1/snapshot/latest/msol/';
 const TVL_API = 'https://api.marinade.finance/tlv';
@@ -244,9 +243,9 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
 
     setValidators(
       response.validators.map((v) => ({
-        address: v.identity,
+        address: v.vote_account,
         name: v.info_name ?? formatAddress(v.identity),
-        voteAddress: v.vote_account,
+        identity: v.identity,
         score: v.score,
         logo: `https://keybase.io/${v.info_keybase}/picture?format=square_360`,
       })),
@@ -335,7 +334,7 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
         });
 
         setScreen('Signing');
-        const signature = await wallet.adapter.sendTransaction(swapTransaction, connection);
+        const signature = await wallet.adapter.sendTransaction(swapTransaction, connection, {skipPreflight: true});
         const latestBlockhash = await connection.getLatestBlockhash();
         setScreen('Confirming');
         await connection.confirmTransaction(
@@ -423,12 +422,12 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
         target.type === 'native'
           ? await marinade.deposit(bnAmount, {
               directToValidatorVoteAddress: delegationStrategy
-                ? new PublicKey(delegationStrategy.voteAddress)
+                ? new PublicKey(delegationStrategy.address)
                 : undefined,
             })
           : await marinade.depositStakeAccount(new PublicKey(target.stakeAccount.address), {
               directToValidatorVoteAddress: delegationStrategy
-                ? new PublicKey(delegationStrategy.voteAddress)
+                ? new PublicKey(delegationStrategy.address)
                 : undefined,
             });
 

@@ -59,6 +59,8 @@ const Form: React.FC<{
 
   const msolTokenInfo = tokenMap.get(MSOL_MINT.toBase58());
   const solTokenInfo = tokenMap.get(NATIVE_MINT.toBase58());
+  const inputTokenInfo = stakeMode === 'stake' ? solTokenInfo : msolTokenInfo;
+  const outputTokenInfo = stakeMode === 'stake' ? msolTokenInfo : solTokenInfo;
 
   const onClickSelectFromMint = useCallback(() => {
     setSelectPairSelector('fromMint');
@@ -102,7 +104,7 @@ const Form: React.FC<{
                 }}
                 className={`text-xs text-thin flex items-center gap-1`}
               >
-                <FaWallet className="inline text-[#CBD5E0]" /> {inputAccount?.balance ?? 0} SOL{' '}
+                <FaWallet className="inline text-[#CBD5E0]" /> {inputAccount?.balance ?? 0} {inputTokenInfo?.symbol}{' '}
                 <button
                   style={{
                     color: palette.primary,
@@ -153,7 +155,7 @@ const Form: React.FC<{
                         {target && (
                           <div className="h-5 w-5">
                             {(target?.type === 'native' ? (
-                              <TokenIcon tokenInfo={solTokenInfo} width={20} height={20} />
+                              <TokenIcon tokenInfo={inputTokenInfo} width={20} height={20} />
                             ) : null) ??
                               (target?.type === 'stakeAccount' ? (
                                 <div
@@ -202,14 +204,14 @@ const Form: React.FC<{
                         )}
                       </button>
                     ) : (
-                      <TokenBadge tokenInfo={msolTokenInfo!} color={palette.text} />
+                      <TokenBadge tokenInfo={inputTokenInfo!} color={palette.text} />
                     )}
 
                     <div className="text-right">
                       <NumericFormat
                         disabled={!(target?.type === 'native')}
                         value={target?.amount ?? ''}
-                        decimalScale={solTokenInfo?.decimals}
+                        decimalScale={inputTokenInfo?.decimals}
                         thousandSeparator={thousandSeparator}
                         allowNegative={false}
                         valueIsNumericString
@@ -235,12 +237,12 @@ const Form: React.FC<{
                         <div className="h-4" />
                       )}
                     </span>
-                    {solTokenInfo?.address ? (
+                    {inputTokenInfo?.address ? (
                       <div className="flex justify-end items-center">
                         {target?.amount ? (
                           <span className="text-xs" style={{ color: palette.text }}>
                             {' '}
-                            <CoinBalanceUSD tokenInfo={solTokenInfo} amount={target.amount.toString()} />
+                            <CoinBalanceUSD tokenInfo={inputTokenInfo} amount={target.amount.toString()} />
                           </span>
                         ) : null}
                       </div>
@@ -273,11 +275,11 @@ const Form: React.FC<{
                 color: colors.disabledTextDark,
               }}
             >
-              <FaWallet className="inline text-[#CBD5E0]" /> {outputAccount?.balance ?? 0} mSOL{' '}
+              <FaWallet className="inline text-[#CBD5E0]" /> {outputAccount?.balance ?? 0} {outputTokenInfo?.symbol}{' '}
             </span>
           </div>
           <UnstakeResults
-            tokenInfo={(stakeMode === 'stake' ? msolTokenInfo : solTokenInfo)!}
+            tokenInfo={outputTokenInfo!}
             tokenAccount={outputAccount}
             thousandSeparator={thousandSeparator}
           />
