@@ -304,8 +304,8 @@ export const DataProvider: FC<IInit & { children: ReactNode }> = ({
     setMarinadeStats({
       msolSolPrice: state.mSolPrice,
       stakingRewardFee: state.rewardsCommissionPercent,
-      rewardDepositFee: partnerState?.state.operationDepositSolFee ?? 0,
-      rewardDepositStakeFee: partnerState?.state.operationDepositStakeAccountFee ?? 0,
+      rewardDepositFee: (partnerState?.state.operationDepositSolFee ?? 0)/100,
+      rewardDepositStakeFee: (partnerState?.state.operationDepositStakeAccountFee ?? 0)/100,
       timeTillNextEpoch: `${days}D ${hours}H ${minutes}M`,
     });
   }

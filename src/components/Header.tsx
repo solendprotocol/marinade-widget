@@ -1,5 +1,4 @@
 import React from 'react';
-import RefreshSVG from 'src/icons/RefreshSVG';
 import { TbSettingsAutomation } from 'react-icons/tb';
 
 import { WalletButton } from './WalletComponents';

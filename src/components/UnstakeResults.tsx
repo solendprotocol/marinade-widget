@@ -39,9 +39,11 @@ const UnstakeResults: React.FC<{
   const { priceLoading, target, marinadeStats, stakeMode, instantUnstake, setInstantUnstake, bestRoute } = useData();
   const { palette } = useTheme();
 
+  const depositFee = (target?.type === 'native' ? marinadeStats?.rewardDepositFee : marinadeStats?.rewardDepositStakeFee) ?? 0;
   const unstakeAmount = target?.amount && marinadeStats ? target.amount * marinadeStats.msolSolPrice : null;
-  const stakeAmount = target?.amount && marinadeStats ? target.amount / marinadeStats.msolSolPrice : null;
+  const stakeAmount = target?.amount && marinadeStats ? (target.amount / marinadeStats.msolSolPrice * (1-depositFee/100)) : null;
   const instantUnstakeAmount = JSBI.toNumber(bestRoute?.outAmount ?? JSBI.BigInt(0)) / 10 ** (tokenInfo?.decimals ?? 9);
+
   return (
     <div className="flex flex-col gap-4">
       <div
@@ -110,7 +112,7 @@ const UnstakeResults: React.FC<{
                   />
                 </div>
               ) : (
-                <div className="h-4" />
+                <div className="h-4 w-32 animate-pulse bg-slate-200 rounded" />
               )}
             </div>
             {stakeAmount && !priceLoading ? (
@@ -124,7 +126,9 @@ const UnstakeResults: React.FC<{
                 </span>
               </div>
             ) : (
-              <div className="h-4" />
+              <div className="flex justify-end items-center">
+                <div className="h-4 w-16 animate-pulse bg-slate-200 rounded" />
+              </div>
             )}
           </div>
         </div>
@@ -195,7 +199,7 @@ const UnstakeResults: React.FC<{
                       decimalSeparator={detectedSeparator}
                     />
                   </div>
-                ) : null}
+                ) : <div className="h-4 w-32 animate-pulse bg-slate-200 rounded" />}
               </div>
               {stakeAmount && unstakeAmount ? (
                 <div className="flex justify-end items-center">
@@ -208,7 +212,9 @@ const UnstakeResults: React.FC<{
                   </span>
                 </div>
               ) : (
-                <div className="h-4" />
+                <div className="flex justify-end items-center">
+                  <div className="h-4 w-16 animate-pulse bg-slate-200 rounded" />
+                </div>
               )}
             </div>
           </div>

@@ -286,15 +286,14 @@ const Form: React.FC<{
         </div>
       </div>
 
-      <div className="flex justify-between w-full py-2 mb-4">
+      {stakeMode === 'stake' && <div className="flex justify-between w-full py-2">
         <span className="font-normal text-xs" style={{ color: palette.text }}>
           Deposit fee:{' '}
-          {((target?.type === 'native' ? marinadeStats?.rewardDepositFee : marinadeStats?.rewardDepositStakeFee) ?? 0) /
-            100}
+          {(target?.type === 'native' ? marinadeStats?.rewardDepositFee : marinadeStats?.rewardDepositStakeFee) ?? 0}
           %
         </span>
-      </div>
-      <div className="w-full mb-4">
+      </div>}
+      <div className="w-full my-4">
         {!walletPublicKey ? (
           <ActionButton size="lg" className="w-full" type="button" onClick={onConnectWallet}>
             Connect Wallet
@@ -317,7 +316,7 @@ const Form: React.FC<{
             <span className="font-normal text-xs" style={{ color: palette.text }}>
               1 mSOL ≈ {marinadeStats.msolSolPrice.toFixed(6)} SOL
             </span>
-            {delegationStrategy && (
+            {delegationStrategy && stakeMode === 'stake' && (
               <span
                 className="flex items-center gap-1 font-normal text-xs cursor-pointer"
                 style={{ color: palette.text }}
@@ -337,7 +336,7 @@ const Form: React.FC<{
             )}
           </div>
         )}
-        {delegationStrategy && target?.amount && showTransactionInfo && (
+        {stakeMode === 'stake' && delegationStrategy && Boolean(target?.amount) && showTransactionInfo && (
           <>
             <div className="flex justify-between w-full">
               <span
@@ -415,7 +414,7 @@ const Form: React.FC<{
             </div>
           </>
         )}
-        {target && marinadeStats && (
+        {stakeMode === 'stake' && target && marinadeStats && (
           <div className="flex justify-between w-full">
             <span
               className="font-normal text-xs flex gap-1 items-center"
